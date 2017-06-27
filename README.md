@@ -1,2 +1,2 @@
 # PostgresQueryTool
-Simple client for query PostgreSQL databases and browse db schemas, based on Qt.
+Simple client for query PostgreSQL databases and browse db schemas, based on Java/JavaFX.
