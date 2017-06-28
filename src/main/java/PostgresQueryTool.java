@@ -4,8 +4,8 @@
  *
  * @author pabst, @date 27.06.17 10:25
  */
-public class Library {
-    public boolean someLibraryMethod() {
-        return true;
+public class PostgresQueryTool {
+    public static void main(String [] args) {
+
     }
 }

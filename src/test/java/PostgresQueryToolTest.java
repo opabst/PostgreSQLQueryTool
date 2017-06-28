@@ -7,9 +7,9 @@ import static org.junit.Assert.*;
  *
  * @author pabst, @date 27.06.17 10:25
  */
-public class LibraryTest {
+public class PostgresQueryToolTest {
     @Test public void testSomeLibraryMethod() {
-        Library classUnderTest = new Library();
+        PostgresQueryTool classUnderTest = new PostgresQueryTool();
         assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
     }
 }
