@@ -1,3 +1,4 @@
+import de.uni_hannover.dbs.PostgreSQL.PostgresQueryTool;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
