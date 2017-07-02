@@ -10,7 +10,18 @@ repositories {
     jcenter()
 }
 
-applicationDefaultJvmArgs = ["-Xmx1g]
+applicationDefaultJvmArgs = ["-Xmx1g"]
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java"]
+        }
+        resources {
+            srcDirs = ["src/main/resources"]
+        }
+    }
+}
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
