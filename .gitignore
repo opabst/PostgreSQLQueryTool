@@ -4,5 +4,6 @@ gradlew
 gradlew.bat
 /gradle/
 /.idea/
+PostgresQueryTool.iml
 .gradletasknamecache
 .DS_Store
