@@ -27,16 +27,16 @@ if (currentOS.isWindows()) {
     platform = 'mac'
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ["src/main/java"]
-        }
-        resources {
-            srcDirs = ["src/main/resources"]
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        java {
+//            srcDirs = ["src/main/java"]
+//        }
+//        resources {
+//            srcDirs = ["src/main/resources"]
+//        }
+//    }
+//}
 
 javafx {
     modules = [ 'javafx.fxml', 'javafx.base', 'javafx.controls', 'javafx.graphics']

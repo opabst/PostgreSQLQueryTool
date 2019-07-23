@@ -1,16 +1,22 @@
 package de.uni_hannover.dbs.PostgreSQL.controller;
 
-import com.sun.glass.ui.Application;
 import de.uni_hannover.dbs.PostgreSQL.model.TreeViewRootItem;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 //TODO: TreeItems für jede Art von Baumobjekt erstellen
 
@@ -31,6 +37,9 @@ public class MainWindowController {
     @FXML
     private TextArea MainWindowExplainPlanTA;
 
+    @FXML
+    private MenuItem fileClose;
+
     public MainWindowController() {
 
     }
@@ -49,6 +58,30 @@ public class MainWindowController {
         DatabaseObjectOutline.setRoot(rootItem);
 
 
+    }
+
+    @FXML
+    public void close() {
+        // TODO: eventuell überdenken; vielleicht ist hier aufräumen erforderlich (Verbindung schließen, Quelltext speichern,...)
+        Platform.exit();
+    }
+
+    @FXML
+    public void openConnectionWindow(ActionEvent event) {
+        Stage connectionWindow = new Stage();
+
+        Parent connectionPane = null;
+        try {
+            connectionPane = FXMLLoader.load(getClass().getResource("/de/uni_hannover/dbs/PostgreSQL/views/ConnectionWindow.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Scene scene = new Scene(connectionPane);
+        connectionWindow.setScene(scene);
+        connectionWindow.initModality(Modality.APPLICATION_MODAL);
+        connectionWindow.initOwner(((MenuItem)event.getTarget()).getParentPopup().getOwnerWindow());
+        connectionWindow.showAndWait();
     }
 
 }

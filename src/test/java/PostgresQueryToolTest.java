@@ -10,7 +10,6 @@ import static org.junit.Assert.*;
  */
 public class PostgresQueryToolTest {
     @Test public void testSomeLibraryMethod() {
-        PostgresQueryTool classUnderTest = new PostgresQueryTool();
-        assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
+
     }
 }
