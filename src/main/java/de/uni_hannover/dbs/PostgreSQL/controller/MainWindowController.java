@@ -1,5 +1,7 @@
 package de.uni_hannover.dbs.PostgreSQL.controller;
 
+import de.uni_hannover.dbs.PostgreSQL.db.ConnectionStore;
+import de.uni_hannover.dbs.PostgreSQL.model.DBConnection;
 import de.uni_hannover.dbs.PostgreSQL.model.TreeViewRootItem;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -40,6 +42,9 @@ public class MainWindowController {
     @FXML
     private MenuItem fileClose;
 
+    @FXML
+    private ComboBox<DBConnection> connectionCB;
+
     public MainWindowController() {
 
     }
@@ -56,6 +61,8 @@ public class MainWindowController {
         });
 
         DatabaseObjectOutline.setRoot(rootItem);
+
+        connectionCB.setItems(ConnectionStore.getInstance().getConnections());
 
 
     }
