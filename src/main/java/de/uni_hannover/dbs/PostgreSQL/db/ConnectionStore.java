@@ -24,4 +24,8 @@ public class ConnectionStore {
     public void addConnection(DBConnection _con) {
         conList.add(_con);
     }
+
+    public ObservableList<DBConnection> getConnections() {
+        return conList;
+    }
 }
