@@ -2,22 +2,28 @@ package de.uni_hannover.dbs.PostgreSQL.model;
 
 public class DBConnection {
 
-    private String url;
+    private String connectionname;
+    private String hostname;
     private String username;
     private String password;
     private String port;
     private String dbname;
 
-    public DBConnection(String _url, String _username, String _password, String _port, String _dbname) {
-        url = _url;
+    public DBConnection(String _connectionname, String _hostname, String _username, String _password, String _port, String _dbname) {
+        connectionname = _connectionname;
+        hostname = _hostname;
         username = _username;
         password = _password;
         port = _port;
         dbname = _dbname;
     }
 
-    public String getUrl() {
-        return url;
+    public String getConnectionname() {
+        return connectionname;
+    }
+
+    public String getHostname() {
+        return hostname;
     }
 
     public String getUsername() {
