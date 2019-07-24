@@ -9,7 +9,7 @@ public class DBConnection {
     private String port;
     private String dbname;
 
-    public DBConnection(String _connectionname, String _hostname, String _username, String _password, String _port, String _dbname) {
+    public DBConnection(String _connectionname, String _hostname, String _port,  String _dbname, String _username, String _password) {
         connectionname = _connectionname;
         hostname = _hostname;
         username = _username;
