@@ -1,7 +1,7 @@
 package de.uni_hannover.dbs.PostgreSQL.controller;
 
 import de.uni_hannover.dbs.PostgreSQL.db.ConnectionStore;
-import de.uni_hannover.dbs.PostgreSQL.model.DBConnection;
+import de.uni_hannover.dbs.PostgreSQL.db.DBConnection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
