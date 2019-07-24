@@ -1,30 +1,76 @@
 package de.uni_hannover.dbs.PostgreSQL.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+// TODO: Wenn Felder außer Verbindungsname geändert werden, saveAndExitBTN wieder ausgrauen
 /**
  * Created by pabst on 05.07.17.
  */
 public class ConnectionWindowController {
 
     @FXML
-    private TextField ConWinConnectionNameTF;
+    private TextField connectionNameTF;
 
     @FXML
-    private TextField ConWinHostnameTF;
+    private TextField hostnameTF;
 
     @FXML
-    private TextField ConWinDatabaseTF;
+    private TextField databasenameTF;
 
     @FXML
-    private TextField ConWinUsernameTF;
+    private TextField usernameTF;
 
     @FXML
-    private PasswordField ConWinPasswordTF;
+    private PasswordField passwordTF;
+
+    @FXML
+    private TextField portTF;
+
+    @FXML
+    private Button testConnectionBTN;
+
+    @FXML
+    private Button rejectInputBTN;
+
+    @FXML
+    private Button saveAndExitBTN;
 
     public ConnectionWindowController() {
+
+    }
+
+    @FXML
+    public void testConnection() {
+        String hostname = hostnameTF.getText();
+        String port = portTF.getText();
+        String databaseName = databasenameTF.getText();
+        String username = usernameTF.getText();
+        String password = passwordTF.getText();
+
+        Connection testCon = null;
+        try {
+            testCon = DriverManager.getConnection("jdbc:postgresql://" + hostname + ":" + port + "/" + databaseName, username, password);
+            saveAndExitBTN.setDisable(false);
+        } catch (SQLException e) {
+            System.err.print(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void reject() {
+        Stage stage = (Stage)rejectInputBTN.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    public void saveAndExit() {
 
     }
 }
