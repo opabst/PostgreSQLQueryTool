@@ -1,6 +1,11 @@
-package de.uni_hannover.dbs.PostgreSQL.model;
+package de.uni_hannover.dbs.PostgreSQL.db;
+
+// TODO: Ausnahmen behandeln
+import java.sql.*;
 
 public class DBConnection {
+
+    Connection con = null;
 
     private String connectionname;
     private String hostname;
@@ -44,5 +49,23 @@ public class DBConnection {
 
     public String toString() {
         return connectionname + ": " + dbname;
+    }
+
+    private void connect() {
+        try {
+            con = DriverManager.getConnection("jdbc:postgresql://" + hostname + ":" + port + "/" + dbname , username, password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ResultSet executeQuery(String _sqlQuery) throws SQLException {
+        if (con == null) {
+            connect();
+        }
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(_sqlQuery);
+
+        return rs;
     }
 }
