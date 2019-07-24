@@ -55,27 +55,39 @@
                      </padding>
                      <GridPane.margin>
                         <Insets left="5.0" right="5.0" />
-                     </GridPane.margin></Label>
+                     </GridPane.margin>
+                  </Label>
+                   <TextField fx:id="connectionnameTF" GridPane.columnIndex="1">
+                       <GridPane.margin>
+                           <Insets left="5.0" right="5.0" />
+                       </GridPane.margin>
+                   </TextField>
+                   <TextField fx:id="hostnameTF" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                       <GridPane.margin>
+                           <Insets left="5.0" right="5.0" />
+                       </GridPane.margin>
+                   </TextField>
+                   <TextField fx:id="portTF" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                       <GridPane.margin>
+                           <Insets left="5.0" right="5.0" />
+                       </GridPane.margin>
+
+                   </TextField>
+                   <TextField fx:id="databasenameTF" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                       <GridPane.margin>
+                           <Insets left="5.0" right="5.0" />
+                       </GridPane.margin>
+                   </TextField>
+                   <TextField fx:id="usernameTF" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                       <GridPane.margin>
+                           <Insets left="5.0" right="5.0" />
+                       </GridPane.margin>
+                   </TextField>
                   <PasswordField fx:id="passwordTF" GridPane.columnIndex="1" GridPane.rowIndex="5">
                      <GridPane.margin>
                         <Insets left="5.0" right="5.0" />
-                     </GridPane.margin></PasswordField>
-                  <TextField fx:id="usernameTF" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                     <GridPane.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </GridPane.margin></TextField>
-                  <TextField fx:id="databasenameTF" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                     <GridPane.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </GridPane.margin></TextField>
-                  <TextField fx:id="hostnameTF" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <GridPane.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </GridPane.margin></TextField>
-                  <TextField fx:id="connectionnameTF" GridPane.columnIndex="1">
-                     <GridPane.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </GridPane.margin></TextField>
+                     </GridPane.margin>
+                  </PasswordField>
                   <Label text="Datenbank:" GridPane.rowIndex="3">
                      <padding>
                         <Insets left="5.0" right="5.0" />
@@ -92,12 +104,6 @@
                            <Insets left="5.0" right="5.0" />
                        </GridPane.margin>
                    </Label>
-                   <TextField fx:id="portTF" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                       <GridPane.margin>
-                           <Insets left="5.0" right="5.0" />
-                       </GridPane.margin>
-
-                   </TextField>
                   <Label text="Hostname:" GridPane.rowIndex="1">
                      <padding>
                         <Insets left="5.0" right="5.0" />
