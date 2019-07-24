@@ -79,6 +79,7 @@ public class MainWindowController {
 
         Scene scene = new Scene(connectionPane);
         connectionWindow.setScene(scene);
+
         connectionWindow.initModality(Modality.APPLICATION_MODAL);
         connectionWindow.initOwner(((MenuItem)event.getTarget()).getParentPopup().getOwnerWindow());
         connectionWindow.showAndWait();

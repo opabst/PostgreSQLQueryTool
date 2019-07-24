@@ -1,5 +1,7 @@
 package de.uni_hannover.dbs.PostgreSQL.controller;
 
+import de.uni_hannover.dbs.PostgreSQL.db.ConnectionStore;
+import de.uni_hannover.dbs.PostgreSQL.model.DBConnection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -16,7 +18,7 @@ import java.sql.SQLException;
 public class ConnectionWindowController {
 
     @FXML
-    private TextField connectionNameTF;
+    private TextField connectionnameTF;
 
     @FXML
     private TextField hostnameTF;
@@ -71,6 +73,15 @@ public class ConnectionWindowController {
 
     @FXML
     public void saveAndExit() {
+        DBConnection dbc = new DBConnection(connectionnameTF.getText(),
+                                            hostnameTF.getText(),
+                                            portTF.getText(),
+                                            databasenameTF.getText(),
+                                            usernameTF.getText(),
+                                            passwordTF.getText());
 
+        ConnectionStore.getInstance().addConnection(dbc);
+        Stage stage = (Stage)saveAndExitBTN.getScene().getWindow();
+        stage.close();
     }
 }
