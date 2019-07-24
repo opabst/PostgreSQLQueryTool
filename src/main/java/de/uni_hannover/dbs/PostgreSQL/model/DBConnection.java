@@ -41,4 +41,8 @@ public class DBConnection {
     public String getDbname() {
         return dbname;
     }
+
+    public String toString() {
+        return connectionname + ": " + dbname;
+    }
 }
