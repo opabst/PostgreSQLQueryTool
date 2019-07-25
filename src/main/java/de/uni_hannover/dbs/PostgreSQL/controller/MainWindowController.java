@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -78,6 +79,18 @@ public class MainWindowController {
 
         connectionCB.setItems(ConnectionStore.getInstance().getConnections());
 
+        connectionCB.getItems().addListener(new ListChangeListener<DBConnection>() {
+            @Override
+            public void onChanged(Change<? extends DBConnection> c) {
+                while (c.next()) {
+                    if(c.wasAdded()) {
+                        int cbItems = connectionCB.getItems().size();
+                        connectionCB.getSelectionModel().select(cbItems-1);
+                    }
+                }
+            }
+        });
+
         connectionCB.getSelectionModel().select(0);
 
 
@@ -116,9 +129,17 @@ public class MainWindowController {
 
         tableData = FXCollections.observableArrayList();
 
+        String query = MainWindowQueryTA.getSelectedText();
+
+        if(query.equals("")) {
+            query = MainWindowQueryTA.getText();
+        }
+
+        query = query.replace("\n", " ");
+
         ResultSet result = null;
         try {
-            result = con.executeQuery(MainWindowQueryTA.getText());
+            result = con.executeQuery(query);
         } catch (SQLException e) {
             errorMessagesTA.setText(errorMessagesTA.getText() + "n" + e.getMessage());
         }
