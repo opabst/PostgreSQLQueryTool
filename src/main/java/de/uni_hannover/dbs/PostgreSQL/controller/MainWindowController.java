@@ -169,8 +169,6 @@ public class MainWindowController {
         }
         MainWindowResultTV.getColumns().removeAll();
 
-        MainWindowResultTV.refresh();
-
         MainWindowResultTV.setItems(null);
 
         tableData = FXCollections.observableArrayList();
@@ -226,6 +224,7 @@ public class MainWindowController {
         }
 
         MainWindowResultTV.setItems(tableData);
+        MainWindowResultTV.refresh();
 
     }
 
