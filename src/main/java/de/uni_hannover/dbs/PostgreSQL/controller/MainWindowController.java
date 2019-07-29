@@ -17,6 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -58,6 +59,18 @@ public class MainWindowController {
     @FXML
     private TextArea errorMessagesTA;
 
+    @FXML
+    private TabPane queryResultTabPanel;
+
+    @FXML
+    private Tab resultTab;
+
+    @FXML
+    private Tab queryplanTab;
+
+    @FXML
+    private Tab errormessageTab;
+
     private ObservableList<ObservableList> tableData;
 
     public MainWindowController() {
@@ -93,6 +106,18 @@ public class MainWindowController {
 
         connectionCB.getSelectionModel().select(0);
 
+        runQueryBTN.setDisable(true);
+        MainWindowQueryTA.setOnKeyTyped(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(MainWindowQueryTA.getText().length() == 0) {
+                    runQueryBTN.setDisable(true);
+                } else {
+                    runQueryBTN.setDisable(false);
+                }
+            }
+        });
+
 
     }
 
@@ -124,10 +149,20 @@ public class MainWindowController {
     @FXML
     public void runQuery() {
         DBConnection con = connectionCB.getValue();
+        MainWindowResultTV.getItems().clear();
 
+        for(int i = 0; i <MainWindowResultTV.getColumns().size(); i++) {
+            TableColumn col = (TableColumn)MainWindowResultTV.getColumns().get(i);
+            col.setCellValueFactory(null);
+        }
         MainWindowResultTV.getColumns().removeAll();
 
+        MainWindowResultTV.refresh();
+
+        MainWindowResultTV.setItems(null);
+
         tableData = FXCollections.observableArrayList();
+
 
         String query = MainWindowQueryTA.getSelectedText();
 
@@ -138,18 +173,14 @@ public class MainWindowController {
         query = query.replace("\n", " ");
 
         ResultSet result = null;
-        try {
-            result = con.executeQuery(query);
-        } catch (SQLException e) {
-            errorMessagesTA.setText(errorMessagesTA.getText() + "n" + e.getMessage());
-        }
-
-        // Basierend auf https://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/
-
         ResultSetMetaData metaData = null;
         try {
+            result = con.executeQuery(query);
+
             metaData = result.getMetaData();
 
+
+            // Basierend auf https://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/
             // Aus Metadaten Ergebnistabelle konstruieren -> HEADER
             for(int i = 0; i < metaData.getColumnCount(); i++) {
                 final int j = i;
@@ -160,11 +191,6 @@ public class MainWindowController {
                 MainWindowResultTV.getColumns().addAll(col);
             }
 
-        } catch (SQLException e) {
-            errorMessagesTA.setText(errorMessagesTA.getText() + "n" + e.getMessage());
-        }
-
-        try {
             int columnCount = metaData.getColumnCount();
             while (result.next()) {
                 ObservableList<String> row = FXCollections.observableArrayList();
@@ -180,8 +206,11 @@ public class MainWindowController {
                 }
                 tableData.add(row);
             }
+
+            queryResultTabPanel.getSelectionModel().select(resultTab);
         } catch (SQLException e) {
-            errorMessagesTA.setText(errorMessagesTA.getText() + "n" + e.getMessage());
+            errorMessagesTA.setText(errorMessagesTA.getText() + "\n" + e.getMessage());
+            queryResultTabPanel.getSelectionModel().select(errormessageTab);
         }
 
         MainWindowResultTV.setItems(tableData);
