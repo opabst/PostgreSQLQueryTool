@@ -71,6 +71,12 @@ public class MainWindowController {
     @FXML
     private Tab errormessageTab;
 
+    @FXML
+    private Button explainBTN;
+
+    @FXML
+    private Button analyzeBTN;
+
     private ObservableList<ObservableList> tableData;
 
     public MainWindowController() {
@@ -107,13 +113,19 @@ public class MainWindowController {
         connectionCB.getSelectionModel().select(0);
 
         runQueryBTN.setDisable(true);
+        analyzeBTN.setDisable(true);
+        explainBTN.setDisable(true);
         MainWindowQueryTA.setOnKeyTyped(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 if(MainWindowQueryTA.getText().length() == 0) {
                     runQueryBTN.setDisable(true);
+                    explainBTN.setDisable(true);
+                    analyzeBTN.setDisable(true);
                 } else {
                     runQueryBTN.setDisable(false);
+                    explainBTN.setDisable(false);
+                    analyzeBTN.setDisable(false);
                 }
             }
         });
@@ -215,6 +227,65 @@ public class MainWindowController {
 
         MainWindowResultTV.setItems(tableData);
 
+    }
+
+    @FXML
+    public void analyzeQuery() {
+        DBConnection con = connectionCB.getValue();
+
+        MainWindowExplainPlanTA.setText("");
+
+        String queryText = MainWindowQueryTA.getSelectedText();
+        if(queryText.equals("")) {
+            queryText = MainWindowQueryTA.getText();
+        }
+
+        String query = "EXPLAIN ANALYZE " + queryText;
+        query = query.replace("\n", " ");
+
+        ResultSet result = null;
+        try {
+            result = con.executeQuery(query);
+
+            while(result.next()) {
+                String plan = result.getString(1);
+                MainWindowExplainPlanTA.setText(MainWindowExplainPlanTA.getText() + "\n" + plan);
+
+            }
+            queryResultTabPanel.getSelectionModel().select(queryplanTab);
+        } catch (SQLException e) {
+            errorMessagesTA.setText(errorMessagesTA.getText() + "\n" + e.getMessage());
+            queryResultTabPanel.getSelectionModel().select(errormessageTab);
+        }
+    }
+
+    @FXML
+    public void explainQuery() {
+        DBConnection con = connectionCB.getValue();
+
+        MainWindowExplainPlanTA.setText("");
+
+        String queryText = MainWindowQueryTA.getSelectedText();
+        if(queryText.equals("")) {
+            queryText = MainWindowQueryTA.getText();
+        }
+
+        String query = "EXPLAIN " + queryText;
+        query = query.replace("\n", " ");
+
+        ResultSet result = null;
+        try {
+            result = con.executeQuery(query);
+
+            while(result.next()) {
+                String plan = result.getString(1);
+                MainWindowExplainPlanTA.setText(MainWindowExplainPlanTA.getText() + "\n" + plan);
+            }
+            queryResultTabPanel.getSelectionModel().select(queryplanTab);
+        } catch (SQLException e) {
+            errorMessagesTA.setText(errorMessagesTA.getText() + "\n" + e.getMessage());
+            queryResultTabPanel.getSelectionModel().select(errormessageTab);
+        }
     }
 
 }

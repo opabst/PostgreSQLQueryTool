@@ -78,9 +78,11 @@
                            </children></AnchorPane>
                     </items>
                   </SplitPane>
-                  <ToolBar maxHeight="35.0" maxWidth="200.0" minHeight="35.0" minWidth="200.0" prefHeight="35.0" prefWidth="200.0">
+                  <ToolBar maxHeight="35.0" maxWidth="300.0" minHeight="35.0" minWidth="300.0" prefHeight="35.0" prefWidth="300.0">
                     <items>
                       <Button fx:id="runQueryBTN" mnemonicParsing="false" onAction="#runQuery" text="Ausführen" />
+                        <Button fx:id="explainBTN" mnemonicParsing="false" onAction="#explainQuery" text="EXPLAIN" />
+                        <Button fx:id="analyzeBTN" mnemonicParsing="false" onAction="#analyzeQuery" text="ANALYZE" />
                     </items>
                   </ToolBar>
                </children>
