@@ -4,6 +4,7 @@ import de.uni_hannover.dbs.PostgreSQL.db.ConnectionStore;
 import de.uni_hannover.dbs.PostgreSQL.db.DBConnection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -44,6 +45,9 @@ public class ConnectionWindowController {
     @FXML
     private Button saveAndExitBTN;
 
+    @FXML
+    private Label conStatusLBL;
+
     public ConnectionWindowController() {
 
     }
@@ -60,8 +64,11 @@ public class ConnectionWindowController {
         try {
             testCon = DriverManager.getConnection("jdbc:postgresql://" + hostname + ":" + port + "/" + databaseName, username, password);
             saveAndExitBTN.setDisable(false);
+            conStatusLBL.setText("Verbindungsstatus: Erfolg");
+            conStatusLBL.setStyle("-fx-text-fill: green;");
         } catch (SQLException e) {
-            System.err.print(e.getMessage());
+            conStatusLBL.setText("Verbindungsstatus: Fehler");
+            conStatusLBL.setStyle("-fx-text-fill: red;");
         }
     }
 
