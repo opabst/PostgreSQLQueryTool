@@ -163,11 +163,15 @@ public class MainWindowController {
         DBConnection con = connectionCB.getValue();
         MainWindowResultTV.getItems().clear();
 
+        MainWindowResultTV.getColumns().removeAll();
+
+
+
         for(int i = 0; i <MainWindowResultTV.getColumns().size(); i++) {
             TableColumn col = (TableColumn)MainWindowResultTV.getColumns().get(i);
             col.setCellValueFactory(null);
         }
-        MainWindowResultTV.getColumns().removeAll();
+        MainWindowResultTV.refresh();
 
         MainWindowResultTV.setItems(null);
 
