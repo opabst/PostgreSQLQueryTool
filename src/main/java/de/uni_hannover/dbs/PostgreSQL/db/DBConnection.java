@@ -67,8 +67,7 @@ public class DBConnection {
         Statement stmt = con.createStatement();
         // dynamisch laden funktioniert so nicht
         //stmt.setFetchSize(100);
-        ResultSet rs = stmt.executeQuery(_sqlQuery);
 
-        return rs;
+        return stmt.executeQuery(_sqlQuery);
     }
 }
