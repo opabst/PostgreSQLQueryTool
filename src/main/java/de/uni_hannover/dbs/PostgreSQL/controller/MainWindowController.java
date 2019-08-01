@@ -24,6 +24,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
+import java.util.ArrayList;
+
 //TODO: TreeItems für jede Art von Baumobjekt erstellen
 
 /**
@@ -141,22 +143,10 @@ public class MainWindowController {
     @FXML
     public void runQuery() {
         DBConnection con = connectionCB.getValue();
-        MainWindowResultTV.getItems().clear();
 
         MainWindowResultTV.getColumns().removeAll();
 
-
-
-        for(int i = 0; i <MainWindowResultTV.getColumns().size(); i++) {
-            TableColumn col = (TableColumn)MainWindowResultTV.getColumns().get(i);
-            col.setCellValueFactory(null);
-        }
-        MainWindowResultTV.refresh();
-
-        MainWindowResultTV.setItems(null);
-
         ObservableList<ObservableList> tableData = FXCollections.observableArrayList();
-
 
         String query = MainWindowQueryTA.getSelectedText();
 
@@ -171,17 +161,17 @@ public class MainWindowController {
 
             ResultSetMetaData metaData = result.getMetaData();
 
-
             // Basierend auf https://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/
-            // Aus Metadaten Ergebnistabelle konstruieren -> HEADER
+            ArrayList<TableColumn> tabCols = new ArrayList<>();
             for(int i = 0; i < metaData.getColumnCount(); i++) {
                 final int j = i;
                 TableColumn col = new TableColumn(metaData.getColumnName(i+1));
                 col.setCellValueFactory((Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>)
                         param -> new SimpleStringProperty(param.getValue().get(j).toString()));
-
-                MainWindowResultTV.getColumns().addAll(col);
+                tabCols.add(col);
             }
+
+            MainWindowResultTV.getColumns().setAll(tabCols);
 
             int columnCount = metaData.getColumnCount();
             while (result.next()) {
@@ -205,7 +195,6 @@ public class MainWindowController {
         }
 
         MainWindowResultTV.setItems(tableData);
-        MainWindowResultTV.refresh();
 
     }
 
