@@ -10,15 +10,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -48,9 +44,6 @@ public class MainWindowController {
     private TextArea MainWindowExplainPlanTA;
 
     @FXML
-    private MenuItem fileClose;
-
-    @FXML
     private ComboBox<DBConnection> connectionCB;
 
     @FXML
@@ -77,8 +70,6 @@ public class MainWindowController {
     @FXML
     private Button analyzeBTN;
 
-    private ObservableList<ObservableList> tableData;
-
     public MainWindowController() {
 
     }
@@ -87,25 +78,17 @@ public class MainWindowController {
     public void initialize() {
         TreeViewRootItem rootItem = new TreeViewRootItem("Verbindungen");
 
-        rootItem.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler() {
-            @Override
-            public void handle(Event event) {
-                System.out.println("Maus gemacht");
-            }
-        });
+        //rootItem.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> System.out.println("Maus gemacht"));
 
         DatabaseObjectOutline.setRoot(rootItem);
 
         connectionCB.setItems(ConnectionStore.getInstance().getConnections());
 
-        connectionCB.getItems().addListener(new ListChangeListener<DBConnection>() {
-            @Override
-            public void onChanged(Change<? extends DBConnection> c) {
-                while (c.next()) {
-                    if(c.wasAdded()) {
-                        int cbItems = connectionCB.getItems().size();
-                        connectionCB.getSelectionModel().select(cbItems-1);
-                    }
+        connectionCB.getItems().addListener((ListChangeListener<DBConnection>) c -> {
+            while (c.next()) {
+                if(c.wasAdded()) {
+                    int cbItems = connectionCB.getItems().size();
+                    connectionCB.getSelectionModel().select(cbItems-1);
                 }
             }
         });
@@ -115,18 +98,15 @@ public class MainWindowController {
         runQueryBTN.setDisable(true);
         analyzeBTN.setDisable(true);
         explainBTN.setDisable(true);
-        MainWindowQueryTA.setOnKeyTyped(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if(MainWindowQueryTA.getText().length() == 0) {
-                    runQueryBTN.setDisable(true);
-                    explainBTN.setDisable(true);
-                    analyzeBTN.setDisable(true);
-                } else {
-                    runQueryBTN.setDisable(false);
-                    explainBTN.setDisable(false);
-                    analyzeBTN.setDisable(false);
-                }
+        MainWindowQueryTA.setOnKeyTyped(event -> {
+            if(MainWindowQueryTA.getText().length() == 0) {
+                runQueryBTN.setDisable(true);
+                explainBTN.setDisable(true);
+                analyzeBTN.setDisable(true);
+            } else {
+                runQueryBTN.setDisable(false);
+                explainBTN.setDisable(false);
+                analyzeBTN.setDisable(false);
             }
         });
 
@@ -175,7 +155,7 @@ public class MainWindowController {
 
         MainWindowResultTV.setItems(null);
 
-        tableData = FXCollections.observableArrayList();
+        ObservableList<ObservableList> tableData = FXCollections.observableArrayList();
 
 
         String query = MainWindowQueryTA.getSelectedText();
@@ -186,12 +166,10 @@ public class MainWindowController {
 
         query = query.replace("\n", " ");
 
-        ResultSet result = null;
-        ResultSetMetaData metaData = null;
         try {
-            result = con.executeQuery(query);
+            ResultSet result = con.executeQuery(query);
 
-            metaData = result.getMetaData();
+            ResultSetMetaData metaData = result.getMetaData();
 
 
             // Basierend auf https://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/
@@ -211,7 +189,6 @@ public class MainWindowController {
                 for(int i = 1; i <= columnCount; i++) {
 
                     // Auf NULL-Werte testen und gegebenenfalls durch leeren String ersetzen
-                    String tmp = result.getString(i);
                     if(result.wasNull()) {
                         row.add("");
                     } else {
@@ -246,9 +223,8 @@ public class MainWindowController {
         String query = "EXPLAIN ANALYZE " + queryText;
         query = query.replace("\n", " ");
 
-        ResultSet result = null;
         try {
-            result = con.executeQuery(query);
+            ResultSet result = con.executeQuery(query);
 
             while(result.next()) {
                 String plan = result.getString(1);
@@ -276,9 +252,8 @@ public class MainWindowController {
         String query = "EXPLAIN " + queryText;
         query = query.replace("\n", " ");
 
-        ResultSet result = null;
         try {
-            result = con.executeQuery(query);
+            ResultSet result = con.executeQuery(query);
 
             while(result.next()) {
                 String plan = result.getString(1);

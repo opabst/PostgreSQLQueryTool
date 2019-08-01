@@ -37,9 +37,6 @@ public class ConnectionWindowController {
     private TextField portTF;
 
     @FXML
-    private Button testConnectionBTN;
-
-    @FXML
     private Button rejectInputBTN;
 
     @FXML
@@ -60,9 +57,9 @@ public class ConnectionWindowController {
         String username = usernameTF.getText();
         String password = passwordTF.getText();
 
-        Connection testCon = null;
         try {
-            testCon = DriverManager.getConnection("jdbc:postgresql://" + hostname + ":" + port + "/" + databaseName, username, password);
+            Connection testCon = DriverManager.getConnection("jdbc:postgresql://" + hostname + ":" + port + "/" + databaseName, username, password);
+            testCon.close();
             saveAndExitBTN.setDisable(false);
             conStatusLBL.setText("Verbindungsstatus: Erfolg");
             conStatusLBL.setStyle("-fx-text-fill: green;");
