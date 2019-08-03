@@ -144,9 +144,9 @@ public class MainWindowController {
     public void runQuery() {
         DBConnection con = connectionCB.getValue();
 
-        MainWindowResultTV.getColumns().removeAll();
-
         ObservableList<ObservableList> tableData = FXCollections.observableArrayList();
+
+        MainWindowResultTV.getColumns().removeAll(MainWindowResultTV.getColumns());
 
         String query = MainWindowQueryTA.getSelectedText();
 
@@ -173,18 +173,18 @@ public class MainWindowController {
 
             MainWindowResultTV.getColumns().setAll(tabCols);
 
-            int columnCount = metaData.getColumnCount();
+
             while (result.next()) {
                 ObservableList<String> row = FXCollections.observableArrayList();
-                for(int i = 1; i <= columnCount; i++) {
-
+                for(int i = 1; i <= metaData.getColumnCount(); i++) {
+                    String value = result.getString(i);
                     // Auf NULL-Werte testen und gegebenenfalls durch leeren String ersetzen
                     if(result.wasNull()) {
-                        row.add("");
-                    } else {
-                        row.add(result.getString(i));
+                        value = "";
                     }
+                    row.add(value);
                 }
+
                 tableData.add(row);
             }
 
