@@ -19,12 +19,15 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.Locale;
 
 //TODO: TreeItems für jede Art von Baumobjekt erstellen
 
@@ -78,7 +81,8 @@ public class MainWindowController {
 
     @FXML
     public void initialize() {
-        TreeViewRootItem rootItem = new TreeViewRootItem("Verbindungen");
+        ResourceBundle resBundle = ResourceBundle.getBundle("de/uni_hannover.de/dbs/PostgreSQL/lang_properties/gui_strings", Locale.getDefault());
+        TreeViewRootItem rootItem = new TreeViewRootItem(resBundle.getString("tree_view_root"));
 
         //rootItem.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> System.out.println("Maus gemacht"));
 
