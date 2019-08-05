@@ -1,5 +1,6 @@
 package de.uni_hannover.dbs.PostgreSQL.db;
 
+import de.uni_hannover.dbs.PostgreSQL.db.metadata.Schema;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
