@@ -2,7 +2,6 @@ package de.uni_hannover.dbs.PostgreSQL.controller;
 
 import de.uni_hannover.dbs.PostgreSQL.db.ConnectionStore;
 import de.uni_hannover.dbs.PostgreSQL.db.DBConnection;
-import de.uni_hannover.dbs.PostgreSQL.model.TreeViewRootItem;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -27,7 +26,6 @@ import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.Locale;
 
 //TODO: TreeItems für jede Art von Baumobjekt erstellen
 
@@ -37,7 +35,7 @@ import java.util.Locale;
 public class MainWindowController {
 
     @FXML
-    private TreeView<TreeViewRootItem> DatabaseObjectOutline;
+    private TreeView<String> DatabaseObjectOutline;
 
     @FXML
     private TextArea MainWindowQueryTA;
@@ -105,7 +103,8 @@ public class MainWindowController {
         ResourceBundle resBundle = ResourceBundle.getBundle("de.uni_hannover.dbs.PostgreSQL.lang_properties.guistrings");
 
         // Lokalisierte GUI-Texte einsetzen
-        TreeViewRootItem rootItem = new TreeViewRootItem(resBundle.getString("tree_view_root"));
+        TreeItem<String> rootItem = new TreeItem<>(resBundle.getString("tree_view_root"));
+        rootItem.setExpanded(true);
 
         resultTab.setText(resBundle.getString("result_tab"));
         queryplanTab.setText(resBundle.getString("query_plan_tab"));
@@ -131,11 +130,17 @@ public class MainWindowController {
 
         connectionCB.setItems(ConnectionStore.getInstance().getConnections());
 
+        // Listener der zuletzt hinzugefügte Verbindung als aktuelle setzt und zm TreeView hinzufügt.
         connectionCB.getItems().addListener((ListChangeListener<DBConnection>) c -> {
             while (c.next()) {
                 if (c.wasAdded()) {
                     int cbItems = connectionCB.getItems().size();
                     connectionCB.getSelectionModel().select(cbItems - 1);
+
+                    DBConnection con = connectionCB.getItems().get(connectionCB.getItems().size()-1);
+
+                    // Verbindung hinzufügen als Oberobjekt des Datenbankobjektbaums
+                    DatabaseObjectOutline.getRoot().getChildren().add(new TreeItem<>(con.getConnectionname()));
                 }
             }
         });
