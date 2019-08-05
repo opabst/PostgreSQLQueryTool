@@ -23,7 +23,7 @@
           <RowConstraints maxHeight="270.0" minHeight="270.0" prefHeight="270.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label alignment="CENTER" prefHeight="17.0" prefWidth="600.0" text="Verbindungseinstellungen">
+            <Label fx:id="mainLabel" alignment="CENTER" prefHeight="17.0" prefWidth="600.0" text="Verbindungseinstellungen">
                <font>
                   <Font name="System Bold" size="30.0" />
                </font>
@@ -43,14 +43,14 @@
                   <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label prefHeight="17.0" prefWidth="173.0" text="Passwort:" GridPane.rowIndex="5">
+                  <Label fx:id="passwordLBL" prefHeight="17.0" prefWidth="173.0" text="Passwort:" GridPane.rowIndex="5">
                      <padding>
                         <Insets left="5.0" right="5.0" />
                      </padding>
                      <GridPane.margin>
                         <Insets left="5.0" right="5.0" />
                      </GridPane.margin></Label>
-                  <Label text="Benutzername:" GridPane.rowIndex="4">
+                  <Label fx:id="usernameLBL" text="Benutzername:" GridPane.rowIndex="4">
                      <padding>
                         <Insets left="5.0" right="5.0" />
                      </padding>
@@ -89,7 +89,7 @@
                         <Insets left="5.0" right="5.0" />
                      </GridPane.margin>
                   </PasswordField>
-                  <Label text="Datenbank:" GridPane.rowIndex="3">
+                  <Label fx:id="databasenameLBL" text="Datenbank:" GridPane.rowIndex="3">
                      <padding>
                         <Insets left="5.0" right="5.0" />
                      </padding>
@@ -97,7 +97,7 @@
                         <Insets left="5.0" right="5.0" />
                      </GridPane.margin>
                   </Label>
-                   <Label text="Port:" GridPane.rowIndex="2">
+                   <Label fx:id="portLBL" text="Port:" GridPane.rowIndex="2">
                        <padding>
                            <Insets left="5.0" right="5.5" />
                        </padding>
@@ -105,7 +105,7 @@
                            <Insets left="5.0" right="5.0" />
                        </GridPane.margin>
                    </Label>
-                  <Label text="Hostname:" GridPane.rowIndex="1">
+                  <Label fx:id="hostnameLBL" text="Hostname:" GridPane.rowIndex="1">
                      <padding>
                         <Insets left="5.0" right="5.0" />
                      </padding>
@@ -113,7 +113,7 @@
                         <Insets left="5.0" right="5.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label contentDisplay="CENTER" prefHeight="17.0" prefWidth="179.0" text="Verbindungsname:" textAlignment="RIGHT">
+                  <Label fx:id="connectionnameLBL" contentDisplay="CENTER" prefHeight="17.0" prefWidth="179.0" text="Verbindungsname:" textAlignment="RIGHT">
                      <padding>
                         <Insets left="5.0" right="5.0" />
                      </padding>
@@ -133,7 +133,7 @@
                      <children>
                         <Button fx:id="testConnectionBTN" mnemonicParsing="false" onAction="#testConnection" text="Testen" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                         <Button fx:id="rejectInputBTN" mnemonicParsing="false" onAction="#reject" text="Verwerfen" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                        <Button fx:id="saveAndExitBTN" disable="true" mnemonicParsing="false" onAction="#saveAndExit" text="Speichern und Beenden" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                        <Button fx:id="saveAndCloseBTN" disable="true" mnemonicParsing="false" onAction="#saveAndExit" text="Speichern und Beenden" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                      </children>
                   </GridPane>
                   <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="6">

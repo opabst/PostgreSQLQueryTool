@@ -81,7 +81,9 @@ public class MainWindowController {
 
     @FXML
     public void initialize() {
-        ResourceBundle resBundle = ResourceBundle.getBundle("de/uni_hannover.de/dbs/PostgreSQL/lang_properties/gui_strings", Locale.getDefault());
+        ResourceBundle resBundle = ResourceBundle.getBundle("de.uni_hannover.dbs.PostgreSQL.lang_properties.guistrings");
+
+        // Lokalisierte GUI-Texte einsetzen
         TreeViewRootItem rootItem = new TreeViewRootItem(resBundle.getString("tree_view_root"));
 
         //rootItem.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> System.out.println("Maus gemacht"));
