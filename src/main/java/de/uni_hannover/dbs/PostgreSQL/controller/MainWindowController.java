@@ -75,6 +75,27 @@ public class MainWindowController {
     @FXML
     private Button analyzeBTN;
 
+    @FXML
+    private Menu fileMENU;
+
+    @FXML
+    private MenuItem fileAddConnectionITM;
+
+    @FXML
+    private MenuItem fileCloseITM;
+
+    @FXML
+    private Menu editMENU;
+
+    @FXML
+    private MenuItem editDeleteITM;
+
+    @FXML
+    private Menu helpMENU;
+
+    @FXML
+    private MenuItem helpAboutITM;
+
     public MainWindowController() {
 
     }
@@ -86,6 +107,24 @@ public class MainWindowController {
         // Lokalisierte GUI-Texte einsetzen
         TreeViewRootItem rootItem = new TreeViewRootItem(resBundle.getString("tree_view_root"));
 
+        resultTab.setText(resBundle.getString("result_tab"));
+        queryplanTab.setText(resBundle.getString("query_plan_tab"));
+        errormessageTab.setText(resBundle.getString("error_messages_tab"));
+
+        runQueryBTN.setText(resBundle.getString("query_execute_button"));
+        explainBTN.setText(resBundle.getString("query_explain_button"));
+        analyzeBTN.setText(resBundle.getString("query_analyze_button"));
+
+        fileMENU.setText(resBundle.getString("menu_file_submenu"));
+        fileAddConnectionITM.setText(resBundle.getString("menu_file_submenu_add_connection"));
+        fileCloseITM.setText(resBundle.getString("menu_file_submenu_close"));
+
+        editMENU.setText(resBundle.getString("menu_edit_submenu"));
+        editDeleteITM.setText(resBundle.getString("menu_edit_submenu_delete"));
+
+        helpMENU.setText(resBundle.getString("menu_help_submenu"));
+        helpAboutITM.setText(resBundle.getString("menu_help_submenu_about"));
+
         //rootItem.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> System.out.println("Maus gemacht"));
 
         DatabaseObjectOutline.setRoot(rootItem);
@@ -94,9 +133,9 @@ public class MainWindowController {
 
         connectionCB.getItems().addListener((ListChangeListener<DBConnection>) c -> {
             while (c.next()) {
-                if(c.wasAdded()) {
+                if (c.wasAdded()) {
                     int cbItems = connectionCB.getItems().size();
-                    connectionCB.getSelectionModel().select(cbItems-1);
+                    connectionCB.getSelectionModel().select(cbItems - 1);
                 }
             }
         });
@@ -107,7 +146,7 @@ public class MainWindowController {
         analyzeBTN.setDisable(true);
         explainBTN.setDisable(true);
         MainWindowQueryTA.setOnKeyTyped(event -> {
-            if(MainWindowQueryTA.getText().length() == 0) {
+            if (MainWindowQueryTA.getText().length() == 0) {
                 runQueryBTN.setDisable(true);
                 explainBTN.setDisable(true);
                 analyzeBTN.setDisable(true);
@@ -142,7 +181,7 @@ public class MainWindowController {
         connectionWindow.setScene(scene);
 
         connectionWindow.initModality(Modality.APPLICATION_MODAL);
-        connectionWindow.initOwner(((MenuItem)event.getTarget()).getParentPopup().getOwnerWindow());
+        connectionWindow.initOwner(((MenuItem) event.getTarget()).getParentPopup().getOwnerWindow());
         connectionWindow.showAndWait();
     }
 
@@ -156,7 +195,7 @@ public class MainWindowController {
 
         String query = MainWindowQueryTA.getSelectedText();
 
-        if(query.equals("")) {
+        if (query.equals("")) {
             query = MainWindowQueryTA.getText();
         }
 
@@ -169,9 +208,9 @@ public class MainWindowController {
 
             // Basierend auf https://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/
             ArrayList<TableColumn> tabCols = new ArrayList<>();
-            for(int i = 0; i < metaData.getColumnCount(); i++) {
+            for (int i = 0; i < metaData.getColumnCount(); i++) {
                 final int j = i;
-                TableColumn col = new TableColumn(metaData.getColumnName(i+1));
+                TableColumn col = new TableColumn(metaData.getColumnName(i + 1));
                 col.setCellValueFactory((Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>)
                         param -> new SimpleStringProperty(param.getValue().get(j).toString()));
                 tabCols.add(col);
@@ -182,10 +221,10 @@ public class MainWindowController {
 
             while (result.next()) {
                 ObservableList<String> row = FXCollections.observableArrayList();
-                for(int i = 1; i <= metaData.getColumnCount(); i++) {
+                for (int i = 1; i <= metaData.getColumnCount(); i++) {
                     String value = result.getString(i);
                     // Auf NULL-Werte testen und gegebenenfalls durch leeren String ersetzen
-                    if(result.wasNull()) {
+                    if (result.wasNull()) {
                         value = "";
                     }
                     row.add(value);
@@ -211,7 +250,7 @@ public class MainWindowController {
         MainWindowExplainPlanTA.setText("");
 
         String queryText = MainWindowQueryTA.getSelectedText();
-        if(queryText.equals("")) {
+        if (queryText.equals("")) {
             queryText = MainWindowQueryTA.getText();
         }
 
@@ -221,7 +260,7 @@ public class MainWindowController {
         try {
             ResultSet result = con.executeQuery(query);
 
-            while(result.next()) {
+            while (result.next()) {
                 String plan = result.getString(1);
                 MainWindowExplainPlanTA.setText(MainWindowExplainPlanTA.getText() + "\n" + plan);
 
@@ -240,7 +279,7 @@ public class MainWindowController {
         MainWindowExplainPlanTA.setText("");
 
         String queryText = MainWindowQueryTA.getSelectedText();
-        if(queryText.equals("")) {
+        if (queryText.equals("")) {
             queryText = MainWindowQueryTA.getText();
         }
 
@@ -250,7 +289,7 @@ public class MainWindowController {
         try {
             ResultSet result = con.executeQuery(query);
 
-            while(result.next()) {
+            while (result.next()) {
                 String plan = result.getString(1);
                 MainWindowExplainPlanTA.setText(MainWindowExplainPlanTA.getText() + "\n" + plan);
             }
