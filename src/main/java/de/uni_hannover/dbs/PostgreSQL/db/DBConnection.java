@@ -1,9 +1,10 @@
 package de.uni_hannover.dbs.PostgreSQL.db;
 
 // TODO: Ausnahmen behandeln
+import java.io.Serializable;
 import java.sql.*;
 
-public class DBConnection {
+public class DBConnection implements Serializable {
 
     Connection con = null;
 
@@ -69,5 +70,15 @@ public class DBConnection {
         //stmt.setFetchSize(100);
 
         return stmt.executeQuery(_sqlQuery);
+    }
+
+    public void disconnect() {
+        try {
+            if(con != null) {
+                con.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,5 +1,7 @@
 package de.uni_hannover.dbs.PostgreSQL;
 
+import de.uni_hannover.dbs.PostgreSQL.db.ConnectionStore;
+import de.uni_hannover.dbs.PostgreSQL.db.DBConnection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,5 +28,11 @@ public class PostgresQueryTool extends Application {
 
     public static Stage getPrimaryStage() {
         return primaryStage;
+    }
+
+    @Override
+    public void stop() {
+        ConnectionStore.getInstance().closeAllConnections();
+        ConnectionStore.getInstance().writeCredentialsToDisk();
     }
 }

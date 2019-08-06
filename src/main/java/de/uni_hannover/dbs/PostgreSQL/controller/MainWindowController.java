@@ -124,8 +124,6 @@ public class MainWindowController {
         helpMENU.setText(resBundle.getString("menu_help_submenu"));
         helpAboutITM.setText(resBundle.getString("menu_help_submenu_about"));
 
-        //rootItem.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> System.out.println("Maus gemacht"));
-
         DatabaseObjectOutline.setRoot(rootItem);
 
         connectionCB.setItems(ConnectionStore.getInstance().getConnections());
@@ -145,7 +143,7 @@ public class MainWindowController {
             }
         });
 
-        connectionCB.getSelectionModel().select(0);
+        connectionCB.getSelectionModel().select(connectionCB.getItems().size()-1);
 
         runQueryBTN.setDisable(true);
         analyzeBTN.setDisable(true);
@@ -162,12 +160,11 @@ public class MainWindowController {
             }
         });
 
-
+        ConnectionStore.getInstance().readCredentialsFromDisk();
     }
 
     @FXML
     public void close() {
-        // TODO: eventuell überdenken; vielleicht ist hier aufräumen erforderlich (Verbindung schließen, Quelltext speichern,...)
         Platform.exit();
     }
 
