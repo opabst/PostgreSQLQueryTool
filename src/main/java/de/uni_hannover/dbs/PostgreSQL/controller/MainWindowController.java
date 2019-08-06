@@ -100,6 +100,7 @@ public class MainWindowController {
 
     @FXML
     public void initialize() {
+        ConnectionStore.getInstance().readCredentialsFromDisk();
         ResourceBundle resBundle = ResourceBundle.getBundle("de.uni_hannover.dbs.PostgreSQL.lang_properties.guistrings");
 
         // Lokalisierte GUI-Texte einsetzen
@@ -126,7 +127,7 @@ public class MainWindowController {
 
         DatabaseObjectOutline.setRoot(rootItem);
 
-        connectionCB.setItems(ConnectionStore.getInstance().getConnections());
+
 
         // Listener der zuletzt hinzugefügte Verbindung als aktuelle setzt und zm TreeView hinzufügt.
         connectionCB.getItems().addListener((ListChangeListener<DBConnection>) c -> {
@@ -142,6 +143,8 @@ public class MainWindowController {
                 }
             }
         });
+
+        connectionCB.setItems(ConnectionStore.getInstance().getConnections());
 
         connectionCB.getSelectionModel().select(connectionCB.getItems().size()-1);
 
@@ -160,7 +163,7 @@ public class MainWindowController {
             }
         });
 
-        ConnectionStore.getInstance().readCredentialsFromDisk();
+
     }
 
     @FXML
