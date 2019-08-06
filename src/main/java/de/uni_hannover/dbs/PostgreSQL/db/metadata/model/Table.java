@@ -1,9 +1,10 @@
-package de.uni_hannover.dbs.PostgreSQL.db.metadata;
+package de.uni_hannover.dbs.PostgreSQL.db.metadata.model;
 
-import de.uni_hannover.dbs.PostgreSQL.db.metadata.table.Column;
-import de.uni_hannover.dbs.PostgreSQL.db.metadata.table.Constraint;
-import de.uni_hannover.dbs.PostgreSQL.db.metadata.table.Index;
-import de.uni_hannover.dbs.PostgreSQL.db.metadata.table.Trigger;
+import de.uni_hannover.dbs.PostgreSQL.db.metadata.model.DatabaseObject;
+import de.uni_hannover.dbs.PostgreSQL.db.metadata.model.table.Column;
+import de.uni_hannover.dbs.PostgreSQL.db.metadata.model.table.Constraint;
+import de.uni_hannover.dbs.PostgreSQL.db.metadata.model.table.Index;
+import de.uni_hannover.dbs.PostgreSQL.db.metadata.model.table.Trigger;
 
 import java.util.ArrayList;
 
@@ -11,10 +12,10 @@ public class Table extends DatabaseObject {
     private final ArrayList<Column> columns;
     private final ArrayList<Constraint> constraints;
     private final ArrayList<Index> indizes;
-    private final ArrayList<Trigger> triggers;
+    private final ArrayList<de.uni_hannover.dbs.PostgreSQL.db.metadata.model.table.Trigger> triggers;
 
     public Table(String _objectName, String _owner, String _acl, ArrayList<Column> _columns, ArrayList<Constraint> _constraints,
-                 ArrayList<Index> _indices, ArrayList<Trigger> _triggers) {
+                 ArrayList<Index> _indices, ArrayList<de.uni_hannover.dbs.PostgreSQL.db.metadata.model.table.Trigger> _triggers) {
         super(_objectName, _owner, _acl);
         columns = _columns;
         constraints = _constraints;

@@ -1,4 +1,6 @@
-package de.uni_hannover.dbs.PostgreSQL.db.metadata;
+package de.uni_hannover.dbs.PostgreSQL.db.metadata.model;
+
+import de.uni_hannover.dbs.PostgreSQL.db.metadata.model.DatabaseObject;
 
 public class Sequence extends DatabaseObject {
     private final Integer currentValue;

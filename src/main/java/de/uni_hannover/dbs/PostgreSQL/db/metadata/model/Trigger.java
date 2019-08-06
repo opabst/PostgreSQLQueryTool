@@ -1,4 +1,4 @@
-package de.uni_hannover.dbs.PostgreSQL.db.metadata;
+package de.uni_hannover.dbs.PostgreSQL.db.metadata.model;
 
 import java.util.ArrayList;
 

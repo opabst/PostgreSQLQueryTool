@@ -1,4 +1,4 @@
-package de.uni_hannover.dbs.PostgreSQL.db.metadata.table;
+package de.uni_hannover.dbs.PostgreSQL.db.metadata.model.table;
 
 public class Trigger {
     private final String triggerName;

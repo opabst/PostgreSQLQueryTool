@@ -1,6 +1,7 @@
-package de.uni_hannover.dbs.PostgreSQL.db;
+package de.uni_hannover.dbs.PostgreSQL.db.metadata;
 
-import de.uni_hannover.dbs.PostgreSQL.db.metadata.*;
+import de.uni_hannover.dbs.PostgreSQL.db.DBConnection;
+import de.uni_hannover.dbs.PostgreSQL.db.metadata.model.Schema;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,5 +29,9 @@ public class MetadataStore {
 
     public static ArrayList<Schema> getAllSchemas() {
         return new ArrayList<>(schemas.values());
+    }
+
+    public static void populateMetadataForConnection(DBConnection _con) {
+
     }
 }

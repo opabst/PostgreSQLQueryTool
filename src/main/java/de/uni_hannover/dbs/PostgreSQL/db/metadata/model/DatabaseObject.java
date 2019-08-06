@@ -1,4 +1,4 @@
-package de.uni_hannover.dbs.PostgreSQL.db.metadata;
+package de.uni_hannover.dbs.PostgreSQL.db.metadata.model;
 
 public class DatabaseObject {
     private final String objectName;
