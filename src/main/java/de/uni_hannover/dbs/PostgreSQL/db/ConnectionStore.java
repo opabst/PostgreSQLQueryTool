@@ -2,6 +2,7 @@ package de.uni_hannover.dbs.PostgreSQL.db;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -58,8 +59,16 @@ public class ConnectionStore {
             objOut.writeObject(connections);
 
         } catch (FileNotFoundException e) {
+            Alert fnfeAlert = new Alert(Alert.AlertType.ERROR);
+            fnfeAlert.setHeaderText("Speichern der Zugangsdaten fehlgeschlagen!");
+            fnfeAlert.setContentText("Datei konnte " + CONFIG_PATH + CRED_FILE + "nicht gefunden werden!");
+            fnfeAlert.show();
             return false;
         } catch (IOException e) {
+            Alert ioeAlert = new Alert(Alert.AlertType.ERROR);
+            ioeAlert.setHeaderText("IO-Fehler");
+            ioeAlert.setContentText("Zugriff auf Datei " + CONFIG_PATH + CRED_FILE + " fehlgeschlagen!");
+            ioeAlert.show();
             return false;
         } finally {
             if(objOut != null) {
@@ -92,10 +101,22 @@ public class ConnectionStore {
             conList = FXCollections.observableArrayList(connections);
 
         } catch (FileNotFoundException e) {
+            Alert fnfeAlert = new Alert(Alert.AlertType.ERROR);
+            fnfeAlert.setHeaderText("Speichern der Zugangsdaten fehlgeschlagen!");
+            fnfeAlert.setContentText("Datei konnte " + CONFIG_PATH + CRED_FILE + "nicht gefunden werden!");
+            fnfeAlert.show();
             return false;
         } catch (IOException e) {
+            Alert ioeAlert = new Alert(Alert.AlertType.ERROR);
+            ioeAlert.setHeaderText("IO-Fehler");
+            ioeAlert.setContentText("Zugriff auf Datei " + CONFIG_PATH + CRED_FILE + " fehlgeschlagen!");
+            ioeAlert.show();
             return false;
         } catch (ClassNotFoundException e) {
+            Alert cnfeAlert = new Alert(Alert.AlertType.ERROR);
+            cnfeAlert.setHeaderText("Klasse konnte nicht gefunden werden!");
+            cnfeAlert.setContentText("Klasse ArrayList<DBConnection> konnte nicht gefunden werden!");
+            cnfeAlert.show();
             e.printStackTrace();
         } finally {
             if (objIn != null) {
