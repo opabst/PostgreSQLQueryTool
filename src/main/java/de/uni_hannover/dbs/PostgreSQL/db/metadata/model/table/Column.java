@@ -4,15 +4,13 @@ public class Column {
     private final Integer columnNumber;
     private final String columnName;
     private final String dataType;
-    private final Boolean isPrimaryKey;
-    private final Boolean isForeignKey;
+    private final Boolean isNullable;
 
-    public Column(Integer _colNum, String _colName, String _dataType, Boolean _isPrimaryKey, Boolean _isForeignKey) {
+    public Column(Integer _colNum, String _colName, String _dataType, Boolean _isNullable) {
         columnNumber = _colNum;
         columnName = _colName;
         dataType = _dataType;
-        isPrimaryKey = _isPrimaryKey;
-        isForeignKey = _isForeignKey;
+        isNullable = _isNullable;
     }
 
     public Integer getColumnNumber() {
@@ -27,11 +25,7 @@ public class Column {
         return dataType;
     }
 
-    public Boolean getPrimaryKey() {
-        return isPrimaryKey;
-    }
-
-    public Boolean getForeignKey() {
-        return isForeignKey;
+    public Boolean getIsNullable() {
+        return isNullable;
     }
 }

@@ -14,6 +14,20 @@ public class View extends DatabaseObject {
         isMaterialized = _isMaterialized;
     }
 
+    public View(String _objectName, String _viewDefinition) {
+        super(_objectName, "", "");
+
+        viewDefinition = _viewDefinition;
+        isMaterialized = false;
+    }
+
+    public View(String _objectName, String _viewDefinition, Boolean _isMatrialized) {
+        super(_objectName, "", "");
+
+        viewDefinition = _viewDefinition;
+        isMaterialized = _isMatrialized;
+    }
+
     public String getViewDefinition() {
         return viewDefinition;
     }

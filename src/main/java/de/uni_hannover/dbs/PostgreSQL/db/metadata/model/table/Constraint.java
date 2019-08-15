@@ -19,6 +19,16 @@ public class Constraint {
         isValid = _isValid;
     }
 
+    public Constraint(String _objectname, String _references) {
+        objectName = _objectname;
+        references = _references;
+        matchType = "";
+        onChange = "";
+        onDelete = "";
+        isDeferrable = false;
+        isValid = false;
+    }
+
     public String getObjectName() {
         return objectName;
     }

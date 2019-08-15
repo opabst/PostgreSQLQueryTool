@@ -1,6 +1,5 @@
 package de.uni_hannover.dbs.PostgreSQL.db.metadata.model;
 
-import de.uni_hannover.dbs.PostgreSQL.db.metadata.model.DatabaseObject;
 
 import java.util.ArrayList;
 
@@ -11,6 +10,17 @@ public class Function extends DatabaseObject {
     private final String returnType;
     private final String language;
     private final String functionDefinition;
+
+    public Function(String _objectName, String _returnType, String _language, String _functionDefinition) {
+        super(_objectName, "", "");
+
+        argumentCount = -1;
+        arguments = new ArrayList<>();
+        signatureArguments = new ArrayList<>();
+        returnType = _returnType;
+        language = _language;
+        functionDefinition = _functionDefinition;
+    }
 
     public Function(String _objectName, String _owner, String _acl, Integer _argumentCount, ArrayList<String> _arguments,
                     ArrayList<String> _signatureArguments, String _returnType, String _language, String _functionDefinition) {

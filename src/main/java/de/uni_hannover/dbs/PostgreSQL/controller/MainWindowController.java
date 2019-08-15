@@ -2,6 +2,7 @@ package de.uni_hannover.dbs.PostgreSQL.controller;
 
 import de.uni_hannover.dbs.PostgreSQL.db.ConnectionStore;
 import de.uni_hannover.dbs.PostgreSQL.db.DBConnection;
+import de.uni_hannover.dbs.PostgreSQL.db.metadata.MetadataStore;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -163,7 +164,7 @@ public class MainWindowController {
             }
         });
 
-
+        //MetadataStore.getInstance().populateMetadataForConnection(connectionCB.getSelectionModel().getSelectedItem()); leads to crash
     }
 
     @FXML
