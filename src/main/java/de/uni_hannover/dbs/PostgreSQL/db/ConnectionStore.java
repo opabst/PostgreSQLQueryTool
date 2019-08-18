@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class ConnectionStore {
     private static ConnectionStore _instance;
 
-    private static final String CONFIG_PATH = "~/.pqt/";
+    private static final String CONFIG_PATH = ".pqt/";
     private static final String CRED_FILE = "pqt_credentials.ser";
 
     private ObservableList<DBConnection> conList;
@@ -43,11 +43,14 @@ public class ConnectionStore {
     }
 
     public Boolean writeCredentialsToDisk() {
+        String homeDirectory = System.getProperty("user.home");
+        String filePath = homeDirectory + "/" + CONFIG_PATH + CRED_FILE;
+        String fileDir = homeDirectory + "/" + CONFIG_PATH;
         FileOutputStream fileOut = null;
         ObjectOutputStream objOut = null;
         try {
-            File path = new File(CONFIG_PATH);
-            File file = new File(CONFIG_PATH + CRED_FILE);
+            File path = new File(fileDir);
+            File file = new File(filePath);
             if(!path.exists()) {
                 path.mkdirs();
             }
@@ -61,13 +64,13 @@ public class ConnectionStore {
         } catch (FileNotFoundException e) {
             Alert fnfeAlert = new Alert(Alert.AlertType.ERROR);
             fnfeAlert.setHeaderText("Speichern der Zugangsdaten fehlgeschlagen!");
-            fnfeAlert.setContentText("Datei konnte " + CONFIG_PATH + CRED_FILE + "nicht gefunden werden!");
+            fnfeAlert.setContentText("Datei konnte " + fileDir + "nicht gefunden werden!");
             fnfeAlert.show();
             return false;
         } catch (IOException e) {
             Alert ioeAlert = new Alert(Alert.AlertType.ERROR);
             ioeAlert.setHeaderText("IO-Fehler");
-            ioeAlert.setContentText("Zugriff auf Datei " + CONFIG_PATH + CRED_FILE + " fehlgeschlagen!");
+            ioeAlert.setContentText("Zugriff auf Datei " + filePath + " fehlgeschlagen!");
             ioeAlert.show();
             return false;
         } finally {
@@ -90,10 +93,13 @@ public class ConnectionStore {
     }
 
     public Boolean readCredentialsFromDisk() {
+        String homeDirectory = System.getProperty("user.home");
+        String filePath = homeDirectory + "/" + CONFIG_PATH + CRED_FILE;
+        String fileDir = homeDirectory + "/" + CONFIG_PATH;
         FileInputStream fileIn = null;
         ObjectInputStream objIn = null;
         try {
-            File path = new File(CONFIG_PATH + CRED_FILE);
+            File path = new File(filePath);
             fileIn = new FileInputStream(path);
             objIn = new ObjectInputStream(fileIn);
 
@@ -101,15 +107,16 @@ public class ConnectionStore {
             conList = FXCollections.observableArrayList(connections);
 
         } catch (FileNotFoundException e) {
+            // TODO: Evtl. annehmen, dass Anwendung noch nicht gestartet wurde? Also keinen Fehler werfen?
             Alert fnfeAlert = new Alert(Alert.AlertType.ERROR);
-            fnfeAlert.setHeaderText("Speichern der Zugangsdaten fehlgeschlagen!");
-            fnfeAlert.setContentText("Datei konnte " + CONFIG_PATH + CRED_FILE + "nicht gefunden werden!");
+            fnfeAlert.setHeaderText("Lesen der Zugangsdaten fehlgeschlagen!");
+            fnfeAlert.setContentText("Datei konnte " + fileDir + "nicht gefunden werden!");
             fnfeAlert.show();
             return false;
         } catch (IOException e) {
             Alert ioeAlert = new Alert(Alert.AlertType.ERROR);
             ioeAlert.setHeaderText("IO-Fehler");
-            ioeAlert.setContentText("Zugriff auf Datei " + CONFIG_PATH + CRED_FILE + " fehlgeschlagen!");
+            ioeAlert.setContentText("Zugriff auf Datei " + filePath + " fehlgeschlagen!");
             ioeAlert.show();
             return false;
         } catch (ClassNotFoundException e) {
