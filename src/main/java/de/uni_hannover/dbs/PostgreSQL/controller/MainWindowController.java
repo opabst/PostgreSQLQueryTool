@@ -2,7 +2,10 @@ package de.uni_hannover.dbs.PostgreSQL.controller;
 
 import de.uni_hannover.dbs.PostgreSQL.db.ConnectionStore;
 import de.uni_hannover.dbs.PostgreSQL.db.DBConnection;
-import de.uni_hannover.dbs.PostgreSQL.db.metadata.MetadataStore;
+import de.uni_hannover.dbs.PostgreSQL.db.metadata.model.DatabaseObject;
+import de.uni_hannover.dbs.PostgreSQL.db.metadata.model.EmptyObject;
+import de.uni_hannover.dbs.PostgreSQL.model.DBOutlineTreeItem;
+import de.uni_hannover.dbs.PostgreSQL.model.TreeItemType;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -36,7 +39,7 @@ import java.util.ResourceBundle;
 public class MainWindowController {
 
     @FXML
-    private TreeView<String> DatabaseObjectOutline;
+    private TreeView DatabaseObjectOutline;
 
     @FXML
     private TextArea MainWindowQueryTA;
@@ -104,10 +107,6 @@ public class MainWindowController {
         ConnectionStore.getInstance().readCredentialsFromDisk();
         ResourceBundle resBundle = ResourceBundle.getBundle("de.uni_hannover.dbs.PostgreSQL.lang_properties.guistrings");
 
-        // Lokalisierte GUI-Texte einsetzen
-        TreeItem<String> rootItem = new TreeItem<>(resBundle.getString("tree_view_root"));
-        rootItem.setExpanded(true);
-
         resultTab.setText(resBundle.getString("result_tab"));
         queryplanTab.setText(resBundle.getString("query_plan_tab"));
         errormessageTab.setText(resBundle.getString("error_messages_tab"));
@@ -126,9 +125,18 @@ public class MainWindowController {
         helpMENU.setText(resBundle.getString("menu_help_submenu"));
         helpAboutITM.setText(resBundle.getString("menu_help_submenu_about"));
 
+        DBOutlineTreeItem rootItem = new DBOutlineTreeItem(resBundle.getString("tree_view_root"), TreeItemType.ROOT);
+        rootItem.setExpanded(true);
+
         DatabaseObjectOutline.setRoot(rootItem);
 
+        ArrayList<DBOutlineTreeItem> connections = new ArrayList();
 
+        for(DBConnection con: ConnectionStore.getInstance().getConnections()) {
+            connections.add(new DBOutlineTreeItem(con.getConnectionname(), TreeItemType.CONNECTION));
+        }
+
+        DatabaseObjectOutline.getRoot().getChildren().setAll(connections);
 
         // Listener der zuletzt hinzugefügte Verbindung als aktuelle setzt und zm TreeView hinzufügt.
         connectionCB.getItems().addListener((ListChangeListener<DBConnection>) c -> {
@@ -136,11 +144,6 @@ public class MainWindowController {
                 if (c.wasAdded()) {
                     int cbItems = connectionCB.getItems().size();
                     connectionCB.getSelectionModel().select(cbItems - 1);
-
-                    DBConnection con = connectionCB.getItems().get(connectionCB.getItems().size()-1);
-
-                    // Verbindung hinzufügen als Oberobjekt des Datenbankobjektbaums
-                    DatabaseObjectOutline.getRoot().getChildren().add(new TreeItem<>(con.getConnectionname()));
                 }
             }
         });
@@ -164,7 +167,7 @@ public class MainWindowController {
             }
         });
 
-        //MetadataStore.getInstance().populateMetadataForConnection(connectionCB.getSelectionModel().getSelectedItem()); leads to crash
+        //MetadataStore.getInstance().populateMetadataForConnection(connectionCB.getSelectionModel().getSelectedItem());
     }
 
     @FXML

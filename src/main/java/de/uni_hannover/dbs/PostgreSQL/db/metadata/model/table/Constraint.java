@@ -1,6 +1,6 @@
 package de.uni_hannover.dbs.PostgreSQL.db.metadata.model.table;
 
-public class Constraint {
+public class Constraint extends TableObject {
     private final String objectName;
     private final String references;
     private final String matchType;
@@ -55,5 +55,15 @@ public class Constraint {
 
     public Boolean getValid() {
         return isValid;
+    }
+
+    @Override
+    public String getTableObjectName() {
+        return objectName;
+    }
+
+    @Override
+    public TableObjectTypes getTableObjectType() {
+        return TableObjectTypes.CONSTRAINT;
     }
 }

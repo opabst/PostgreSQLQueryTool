@@ -35,4 +35,9 @@ public class View extends DatabaseObject {
     public Boolean getIsMaterialized() {
         return isMaterialized;
     }
+
+    @Override
+    public DatabaseObjectTypes getObjectType() {
+        return DatabaseObjectTypes.VIEW;
+    }
 }

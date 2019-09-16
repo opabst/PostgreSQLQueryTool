@@ -45,4 +45,9 @@ public class Trigger extends DatabaseObject {
     public String getTriggerDefinition() {
         return triggerDefinition;
     }
+
+    @Override
+    public DatabaseObjectTypes getObjectType() {
+        return DatabaseObjectTypes.TRIGGER;
+    }
 }

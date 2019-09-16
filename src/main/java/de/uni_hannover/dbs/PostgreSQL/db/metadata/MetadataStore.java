@@ -40,7 +40,8 @@ public class MetadataStore {
 
     public void populateMetadataForConnection(DBConnection _con) {
         try {
-            ResultSet rs = _con.executeQuery("SELECT schema_name, schema_owner FROM information_schema.schemata WHERE schema_name NOT IN ('information_schema', 'pg_catalog')");
+            ResultSet rs = _con.executeQuery("SELECT schema_name, schema_owner FROM information_schema.schemata " +
+                    "WHERE schema_name NOT IN ('information_schema', 'pg_catalog')");
 
             while (rs.next()) {
                 String schema_name = rs.getString("schema_name");
@@ -62,16 +63,15 @@ public class MetadataStore {
 
         try {
             ResultSet rs = _con.executeQuery("SELECT sequence_name, data_type, start_value, minimum_value, maximum_value, increment "
-                    + " FROM information_schema.sequences WHERE sequence_schema = " + _schemaName);
+                    + " FROM information_schema.sequences WHERE sequence_schema = '" + _schemaName + "'");
             while(rs.next()) {
                 String sequenceName = rs.getString("sequence_name");
                 String dataType = rs.getString("data_type");
                 Integer startValue = rs.getInt("start_value");
-                Integer endValue = rs.getInt("end_value");
                 Integer minValue = rs.getInt("minimum_value");
                 Integer maxValue = rs.getInt("maximum_value");
                 Integer increment = rs.getInt("increment");
-                sequences.add(new Sequence(sequenceName, dataType, startValue, endValue, minValue, maxValue, increment));
+                sequences.add(new Sequence(sequenceName, dataType, startValue, minValue, maxValue, increment));
             }
 
         } catch (SQLException e) {
@@ -138,7 +138,7 @@ public class MetadataStore {
         try {
             ResultSet rs = _con.executeQuery("SELECT column_name, ordinal_position, data_type, is_nullable, character_maximum_length, numeric_precision," +
                     " numeric_precision_radix, numeric_scale, datetime_precision, interval_type " +
-                    " FROM information_schema.columns WHERE schema_name = " + _schemaName + " AND table_name =" + _tableName);
+                    " FROM information_schema.columns WHERE schema_name = '" + _schemaName + "' AND table_name = '" + _tableName + "'");
 
             while(rs.next()) {
                 // TODO: handle NULL-values!
@@ -188,8 +188,8 @@ public class MetadataStore {
         // information_schema.key_column_usage
         try {
             ResultSet rs = _con.executeQuery("SELECT column_name, constraint_schema, constraint_name " +
-                    "FROM information_schema.constraint_column_usage WHERE table_schema = " + _schemaName + " AND " +
-                    " table_name = " + _tableName);
+                    "FROM information_schema.constraint_column_usage WHERE table_schema = '" + _schemaName + "' AND " +
+                    " table_name = '" + _tableName + "'");
 
             while (rs.next()) {
                 String columnName = rs.getString("column_name");
@@ -210,7 +210,7 @@ public class MetadataStore {
 
         try {
             ResultSet rs = _con.executeQuery("SELECT table_name, view_definition " +
-                    "FROM information_schema.views WHERE table_schema = " + _schemaName);
+                    "FROM information_schema.views WHERE table_schema = '" + _schemaName + "'");
             while (rs.next()) {
                 String viewName = rs.getString("table_name");
                 String viewDefinition = rs.getString("view_definition");

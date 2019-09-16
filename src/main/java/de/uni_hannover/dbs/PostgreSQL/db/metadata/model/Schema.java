@@ -40,4 +40,9 @@ public class Schema extends DatabaseObject {
     public ArrayList<View> getViews() {
         return views;
     }
+
+    @Override
+    public DatabaseObjectTypes getObjectType() {
+        return DatabaseObjectTypes.SCHEMA;
+    }
 }

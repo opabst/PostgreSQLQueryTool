@@ -1,6 +1,6 @@
 package de.uni_hannover.dbs.PostgreSQL.db.metadata.model;
 
-public class DatabaseObject {
+public abstract class DatabaseObject {
     private final String objectName;
     private final String owner;
     private final String accessControlList;
@@ -22,4 +22,6 @@ public class DatabaseObject {
     public String getAccessControlList() {
         return accessControlList;
     }
+
+    public abstract DatabaseObjectTypes getObjectType();
 }

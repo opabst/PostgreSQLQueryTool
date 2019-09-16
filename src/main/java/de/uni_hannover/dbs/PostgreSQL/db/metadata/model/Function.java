@@ -57,4 +57,8 @@ public class Function extends DatabaseObject {
     public String getLanguage() {
         return language;
     }
+
+    public DatabaseObjectTypes getObjectType() {
+        return DatabaseObjectTypes.FUNCTION;
+    }
 }

@@ -46,4 +46,8 @@ public class Table extends DatabaseObject {
     public ArrayList<Trigger> getTriggers() {
         return triggers;
     }
+
+    public DatabaseObjectTypes getObjectType() {
+        return DatabaseObjectTypes.TABLE;
+    }
 }

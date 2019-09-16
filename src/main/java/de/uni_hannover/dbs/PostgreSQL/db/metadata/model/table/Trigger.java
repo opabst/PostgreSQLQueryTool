@@ -1,6 +1,6 @@
 package de.uni_hannover.dbs.PostgreSQL.db.metadata.model.table;
 
-public class Trigger {
+public class Trigger extends TableObject {
     private final String triggerName;
     private final Boolean isConstraint;
     private final String fires;
@@ -45,5 +45,15 @@ public class Trigger {
 
     public Boolean getActive() {
         return isActive;
+    }
+
+    @Override
+    public String getTableObjectName() {
+        return triggerName;
+    }
+
+    @Override
+    public TableObjectTypes getTableObjectType() {
+        return TableObjectTypes.TRIGGER;
     }
 }

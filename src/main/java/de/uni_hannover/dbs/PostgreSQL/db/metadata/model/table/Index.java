@@ -1,6 +1,6 @@
 package de.uni_hannover.dbs.PostgreSQL.db.metadata.model.table;
 
-public class Index {
+public class Index extends TableObject {
     private final String indexName;
     private final String indexType;
     private final String indexSize;
@@ -21,5 +21,15 @@ public class Index {
 
     public String getIndexSize() {
         return indexSize;
+    }
+
+    @Override
+    public String getTableObjectName() {
+        return indexName;
+    }
+
+    @Override
+    public TableObjectTypes getTableObjectType() {
+        return TableObjectTypes.INDEX;
     }
 }

@@ -1,6 +1,6 @@
 package de.uni_hannover.dbs.PostgreSQL.db.metadata.model.table;
 
-public class Column {
+public class Column extends TableObject{
     private final Integer columnNumber;
     private final String columnName;
     private final String dataType;
@@ -27,5 +27,15 @@ public class Column {
 
     public Boolean getIsNullable() {
         return isNullable;
+    }
+
+    @Override
+    public String getTableObjectName() {
+        return columnName;
+    }
+
+    @Override
+    public TableObjectTypes getTableObjectType() {
+        return TableObjectTypes.COLUMN;
     }
 }

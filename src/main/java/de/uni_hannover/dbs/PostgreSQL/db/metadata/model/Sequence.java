@@ -25,13 +25,13 @@ public class Sequence extends DatabaseObject {
         wasCalled = _wasCalled;
     }
 
-    public Sequence(String _objectName, String _dataType, Integer _currentValue, Integer _nextValue,
+    public Sequence(String _objectName, String _dataType, Integer _currentValue,
                     Integer _minValue, Integer _maxValue, Integer _incrementValue) {
         super(_objectName, "", "");
 
         dataType = _dataType;
         currentValue = _currentValue;
-        nextValue = _nextValue;
+        nextValue = Integer.MIN_VALUE;
         minimumValue = _minValue;
         maximumValue = _maxValue;
         incrementValue = _incrementValue;
@@ -65,5 +65,9 @@ public class Sequence extends DatabaseObject {
 
     public Boolean getWasCalled() {
         return wasCalled;
+    }
+
+    public DatabaseObjectTypes getObjectType() {
+        return DatabaseObjectTypes.SEQUENCE;
     }
 }
