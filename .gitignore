@@ -7,3 +7,4 @@ gradlew.bat
 PostgresQueryTool.iml
 .gradletasknamecache
 .DS_Store
+settings.gradle
