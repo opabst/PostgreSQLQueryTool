@@ -31,6 +31,18 @@ public class ConnectionStore {
         conList.add(_con);
     }
 
+    public DBConnection getConnection(String _connectionName) {
+        DBConnection connection = null;
+        for(DBConnection con: conList) {
+            if(con.getConnectionname().equals(_connectionName)) {
+                connection = con;
+                break;
+            }
+        }
+
+        return connection;
+    }
+
     public ObservableList<DBConnection> getConnections() {
         return conList;
     }

@@ -10,6 +10,8 @@ public class DBOutlineTreeItem extends TreeItem<String> {
         super(_name);
         name = _name;
         type = _type;
+
+
     }
 
     public String toString() {
@@ -20,7 +22,9 @@ public class DBOutlineTreeItem extends TreeItem<String> {
         return sb.toString();
     }
 
-
+    public String getName() {
+        return name;
+    }
 
     public TreeItemType getItemType() {
         return getItemType();

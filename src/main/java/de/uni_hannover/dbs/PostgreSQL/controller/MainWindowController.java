@@ -2,8 +2,7 @@ package de.uni_hannover.dbs.PostgreSQL.controller;
 
 import de.uni_hannover.dbs.PostgreSQL.db.ConnectionStore;
 import de.uni_hannover.dbs.PostgreSQL.db.DBConnection;
-import de.uni_hannover.dbs.PostgreSQL.db.metadata.model.DatabaseObject;
-import de.uni_hannover.dbs.PostgreSQL.db.metadata.model.EmptyObject;
+import de.uni_hannover.dbs.PostgreSQL.db.metadata.MetadataStore;
 import de.uni_hannover.dbs.PostgreSQL.model.DBOutlineTreeItem;
 import de.uni_hannover.dbs.PostgreSQL.model.TreeItemType;
 import javafx.application.Platform;
@@ -138,12 +137,14 @@ public class MainWindowController {
 
         DatabaseObjectOutline.getRoot().getChildren().setAll(connections);
 
-        // Listener der zuletzt hinzugefügte Verbindung als aktuelle setzt und zm TreeView hinzufügt.
+        // Listener der zuletzt hinzugefügte Verbindung als aktuelle setzt und zum TreeView hinzufügt.
         connectionCB.getItems().addListener((ListChangeListener<DBConnection>) c -> {
             while (c.next()) {
                 if (c.wasAdded()) {
                     int cbItems = connectionCB.getItems().size();
                     connectionCB.getSelectionModel().select(cbItems - 1);
+
+
                 }
             }
         });
@@ -167,7 +168,10 @@ public class MainWindowController {
             }
         });
 
+        // TODO: eine Datenbankverbindung ist hier noch nicht zuverlässig gegeben
         //MetadataStore.getInstance().populateMetadataForConnection(connectionCB.getSelectionModel().getSelectedItem());
+
+        // TODO: treeview mit Objekten füllen
     }
 
     @FXML
