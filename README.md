@@ -1,2 +1,2 @@
-# de.uni_hannover.dbs.PostgreSQL.PostgresQueryTool
-Simple client for query PostgreSQL databases and browse db schemas, based on Java/JavaFX.
+# PostgreSQL Query Tool
+A simple client, written in Java and JavaFX, to write sql queries against a database and browse the database objects.
