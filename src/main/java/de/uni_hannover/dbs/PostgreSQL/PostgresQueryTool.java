@@ -9,17 +9,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
-/*
- * @author pabst, @date 27.06.17 10:25
- */
 public class PostgresQueryTool extends Application {
 
     private static Stage primaryStage;
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("views/MainWindow.fxml"));
-
+        //Parent root = FXMLLoader.load(getClass().getResource("views/MainWindow.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("views/WelcomeScreen.fxml"));
         primaryStage = stage;
 
         Scene scene = new Scene(root);
@@ -35,7 +32,7 @@ public class PostgresQueryTool extends Application {
     public void stop() {
         ConnectionStore.getInstance().closeAllConnections();
         if(!ConnectionStore.getInstance().writeCredentialsToDisk()) {
-            System.err.println("Verbindungsdaten konnten nicht geladen werden!");
+            System.err.println("Verbindungsdaten konnten nicht geschrieben werden!");
         }
     }
 }

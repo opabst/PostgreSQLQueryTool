@@ -103,7 +103,6 @@ public class MainWindowController {
 
     @FXML
     public void initialize() {
-        ConnectionStore.getInstance().readCredentialsFromDisk();
         ResourceBundle resBundle = ResourceBundle.getBundle("de.uni_hannover.dbs.PostgreSQL.lang_properties.guistrings");
 
         resultTab.setText(resBundle.getString("result_tab"));

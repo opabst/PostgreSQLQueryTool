@@ -110,6 +110,8 @@ public class ConnectionWindowController {
 
     @FXML
     public void testConnection() {
+        // TODO: teste auf bereits vorhandene Verbindungen
+
         ResourceBundle resBundle = ResourceBundle.getBundle("de.uni_hannover.dbs.PostgreSQL.lang_properties.guistrings");
 
         String hostname = hostnameTF.getText();
