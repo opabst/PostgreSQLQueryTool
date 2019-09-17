@@ -32,7 +32,8 @@ public class WelcomeScreenController {
 
     @FXML
     public void initialize() {
-        // TODO: Listener testen -> funktioniert nicht
+        // TODO: Listener direkt mit connectionAccordion verbinden
+
         ConnectionStore.getInstance().getConnections().addListener(new ListChangeListener<DBConnection>() {
             @Override
             public void onChanged(Change<? extends DBConnection> c) {
@@ -144,7 +145,8 @@ public class WelcomeScreenController {
         deleteButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                TitledPane pane = connectionAccordion.getExpandedPane();
+                ConnectionStore.getInstance().removeConnection(pane.getText());
             }
         });
         grid.add(deleteButton,3, 4);

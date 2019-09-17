@@ -43,6 +43,15 @@ public class ConnectionStore {
         return connection;
     }
 
+    public boolean removeConnection(String _name) {
+        for(DBConnection con: conList) {
+            if(con.getConnectionname().equals(_name)) {
+                return conList.removeAll(con);
+            }
+        }
+        return false;
+    }
+
     public ObservableList<DBConnection> getConnections() {
         return conList;
     }
