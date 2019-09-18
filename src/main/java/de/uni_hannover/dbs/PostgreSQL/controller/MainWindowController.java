@@ -9,32 +9,19 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 
-
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-//TODO: TreeItems für jede Art von Baumobjekt erstellen
 
-/**
- * Created by pabst on 05.07.17.
- */
+
 public class MainWindowController {
 
     @FXML
@@ -93,63 +80,66 @@ public class MainWindowController {
 
     private DBConnection dbConnection;
 
+    private MetadataStore metadata;
+
     public MainWindowController() {
 
     }
 
     @FXML
     public void initialize() {
-        ResourceBundle resBundle = ResourceBundle.getBundle("de.uni_hannover.dbs.PostgreSQL.lang_properties.guistrings");
+        Platform.runLater(() -> {
+            ResourceBundle resBundle = ResourceBundle.getBundle("de.uni_hannover.dbs.PostgreSQL.lang_properties.guistrings");
 
-        resultTab.setText(resBundle.getString("result_tab"));
-        queryplanTab.setText(resBundle.getString("query_plan_tab"));
-        errormessageTab.setText(resBundle.getString("error_messages_tab"));
+            resultTab.setText(resBundle.getString("result_tab"));
+            queryplanTab.setText(resBundle.getString("query_plan_tab"));
+            errormessageTab.setText(resBundle.getString("error_messages_tab"));
 
-        runQueryBTN.setText(resBundle.getString("query_execute_button"));
-        explainBTN.setText(resBundle.getString("query_explain_button"));
-        analyzeBTN.setText(resBundle.getString("query_analyze_button"));
+            runQueryBTN.setText(resBundle.getString("query_execute_button"));
+            explainBTN.setText(resBundle.getString("query_explain_button"));
+            analyzeBTN.setText(resBundle.getString("query_analyze_button"));
 
-        fileMENU.setText(resBundle.getString("menu_file_submenu"));
-        fileCloseITM.setText(resBundle.getString("menu_file_submenu_close"));
+            fileMENU.setText(resBundle.getString("menu_file_submenu"));
+            fileCloseITM.setText(resBundle.getString("menu_file_submenu_close"));
 
-        editMENU.setText(resBundle.getString("menu_edit_submenu"));
-        editDeleteITM.setText(resBundle.getString("menu_edit_submenu_delete"));
+            editMENU.setText(resBundle.getString("menu_edit_submenu"));
+            editDeleteITM.setText(resBundle.getString("menu_edit_submenu_delete"));
 
-        helpMENU.setText(resBundle.getString("menu_help_submenu"));
-        helpAboutITM.setText(resBundle.getString("menu_help_submenu_about"));
+            helpMENU.setText(resBundle.getString("menu_help_submenu"));
+            helpAboutITM.setText(resBundle.getString("menu_help_submenu_about"));
 
-        DBOutlineTreeItem rootItem = new DBOutlineTreeItem(resBundle.getString("tree_view_root"), TreeItemType.ROOT);
-        rootItem.setExpanded(true);
+            DBOutlineTreeItem rootItem = new DBOutlineTreeItem(resBundle.getString("tree_view_root"), TreeItemType.ROOT);
+            rootItem.setExpanded(true);
 
-        DatabaseObjectOutline.setRoot(rootItem);
+            DatabaseObjectOutline.setRoot(rootItem);
 
-        ArrayList<DBOutlineTreeItem> connections = new ArrayList();
+            ArrayList<DBOutlineTreeItem> connections = new ArrayList();
 
-        for(DBConnection con: ConnectionStore.getInstance().getConnections()) {
-            connections.add(new DBOutlineTreeItem(con.getConnectionname(), TreeItemType.CONNECTION));
-        }
-
-        DatabaseObjectOutline.getRoot().getChildren().setAll(connections);
-
-        runQueryBTN.setDisable(true);
-        analyzeBTN.setDisable(true);
-        explainBTN.setDisable(true);
-        MainWindowQueryTA.setOnKeyTyped(event -> {
-            if (MainWindowQueryTA.getText().length() == 0) {
-                runQueryBTN.setDisable(true);
-                explainBTN.setDisable(true);
-                analyzeBTN.setDisable(true);
-            } else {
-                runQueryBTN.setDisable(false);
-                explainBTN.setDisable(false);
-                analyzeBTN.setDisable(false);
+            for (DBConnection con : ConnectionStore.getInstance().getConnections()) {
+                connections.add(new DBOutlineTreeItem(con.getConnectionname(), TreeItemType.CONNECTION));
             }
+
+            DatabaseObjectOutline.getRoot().getChildren().setAll(connections);
+
+            runQueryBTN.setDisable(true);
+            analyzeBTN.setDisable(true);
+            explainBTN.setDisable(true);
+            MainWindowQueryTA.setOnKeyTyped(event -> {
+                if (MainWindowQueryTA.getText().length() == 0) {
+                    runQueryBTN.setDisable(true);
+                    explainBTN.setDisable(true);
+                    analyzeBTN.setDisable(true);
+                } else {
+                    runQueryBTN.setDisable(false);
+                    explainBTN.setDisable(false);
+                    analyzeBTN.setDisable(false);
+                }
+            });
+
+
+            metadata = new MetadataStore(dbConnection);
+            metadata.populateMetadataForConnection();
         });
-
-        // TODO: eine Datenbankverbindung ist hier noch nicht zuverlässig gegeben
-        //MetadataStore.getInstance().populateMetadataForConnection(connectionCB.getSelectionModel().getSelectedItem());
-
-        // TODO: treeview mit Objekten füllen
     }
 
     @FXML

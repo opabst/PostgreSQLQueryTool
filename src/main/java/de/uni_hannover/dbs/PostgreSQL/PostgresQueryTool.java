@@ -15,7 +15,9 @@ public class PostgresQueryTool extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("views/WelcomeScreen.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().
+                getResource("de/uni_hannover/dbs/PostgreSQL/views/WelcomeScreen.fxml"));
+        Parent root = loader.load();
         primaryStage = stage;
 
         Scene scene = new Scene(root);

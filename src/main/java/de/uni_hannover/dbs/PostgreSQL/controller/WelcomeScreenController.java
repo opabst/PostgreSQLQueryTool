@@ -174,7 +174,7 @@ public class WelcomeScreenController {
                 Parent mainWindowPane = null;
                 MainWindowController controller = null;
                 try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/de/uni_hannover/dbs/PostgreSQL/views/MainWindow.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("de/uni_hannover/dbs/PostgreSQL/views/MainWindow.fxml"));
                     mainWindowPane = loader.load();
                     controller = loader.<MainWindowController>getController();
                 } catch (IOException e) {
@@ -203,7 +203,9 @@ public class WelcomeScreenController {
 
         Parent connectionPane = null;
         try {
-            connectionPane = FXMLLoader.load(getClass().getResource("/de/uni_hannover/dbs/PostgreSQL/views/ConnectionWindow.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().
+                    getResource("de/uni_hannover/dbs/PostgreSQL/views/ConnectionWindow.fxml"));
+            connectionPane = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
