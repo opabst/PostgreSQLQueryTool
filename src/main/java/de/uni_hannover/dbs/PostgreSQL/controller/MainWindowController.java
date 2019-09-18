@@ -108,19 +108,6 @@ public class MainWindowController {
             helpMENU.setText(resBundle.getString("menu_help_submenu"));
             helpAboutITM.setText(resBundle.getString("menu_help_submenu_about"));
 
-            DBOutlineTreeItem rootItem = new DBOutlineTreeItem(resBundle.getString("tree_view_root"), TreeItemType.ROOT);
-            rootItem.setExpanded(true);
-
-            DatabaseObjectOutline.setRoot(rootItem);
-
-            ArrayList<DBOutlineTreeItem> connections = new ArrayList();
-
-            for (DBConnection con : ConnectionStore.getInstance().getConnections()) {
-                connections.add(new DBOutlineTreeItem(con.getConnectionname(), TreeItemType.CONNECTION));
-            }
-
-            DatabaseObjectOutline.getRoot().getChildren().setAll(connections);
-
             runQueryBTN.setDisable(true);
             analyzeBTN.setDisable(true);
             explainBTN.setDisable(true);
