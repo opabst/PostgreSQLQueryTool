@@ -75,7 +75,7 @@ public class ConnectionStore {
             if(!path.exists()) {
                 path.mkdirs();
             }
-            fileOut = new FileOutputStream(file);
+            fileOut = new FileOutputStream(file, false);
             objOut = new ObjectOutputStream(fileOut);
 
             ArrayList<DBConnection> connections = new ArrayList<>(conList);
