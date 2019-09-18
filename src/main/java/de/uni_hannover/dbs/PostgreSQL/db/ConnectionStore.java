@@ -125,7 +125,7 @@ public class ConnectionStore {
             objIn = new ObjectInputStream(fileIn);
 
             ArrayList<DBConnection> connections = (ArrayList<DBConnection>)objIn.readObject();
-            conList = FXCollections.observableArrayList(connections);
+            conList.addAll(connections);
 
         } catch (FileNotFoundException e) {
             // TODO: Evtl. annehmen, dass Anwendung noch nicht gestartet wurde? Also keinen Fehler werfen?

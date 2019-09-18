@@ -30,10 +30,12 @@ public class WelcomeScreenController {
     @FXML
     private Button addConnection;
 
+    public WelcomeScreenController() {
+        ConnectionStore.getInstance();
+    }
+
     @FXML
     public void initialize() {
-        // TODO: Listener direkt mit connectionAccordion verbinden
-
         ConnectionStore.getInstance().getConnections().addListener(new ListChangeListener<DBConnection>() {
             @Override
             public void onChanged(Change<? extends DBConnection> c) {
@@ -61,10 +63,6 @@ public class WelcomeScreenController {
             }
         });
         ConnectionStore.getInstance().readCredentialsFromDisk();
-
-        for(DBConnection con: ConnectionStore.getInstance().getConnections()) {
-            addConnectionTitledPane(con);
-        }
 
         ResourceBundle resBundle = ResourceBundle.getBundle("de.uni_hannover.dbs.PostgreSQL.lang_properties.guistrings");
         addConnection.setText(resBundle.getString("connection_add_connection"));
