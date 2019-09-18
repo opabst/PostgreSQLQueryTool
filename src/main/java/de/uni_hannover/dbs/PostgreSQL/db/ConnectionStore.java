@@ -83,11 +83,8 @@ public class ConnectionStore {
             objOut.writeObject(connections);
 
         } catch (FileNotFoundException e) {
-            Alert fnfeAlert = new Alert(Alert.AlertType.ERROR);
-            fnfeAlert.setHeaderText("Speichern der Zugangsdaten fehlgeschlagen!");
-            fnfeAlert.setContentText("Datei konnte " + fileDir + "nicht gefunden werden!");
-            fnfeAlert.show();
-            return false;
+            // Nichts tun. Kein Fehler
+            return true;
         } catch (IOException e) {
             Alert ioeAlert = new Alert(Alert.AlertType.ERROR);
             ioeAlert.setHeaderText("IO-Fehler");

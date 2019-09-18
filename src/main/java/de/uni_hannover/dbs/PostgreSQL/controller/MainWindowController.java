@@ -1,10 +1,9 @@
 package de.uni_hannover.dbs.PostgreSQL.controller;
 
-import de.uni_hannover.dbs.PostgreSQL.db.ConnectionStore;
 import de.uni_hannover.dbs.PostgreSQL.db.DBConnection;
 import de.uni_hannover.dbs.PostgreSQL.db.metadata.MetadataStore;
+import de.uni_hannover.dbs.PostgreSQL.db.metadata.model.Schema;
 import de.uni_hannover.dbs.PostgreSQL.model.DBOutlineTreeItem;
-import de.uni_hannover.dbs.PostgreSQL.model.TreeItemType;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -18,6 +17,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 
 
@@ -126,12 +127,16 @@ public class MainWindowController {
 
             metadata = new MetadataStore(dbConnection);
             metadata.populateMetadataForConnection();
+
+            //DatabaseObjectOutline.setShowRoot(false);
+
+            populateTreeView();
         });
     }
 
     @FXML
     public void close() {
-        Platform.exit();
+        //Platform.exit();
     }
 
     @FXML
@@ -245,6 +250,19 @@ public class MainWindowController {
 
     public void setDbConnection(DBConnection _con) {
         dbConnection = _con;
+    }
+
+    private void populateTreeView() {
+        DBOutlineTreeItem rootItem = new DBOutlineTreeItem("Wurzel", null);
+        rootItem.setExpanded(true);
+        DatabaseObjectOutline.setRoot(rootItem);
+
+        for(Schema schema: metadata.getAllSchemas()) {
+            DBOutlineTreeItem schemaItem = new DBOutlineTreeItem(schema.getObjectName(), schema);
+            DatabaseObjectOutline.getRoot().getChildren().add(schemaItem);
+            DatabaseObjectOutline.refresh();
+        }
+
     }
 
 }

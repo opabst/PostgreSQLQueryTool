@@ -18,6 +18,8 @@ public class MetadataStore {
 
     private final HashMap<String, Schema> schemas;
 
+    // TODO: Listen von Datenbankobjekten als sortierte Priority Queues vorhalten
+
     private final DBConnection dbConnection;
 
     public MetadataStore(DBConnection _con) {
@@ -47,6 +49,12 @@ public class MetadataStore {
                 ArrayList<Function> functions = getFunctions(schema_name);
 
                 ArrayList<View> views = getViews(schema_name);
+
+                ArrayList<Table> tables = getTables(schema_name);
+
+                Schema schema = new Schema(schema_name, schema_owner, tables, sequences, functions, views);
+
+                schemas.put(schema_name, schema);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -106,7 +114,7 @@ public class MetadataStore {
         ArrayList<String> tableNames = new ArrayList<>();
 
         try {
-            ResultSet rs = dbConnection.executeQuery("SELECT table_name FROM information_schema " +
+            ResultSet rs = dbConnection.executeQuery("SELECT table_name FROM information_schema.tables " +
                     "WHERE table_schema = '" + _schemaName + "'");
 
             while (rs.next()) {
@@ -136,11 +144,11 @@ public class MetadataStore {
         try {
             ResultSet rs = dbConnection.executeQuery("SELECT column_name, ordinal_position, data_type, is_nullable, character_maximum_length, numeric_precision," +
                     " numeric_precision_radix, numeric_scale, datetime_precision, interval_type " +
-                    " FROM information_schema.columns WHERE schema_name = '" + _schemaName + "' AND table_name = '" + _tableName + "'");
+                    " FROM information_schema.columns WHERE table_schema = '" + _schemaName + "' AND table_name = '" + _tableName + "'");
 
             while(rs.next()) {
                 // TODO: handle NULL-values!
-                String columnName = rs.getString("columnName");
+                String columnName = rs.getString("column_name");
                 Integer columnPos = rs.getInt("ordinal_position");
                 String dataType = rs.getString("data_type");
                 Boolean isNullable = rs.getBoolean("is_nullable");
