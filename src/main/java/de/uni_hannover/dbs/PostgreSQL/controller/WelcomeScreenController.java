@@ -170,7 +170,22 @@ public class WelcomeScreenController {
 
                 DBConnection con = ConnectionStore.getInstance().getConnection(currentPane.getText());
 
-                // TODO: start the mainwindowcontroller with currentPane as a parameter
+                Stage mainWindow = new Stage();
+                Parent mainWindowPane = null;
+                MainWindowController controller = null;
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("views/MainWindow.fxml"));
+                    mainWindowPane = loader.load();
+                    controller = loader.<MainWindowController>getController();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                controller.setDbConnection(con);
+
+                Scene scene = new Scene(mainWindowPane);
+                mainWindow.setScene(scene);
+                mainWindow.show();
             }
         });
         GridPane.setHalignment(connectButton, HPos.RIGHT);

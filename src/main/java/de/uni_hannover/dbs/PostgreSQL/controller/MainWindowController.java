@@ -97,6 +97,8 @@ public class MainWindowController {
     @FXML
     private MenuItem helpAboutITM;
 
+    private DBConnection dbConnection;
+
     public MainWindowController() {
 
     }
@@ -310,6 +312,10 @@ public class MainWindowController {
             errorMessagesTA.setText(errorMessagesTA.getText() + "\n" + e.getMessage());
             queryResultTabPanel.getSelectionModel().select(errormessageTab);
         }
+    }
+
+    public void setDbConnection(DBConnection _con) {
+        dbConnection = _con;
     }
 
 }
