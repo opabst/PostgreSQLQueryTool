@@ -50,9 +50,6 @@ public class MainWindowController {
     private TextArea MainWindowExplainPlanTA;
 
     @FXML
-    private ComboBox<DBConnection> connectionCB;
-
-    @FXML
     private Button runQueryBTN;
 
     @FXML
@@ -78,9 +75,6 @@ public class MainWindowController {
 
     @FXML
     private Menu fileMENU;
-
-    @FXML
-    private MenuItem fileAddConnectionITM;
 
     @FXML
     private MenuItem fileCloseITM;
@@ -116,7 +110,6 @@ public class MainWindowController {
         analyzeBTN.setText(resBundle.getString("query_analyze_button"));
 
         fileMENU.setText(resBundle.getString("menu_file_submenu"));
-        fileAddConnectionITM.setText(resBundle.getString("menu_file_submenu_add_connection"));
         fileCloseITM.setText(resBundle.getString("menu_file_submenu_close"));
 
         editMENU.setText(resBundle.getString("menu_edit_submenu"));
@@ -137,22 +130,6 @@ public class MainWindowController {
         }
 
         DatabaseObjectOutline.getRoot().getChildren().setAll(connections);
-
-        // Listener der zuletzt hinzugefügte Verbindung als aktuelle setzt und zum TreeView hinzufügt.
-        connectionCB.getItems().addListener((ListChangeListener<DBConnection>) c -> {
-            while (c.next()) {
-                if (c.wasAdded()) {
-                    int cbItems = connectionCB.getItems().size();
-                    connectionCB.getSelectionModel().select(cbItems - 1);
-
-
-                }
-            }
-        });
-
-        connectionCB.setItems(ConnectionStore.getInstance().getConnections());
-
-        connectionCB.getSelectionModel().select(connectionCB.getItems().size()-1);
 
         runQueryBTN.setDisable(true);
         analyzeBTN.setDisable(true);
@@ -181,28 +158,7 @@ public class MainWindowController {
     }
 
     @FXML
-    public void openConnectionWindow(ActionEvent event) {
-        Stage connectionWindow = new Stage();
-
-        Parent connectionPane = null;
-        try {
-            connectionPane = FXMLLoader.load(getClass().getResource("/de/uni_hannover/dbs/PostgreSQL/views/ConnectionWindow.fxml"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Scene scene = new Scene(connectionPane);
-        connectionWindow.setScene(scene);
-
-        connectionWindow.initModality(Modality.APPLICATION_MODAL);
-        connectionWindow.initOwner(((MenuItem) event.getTarget()).getParentPopup().getOwnerWindow());
-        connectionWindow.showAndWait();
-    }
-
-    @FXML
     public void runQuery() {
-        DBConnection con = connectionCB.getValue();
-
         ObservableList<ObservableList> tableData = FXCollections.observableArrayList();
 
         MainWindowResultTV.getColumns().removeAll(MainWindowResultTV.getColumns());
@@ -216,7 +172,7 @@ public class MainWindowController {
         query = query.replace("\n", " ");
 
         try {
-            ResultSet result = con.executeQuery(query);
+            ResultSet result = dbConnection.executeQuery(query);
 
             ResultSetMetaData metaData = result.getMetaData();
 
@@ -259,8 +215,6 @@ public class MainWindowController {
 
     @FXML
     public void analyzeQuery() {
-        DBConnection con = connectionCB.getValue();
-
         MainWindowExplainPlanTA.setText("");
 
         String queryText = MainWindowQueryTA.getSelectedText();
@@ -272,7 +226,7 @@ public class MainWindowController {
         query = query.replace("\n", " ");
 
         try {
-            ResultSet result = con.executeQuery(query);
+            ResultSet result = dbConnection.executeQuery(query);
 
             while (result.next()) {
                 String plan = result.getString(1);
@@ -288,8 +242,6 @@ public class MainWindowController {
 
     @FXML
     public void explainQuery() {
-        DBConnection con = connectionCB.getValue();
-
         MainWindowExplainPlanTA.setText("");
 
         String queryText = MainWindowQueryTA.getSelectedText();
@@ -301,7 +253,7 @@ public class MainWindowController {
         query = query.replace("\n", " ");
 
         try {
-            ResultSet result = con.executeQuery(query);
+            ResultSet result = dbConnection.executeQuery(query);
 
             while (result.next()) {
                 String plan = result.getString(1);
