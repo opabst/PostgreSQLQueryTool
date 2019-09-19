@@ -81,4 +81,18 @@ public class DBConnection implements Serializable {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        DBConnection otherCon = (DBConnection)obj;
+        return this.connectionname.equals(otherCon.getConnectionname());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash1 = 41;
+        int hash2 = 37;
+        int hashValue = hash1 * (connectionname.hashCode() * hash2);
+        return super.hashCode();
+    }
 }
