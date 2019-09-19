@@ -76,6 +76,7 @@ public class DBConnection implements Serializable {
         try {
             if(con != null) {
                 con.close();
+                con = null;
             }
         } catch (SQLException e) {
             e.printStackTrace();

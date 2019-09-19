@@ -89,6 +89,7 @@ public class ConnectionStore {
             objOut = new ObjectOutputStream(fileOut);
 
             ArrayList<DBConnection> connections = new ArrayList<>(conList);
+            closeAllConnections();
 
             objOut.writeObject(connections);
 
