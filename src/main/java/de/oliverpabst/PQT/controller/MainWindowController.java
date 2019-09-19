@@ -252,7 +252,7 @@ public class MainWindowController {
 
     private void populateTreeView() {
         ResourceBundle resBundle = ResourceBundle.getBundle("de.oliverpabst.PQT.lang_properties.guistrings");
-        DBOutlineTreeItem rootItem = new DBOutlineTreeItem("tree_view_root", null);
+        DBOutlineTreeItem rootItem = new DBOutlineTreeItem(resBundle.getString("tree_view_root"), null);
         rootItem.setExpanded(true);
         DatabaseObjectOutline.setRoot(rootItem);
 
