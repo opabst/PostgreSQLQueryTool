@@ -110,8 +110,6 @@ public class ConnectionWindowController {
 
     @FXML
     public void testConnection() {
-        // TODO: teste auf bereits vorhandene Verbindungen
-
         ResourceBundle resBundle = ResourceBundle.getBundle("de.oliverpabst.PQT.lang_properties.guistrings");
 
         String hostname = hostnameTF.getText();
@@ -140,6 +138,7 @@ public class ConnectionWindowController {
 
     @FXML
     public void saveAndExit() {
+        ResourceBundle resBundle = ResourceBundle.getBundle("de.oliverpabst.PQT.lang_properties.guistrings");
         DBConnection dbc = new DBConnection(connectionnameTF.getText(),
                                             hostnameTF.getText(),
                                             portTF.getText(),
@@ -147,8 +146,16 @@ public class ConnectionWindowController {
                                             usernameTF.getText(),
                                             passwordTF.getText());
 
-        ConnectionStore.getInstance().addConnection(dbc);
-        Stage stage = (Stage) saveAndCloseBTN.getScene().getWindow();
-        stage.close();
+        if(ConnectionStore.getInstance().addConnection(dbc)) {
+            Stage stage = (Stage) saveAndCloseBTN.getScene().getWindow();
+            stage.close();
+        } else {
+            // Verbindungsname bereits vorhanden!
+            saveAndCloseBTN.setDisable(true);
+            conStatusLBL.setText(resBundle.getString("connection_status_already_exists"));
+            conStatusLBL.setStyle("-fx-text-fill: red;");
+            connectionnameTF.selectAll();
+            connectionnameTF.requestFocus();
+        }
     }
 }

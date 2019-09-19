@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ConnectionStore {
     private static ConnectionStore _instance;
@@ -27,8 +28,17 @@ public class ConnectionStore {
         return _instance;
     }
 
-    public void addConnection(DBConnection _con) {
+    public boolean addConnection(DBConnection _con) {
+        Iterator<DBConnection> conIter = conList.iterator();
+        while(conIter.hasNext()) {
+            DBConnection existingCon = conIter.next();
+
+            if(existingCon.equals(_con)) {
+                return false;
+            }
+        }
         conList.add(_con);
+        return true;
     }
 
     public DBConnection getConnection(String _connectionName) {
@@ -88,7 +98,7 @@ public class ConnectionStore {
         } catch (IOException e) {
             Alert ioeAlert = new Alert(Alert.AlertType.ERROR);
             ioeAlert.setHeaderText("IO-Fehler");
-            ioeAlert.setContentText("Zugriff auf Datei " + filePath + " fehlgeschlagen!");
+            ioeAlert.setContentText("Zugriff auf Datei " + filePath + " fehlgeschlagen!" + "\n" + e.toString());
             ioeAlert.show();
             return false;
         } finally {
