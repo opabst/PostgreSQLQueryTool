@@ -68,10 +68,10 @@ public class MetadataStore {
             while(rs.next()) {
                 String sequenceName = rs.getString("sequence_name");
                 String dataType = rs.getString("data_type");
-                Integer startValue = rs.getInt("start_value");
-                Integer minValue = rs.getInt("minimum_value");
-                Integer maxValue = rs.getInt("maximum_value");
-                Integer increment = rs.getInt("increment");
+                Long startValue = rs.getLong("start_value");
+                Long minValue = rs.getLong("minimum_value");
+                Long maxValue = rs.getLong("maximum_value");
+                Long increment = rs.getLong("increment");
                 sequences.add(new Sequence(sequenceName, dataType, startValue, minValue, maxValue, increment));
             }
 

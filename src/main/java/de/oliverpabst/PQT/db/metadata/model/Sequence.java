@@ -2,16 +2,16 @@ package de.oliverpabst.PQT.db.metadata.model;
 
 public class Sequence extends DatabaseObject {
     private final String dataType;
-    private final Integer currentValue;
-    private final Integer nextValue;
-    private final Integer minimumValue;
-    private final Integer maximumValue;
-    private final Integer incrementValue;
+    private final Long currentValue;
+    private final Long nextValue;
+    private final Long minimumValue;
+    private final Long maximumValue;
+    private final Long incrementValue;
     private final Boolean isCyclic;
     private final Boolean wasCalled;
 
-    public Sequence(String _objectName, String _owner, String _acl, Integer _currentValue, Integer _nextValue,
-                    Integer _minValue, Integer _maxValue, Integer _incrementValue,
+    public Sequence(String _objectName, String _owner, String _acl, Long _currentValue, Long _nextValue,
+                    Long _minValue, Long _maxValue, Long _incrementValue,
                     Boolean _isCyclic, Boolean _wasCalled) {
         super(_objectName, _owner, _acl);
 
@@ -25,13 +25,13 @@ public class Sequence extends DatabaseObject {
         wasCalled = _wasCalled;
     }
 
-    public Sequence(String _objectName, String _dataType, Integer _currentValue,
-                    Integer _minValue, Integer _maxValue, Integer _incrementValue) {
+    public Sequence(String _objectName, String _dataType, Long _currentValue,
+                    Long _minValue, Long _maxValue, Long _incrementValue) {
         super(_objectName, "", "");
 
         dataType = _dataType;
         currentValue = _currentValue;
-        nextValue = Integer.MIN_VALUE;
+        nextValue = Long.MIN_VALUE;
         minimumValue = _minValue;
         maximumValue = _maxValue;
         incrementValue = _incrementValue;
@@ -39,23 +39,23 @@ public class Sequence extends DatabaseObject {
         wasCalled = false;
     }
 
-    public Integer getCurrentValue() {
+    public Long getCurrentValue() {
         return currentValue;
     }
 
-    public Integer getNextValue() {
+    public Long getNextValue() {
         return nextValue;
     }
 
-    public Integer getMinimumValue() {
+    public Long getMinimumValue() {
         return minimumValue;
     }
 
-    public Integer getMaximumValue() {
+    public Long getMaximumValue() {
         return maximumValue;
     }
 
-    public Integer getIncrementValue() {
+    public Long getIncrementValue() {
         return incrementValue;
     }
 
