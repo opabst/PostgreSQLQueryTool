@@ -40,18 +40,18 @@ if (currentOS.isWindows()) {
 
 javafx {
     modules = [ 'javafx.fxml', 'javafx.base', 'javafx.controls', 'javafx.graphics']
-    version = "11.0.+"
+    version = "13"
 }
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
     // The production code uses the SLF4J logging API at compile time
     compile 'org.slf4j:slf4j-api:1.7.21'
-    compile 'org.postgresql:postgresql:42.2.5'
-    compile "org.openjfx:javafx-fxml:11:${platform}"
-    compile "org.openjfx:javafx-base:11:${platform}"
-    compile "org.openjfx:javafx-graphics:11:${platform}"
-    compile "org.openjfx:javafx-controls:11:${platform}"
+    compile 'org.postgresql:postgresql:42.2.8'
+    compile "org.openjfx:javafx-fxml:13:${platform}"
+    compile "org.openjfx:javafx-base:13:${platform}"
+    compile "org.openjfx:javafx-graphics:13:${platform}"
+    compile "org.openjfx:javafx-controls:13:${platform}"
 
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
