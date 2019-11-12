@@ -18,6 +18,8 @@ public class MetadataStore {
 
     // TODO: Listen von Datenbankobjekten als sortierte Priority Queues vorhalten
 
+    // TODO: Lazy Loading für Metadaten außerhalb des eigenen Schemas implementieren
+
     private final DBConnection dbConnection;
 
     public MetadataStore(DBConnection _con) {
