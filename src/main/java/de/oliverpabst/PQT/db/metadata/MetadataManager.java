@@ -1,5 +1,6 @@
 package de.oliverpabst.PQT.db.metadata;
 
+import de.oliverpabst.PQT.db.ConnectionStore;
 import de.oliverpabst.PQT.db.DBConnection;
 import de.oliverpabst.PQT.db.metadata.model.*;
 import de.oliverpabst.PQT.db.metadata.model.table.Column;
@@ -7,14 +8,19 @@ import de.oliverpabst.PQT.db.metadata.model.table.Constraint;
 import de.oliverpabst.PQT.db.metadata.model.table.Index;
 import de.oliverpabst.PQT.db.metadata.model.table.Trigger;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 
-public class MetadataStore {
+public class MetadataManager {
 
-    private final HashMap<String, Schema> schemas;
+    private Boolean schemasLoaded = false;
+
+    private final HashMap<String, Schema> schemas; // HashMap aus Schemas, die wiederrum die Datenbankobjekte enthält
 
     // TODO: Listen von Datenbankobjekten als sortierte Priority Queues vorhalten
 
@@ -22,9 +28,24 @@ public class MetadataStore {
 
     private final DBConnection dbConnection;
 
-    public MetadataStore(DBConnection _con) {
+    public MetadataManager(DBConnection _con) {
         schemas = new HashMap<>();
         dbConnection = _con;
+    }
+
+    /**
+     * Gibt alle Schemas der ausgewählten Datenbank in aufsteigend sortierter Reihenfolge zurück
+     * @return
+     */
+    public ArrayList<String> getSchemaNames() {
+        if(!schemasLoaded) {
+            loadAllSchemas();
+        }
+
+        ArrayList<String> schemaNames = new ArrayList<>(schemas.keySet());
+        Comparator<String> c = Comparator.comparing((String x) -> x);
+        schemaNames.sort(c);
+        return schemaNames;
     }
 
     public Schema getSchema(String _key) {
@@ -35,30 +56,97 @@ public class MetadataStore {
         return new ArrayList<>(schemas.values());
     }
 
-    public void populateMetadataForConnection() {
+    private void loadAllSchemas() {
+
         try {
+
             ResultSet rs = dbConnection.executeQuery("SELECT schema_name, schema_owner FROM information_schema.schemata " +
                     "WHERE schema_name NOT IN ('information_schema', 'pg_catalog')");
 
-            while (rs.next()) {
+            while(rs.next()) {
                 String schema_name = rs.getString("schema_name");
                 String schema_owner = rs.getString("schema_owner");
 
-                ArrayList<Sequence> sequences = getSequences(schema_name);
-
-                ArrayList<Function> functions = getFunctions(schema_name);
-
-                ArrayList<View> views = getViews(schema_name);
-
-                ArrayList<Table> tables = getTables(schema_name);
-
-                Schema schema = new Schema(schema_name, schema_owner, tables, sequences, functions, views);
-
-                schemas.put(schema_name, schema);
+                Schema s = new Schema(schema_name, schema_owner);
+                schemas.put(schema_name, s);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void loadTablesForSchema(String _schemaName) {
+
+        ArrayList<String> tableNames = new ArrayList<>();
+
+        try {
+            ResultSet rs = dbConnection.executeQuery("SELECT table_name FROM information_schema.tables " +
+                    "WHERE table_schema = '" + _schemaName + "'");
+
+            while (rs.next()) {
+                String tableName = rs.getString("table_name");
+
+                tableNames.add(tableName);
+            }
+
+            for (String tableName : tableNames) {
+                ArrayList<Column> columns = getTableColumns(_schemaName, tableName);
+                ArrayList<Trigger> triggers = getTableTriggers(_schemaName, tableName);
+                ArrayList<Index> indices = getTableIndizes(_schemaName, tableName);
+                ArrayList<Constraint> constraints = getTableConstraints(_schemaName, tableName);
+
+                schemas.get(_schemaName).addTable(tableName, new Table(tableName, columns, constraints, indices, triggers));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public HashMap<String, Table> getTablesForSchema(String _schemaName) {
+        return schemas.get(_schemaName).getAllTables();
+    }
+
+    public void loadFunctionsForSchema(String _schemaName) {
+        try {
+            ResultSet rs = dbConnection.executeQuery("SELECT routine_name, data_type, routine_body, routine_definition " +
+                    " FROM information_schema.routines " +
+                    " WHERE specific_schema = '" + _schemaName + "'");
+
+            while (rs.next()) {
+                String funcName = rs.getString("routine_name");
+                String dataType = rs.getString("data_type");
+                String funcBody = rs.getString("routine_body");
+                String funcDef = rs.getString("routine_definition");
+
+                schemas.get(_schemaName).addFunction(funcName, new Function(funcName, dataType, funcBody, funcDef));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public HashMap<String, Function> getFunctionsForSchema(String _schemaName) {
+        return schemas.get(_schemaName).getAllFunctions();
+    }
+
+    public void loadViewsForSchema(String _schemaName) {
+
+        try {
+            ResultSet rs = dbConnection.executeQuery("SELECT table_name, view_definition " +
+                    "FROM information_schema.views WHERE table_schema = '" + _schemaName + "'");
+            while (rs.next()) {
+                String viewName = rs.getString("table_name");
+                String viewDefinition = rs.getString("view_definition");
+
+                schemas.get(_schemaName).addView(viewName, new View(viewName, viewDefinition));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public HashMap<String, View> getViewsForSchema(String _schemaName) {
+        return schemas.get(_schemaName).getAllViews();
     }
 
     private ArrayList<Sequence> getSequences(String _schemaName) {
@@ -230,5 +318,9 @@ public class MetadataStore {
         }
 
         return views;
+    }
+
+    private void createSchemaSkeleton() {
+
     }
 }

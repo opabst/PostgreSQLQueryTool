@@ -2,10 +2,11 @@ package de.oliverpabst.PQT.controller;
 
 import de.oliverpabst.PQT.model.DBOutlineTreeItem;
 import de.oliverpabst.PQT.db.DBConnection;
-import de.oliverpabst.PQT.db.metadata.MetadataStore;
-import de.oliverpabst.PQT.db.metadata.model.Schema;
+import de.oliverpabst.PQT.db.metadata.MetadataManager;
+import de.oliverpabst.PQT.model.OutlineComponentType;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -79,7 +80,7 @@ public class MainWindowController {
 
     private DBConnection dbConnection;
 
-    private MetadataStore metadata;
+    private MetadataManager metadataManager;
 
     public MainWindowController() {
 
@@ -122,13 +123,21 @@ public class MainWindowController {
                 }
             });
 
+            metadataManager = new MetadataManager(dbConnection);
+            //metadataManager.populateMetadataForConnection();
 
-            metadata = new MetadataStore(dbConnection);
-            metadata.populateMetadataForConnection();
+            DatabaseObjectOutline.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+            DatabaseObjectOutline.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<DBOutlineTreeItem>>() {
+                @Override
+                public void changed(ObservableValue<? extends TreeItem<DBOutlineTreeItem>> observableValue, TreeItem<DBOutlineTreeItem> dbOutlineTreeItemTreeItem, TreeItem<DBOutlineTreeItem> t1) {
 
+                }
+            });
+
+            DBOutlineTreeItem rootItem = new DBOutlineTreeItem(resBundle.getString("tree_view_root"), OutlineComponentType.ROOT, metadataManager);
+            rootItem.setExpanded(false);
+            DatabaseObjectOutline.setRoot(rootItem);
             //DatabaseObjectOutline.setShowRoot(false);
-
-            populateTreeView();
         });
     }
 
@@ -249,19 +258,4 @@ public class MainWindowController {
     public void setDbConnection(DBConnection _con) {
         dbConnection = _con;
     }
-
-    private void populateTreeView() {
-        ResourceBundle resBundle = ResourceBundle.getBundle("de.oliverpabst.PQT.lang_properties.guistrings");
-        DBOutlineTreeItem rootItem = new DBOutlineTreeItem(resBundle.getString("tree_view_root"), null);
-        rootItem.setExpanded(true);
-        DatabaseObjectOutline.setRoot(rootItem);
-
-        for(Schema schema: metadata.getAllSchemas()) {
-            DBOutlineTreeItem schemaItem = new DBOutlineTreeItem(schema.getObjectName(), schema);
-            DatabaseObjectOutline.getRoot().getChildren().add(schemaItem);
-            DatabaseObjectOutline.refresh();
-        }
-
-    }
-
 }
