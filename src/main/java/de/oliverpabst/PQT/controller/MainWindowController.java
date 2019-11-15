@@ -10,10 +10,17 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -257,5 +264,26 @@ public class MainWindowController {
 
     public void setDbConnection(DBConnection _con) {
         dbConnection = _con;
+    }
+
+    @FXML
+    public void openAboutScreen(ActionEvent event) {
+        Stage aboutWindow = new Stage();
+        Parent mainWindowPane = null;
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("de/oliverpabst/PQT/views/AboutScreen.fxml"));
+            mainWindowPane = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Scene scene = new Scene(mainWindowPane);
+
+        aboutWindow.setScene(scene);
+
+        aboutWindow.initModality(Modality.APPLICATION_MODAL);
+        aboutWindow.initOwner(((Button)event.getTarget()).getScene().getWindow());
+        aboutWindow.showAndWait();
     }
 }

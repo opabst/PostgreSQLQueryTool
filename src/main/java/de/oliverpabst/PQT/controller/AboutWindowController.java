@@ -1,11 +1,37 @@
 package de.oliverpabst.PQT.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.web.HTMLEditor;
+
+
+
+
 
 public class AboutWindowController {
 
     @FXML
-    public void initialize() {
+    private HTMLEditor aboutTextHTML;
 
+    @FXML
+    public void initialize() {
+        String htmlMessage =
+                "<html>" +
+                        "<head>PostgreSQL-Query-Tool</head>" +
+                        "<body>" +
+                        "<b>Autor</b>: Oliver Pabst &#9400; 2019<br>" +
+                        "<b>Lizenz</b>: <a href=&quot;https://www.gnu.org/licenses/gpl-3.0.en.html&quot;>GNU General Public License v3.0</a>" +
+                        "</body>" +
+                        "</html>";
+
+        aboutTextHTML.setHtmlText(htmlMessage);
+    }
+
+    @FXML
+    public void closeScreen(ActionEvent event) {
+        Scene aboutWindowScene = ((Button)event.getTarget()).getScene().getWindow(); // TODO: Stage laden
+        scene.get
     }
 }
