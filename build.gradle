@@ -39,7 +39,7 @@ if (currentOS.isWindows()) {
 //}
 
 javafx {
-    modules = [ 'javafx.fxml', 'javafx.base', 'javafx.controls', 'javafx.graphics']
+    modules = [ 'javafx.fxml', 'javafx.base', 'javafx.controls', 'javafx.graphics', 'javafx.web']
     version = "13"
 }
 
