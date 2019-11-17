@@ -5,9 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.web.HTMLEditor;
-
-
-
+import javafx.stage.Stage;
 
 
 public class AboutWindowController {
@@ -31,7 +29,9 @@ public class AboutWindowController {
 
     @FXML
     public void closeScreen(ActionEvent event) {
-        Scene aboutWindowScene = ((Button)event.getTarget()).getScene().getWindow(); // TODO: Stage laden
-        scene.get
+        Scene aboutWindowScene = ((Button)event.getTarget()).getScene(); // TODO: Stage laden
+        Stage stage = new Stage();
+        stage.setScene(aboutWindowScene);
+        stage.close();
     }
 }

@@ -272,7 +272,7 @@ public class MainWindowController {
         Parent mainWindowPane = null;
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("de/oliverpabst/PQT/views/AboutScreen.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("de/oliverpabst/PQT/views/About.fxml"));
             mainWindowPane = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
@@ -283,7 +283,7 @@ public class MainWindowController {
         aboutWindow.setScene(scene);
 
         aboutWindow.initModality(Modality.APPLICATION_MODAL);
-        aboutWindow.initOwner(((Button)event.getTarget()).getScene().getWindow());
+        aboutWindow.initOwner(((MenuItem)event.getTarget()).getParentMenu().getWindow());
         aboutWindow.showAndWait();
     }
 }
