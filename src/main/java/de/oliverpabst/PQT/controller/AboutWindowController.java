@@ -7,6 +7,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+import java.util.ResourceBundle;
+
 
 public class AboutWindowController {
 
@@ -14,7 +16,13 @@ public class AboutWindowController {
     private WebView aboutWebView;
 
     @FXML
+    private Button aboutCloseButton;
+
+    @FXML
     public void initialize() {
+        ResourceBundle resBundle = ResourceBundle.getBundle("de.oliverpabst.PQT.lang_properties.guistrings");
+        aboutCloseButton.setText(resBundle.getString("about_close_button"));
+
         String htmlMessage =
                 "<p><h1><b>PostgreSQL-Query-Tool</b></h1></p>\n" +
                 "<br/>\n" +
