@@ -266,7 +266,7 @@ public class MainWindowController {
         }
     }
 
-    public void setDbConnection(DBConnection _con) {
+    void setDbConnection(DBConnection _con) {
         dbConnection = _con;
     }
 
@@ -282,6 +282,7 @@ public class MainWindowController {
             e.printStackTrace();
         }
 
+        assert mainWindowPane != null;
         Scene scene = new Scene(mainWindowPane);
 
         aboutWindow.setScene(scene);
