@@ -149,6 +149,30 @@ public class MetadataManager {
         return schemas.get(_schemaName).getAllViews();
     }
 
+    public void loadSequencesForSchema(String _schemaName) {
+
+        try {
+            ResultSet rs = dbConnection.executeQuery("SELECT sequence_name, data_type, start_value, minimum_value, maximum_value, increment "
+                    + " FROM information_schema.sequences WHERE sequence_schema = '" + _schemaName + "'");
+            while (rs.next()) {
+                String sequenceName = rs.getString("sequence_name");
+                String dataType = rs.getString("data_type");
+                Long startValue = rs.getLong("start_value");
+                Long minValue = rs.getLong("minimum_value");
+                Long maxValue = rs.getLong("maximum_value");
+                Long increment = rs.getLong("increment");
+
+                schemas.get(_schemaName).addSequence(sequenceName, new Sequence(sequenceName, dataType, startValue, minValue, maxValue, increment));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public HashMap<String, Sequence> getSequencesForSchema(String _schemaName) {
+        return schemas.get(_schemaName).getAllSequences();
+    }
+
     private ArrayList<Sequence> getSequences(String _schemaName) {
         ArrayList<Sequence> sequences = new ArrayList<>();
 

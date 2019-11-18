@@ -85,6 +85,8 @@ public class DBOutlineTreeItem extends TreeItem<String> {
             children.add(view);
             DBOutlineTreeItem function = new DBOutlineTreeItem(resBundle.getString("tree_view_functions"), OutlineComponentType.FUNCTION, metadataManager);
             children.add(function);
+            DBOutlineTreeItem sequence = new DBOutlineTreeItem(resBundle.getString("tree_view_sequences"), OutlineComponentType.SEQUENCE, metadataManager);
+            children.add(sequence);
 
             // TODO: fehlende Schemateile laden (Sequences, Tabellenkomponenten )
         } else if (parent.getComponentType() == OutlineComponentType.TABLE) {
@@ -102,7 +104,6 @@ public class DBOutlineTreeItem extends TreeItem<String> {
         } else if (parent.getComponentType() == OutlineComponentType.FUNCTION) {
             String schemaName = parent.getParent().getValue();
             metadataManager.loadFunctionsForSchema(schemaName); // TODO: Reparieren -> sollte nicht manuell geladen werden
-            HashMap<String, Function> functions = metadataManager.getFunctionsForSchema(schemaName);
 
             ArrayList<String> functionNames = new ArrayList<>(metadataManager.getFunctionsForSchema(schemaName).keySet());
             Comparator<String> c = Comparator.comparing((String x) -> x);
@@ -122,6 +123,18 @@ public class DBOutlineTreeItem extends TreeItem<String> {
             viewNames.sort(c);
 
             for(String s: viewNames) {
+                DBOutlineTreeItem item = new DBOutlineTreeItem(s, OutlineComponentType.DB_OBJECT, metadataManager);
+                children.add(item);
+            }
+        } else if (parent.getComponentType() == OutlineComponentType.SEQUENCE) {
+            String schemaName = parent.getParent().getValue();
+            metadataManager.loadSequencesForSchema(schemaName);
+
+            ArrayList<String> sequenceNames = new ArrayList<>(metadataManager.getSequencesForSchema(schemaName).keySet());
+            Comparator<String> c = Comparator.comparing((String x) -> x);
+            sequenceNames.sort(c);
+
+            for(String s: sequenceNames) {
                 DBOutlineTreeItem item = new DBOutlineTreeItem(s, OutlineComponentType.DB_OBJECT, metadataManager);
                 children.add(item);
             }
