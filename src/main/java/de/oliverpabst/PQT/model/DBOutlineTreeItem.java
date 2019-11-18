@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
@@ -55,25 +56,6 @@ public class DBOutlineTreeItem extends TreeItem<String> {
             }
             return getChildren().isEmpty();
         }
-        /*if(this.getComponentType() != OutlineComponentType.DB_OBJECT && !hasLoadedChildren) {
-            // Interne Repräsentanten sind intial nie Blätter
-            if(hasLoadedChildren == false) {
-                loadChildren();
-            }
-            if(super.getChildren().isEmpty()) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return super.getChildren().isEmpty();
-        }*/
-
-
-        /*if(hasLoadedChildren == false) {
-            loadChildren();
-        }
-        return super.getChildren().isEmpty();*/
     }
 
     private void loadChildren() {
@@ -104,13 +86,16 @@ public class DBOutlineTreeItem extends TreeItem<String> {
             DBOutlineTreeItem function = new DBOutlineTreeItem(resBundle.getString("tree_view_functions"), OutlineComponentType.FUNCTION, metadataManager);
             children.add(function);
 
-            // TODO: fehlende Schemateile laden
+            // TODO: fehlende Schemateile laden (Sequences, Tabellenkomponenten )
         } else if (parent.getComponentType() == OutlineComponentType.TABLE) {
             String schemaName = parent.getParent().getValue();
             metadataManager.loadTablesForSchema(schemaName); // TODO: Reparieren -> sollte nicht manuell geladen werden
-            HashMap<String, Table> tables = metadataManager.getTablesForSchema(schemaName);
 
-            for(String s: tables.keySet()) {
+            ArrayList<String> tableNames = new ArrayList<>(metadataManager.getTablesForSchema(schemaName).keySet());
+            Comparator<String> c = Comparator.comparing((String x) -> x);
+            tableNames.sort(c);
+
+            for(String s: tableNames) {
                 DBOutlineTreeItem item = new DBOutlineTreeItem(s, OutlineComponentType.DB_OBJECT, metadataManager);
                 children.add(item);
             }
@@ -119,7 +104,11 @@ public class DBOutlineTreeItem extends TreeItem<String> {
             metadataManager.loadFunctionsForSchema(schemaName); // TODO: Reparieren -> sollte nicht manuell geladen werden
             HashMap<String, Function> functions = metadataManager.getFunctionsForSchema(schemaName);
 
-            for(String s: functions.keySet()) {
+            ArrayList<String> functionNames = new ArrayList<>(metadataManager.getFunctionsForSchema(schemaName).keySet());
+            Comparator<String> c = Comparator.comparing((String x) -> x);
+            functionNames.sort(c);
+
+            for(String s: functionNames) {
                 DBOutlineTreeItem item = new DBOutlineTreeItem(s, OutlineComponentType.DB_OBJECT, metadataManager);
                 children.add(item);
             }
@@ -128,7 +117,11 @@ public class DBOutlineTreeItem extends TreeItem<String> {
             metadataManager.loadViewsForSchema(schemaName); // TODO: Reparieren -> sollte nicht manuell geladen werden
             HashMap<String, View> views = metadataManager.getViewsForSchema(schemaName);
 
-            for(String s: views.keySet()) {
+            ArrayList<String> viewNames = new ArrayList<>(metadataManager.getViewsForSchema(schemaName).keySet());
+            Comparator<String> c = Comparator.comparing((String x) -> x);
+            viewNames.sort(c);
+
+            for(String s: viewNames) {
                 DBOutlineTreeItem item = new DBOutlineTreeItem(s, OutlineComponentType.DB_OBJECT, metadataManager);
                 children.add(item);
             }
