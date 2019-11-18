@@ -6,7 +6,6 @@ import de.oliverpabst.PQT.db.metadata.model.View;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
@@ -89,7 +88,7 @@ public class DBOutlineTreeItem extends TreeItem<String> {
             }
         } else if (parent.getComponentType() == OutlineComponentType.SCHEMA) {
             DBOutlineTreeItem table = new DBOutlineTreeItem(resBundle.getString("tree_view_tables"), OutlineComponentType.TABLE,
-                    metadataManager, new ImageView(ImageProvider.getInstance().getTableImage()));
+                    metadataManager, new ImageView(ImageProvider.getInstance().getTableIcon()));
             children.add(table);
 
             DBOutlineTreeItem view = new DBOutlineTreeItem(resBundle.getString("tree_view_views"), OutlineComponentType.VIEW, metadataManager);
