@@ -1,12 +1,13 @@
 package de.oliverpabst.PQT.model;
 
+import de.oliverpabst.PQT.ImageProvider;
 import de.oliverpabst.PQT.db.metadata.MetadataManager;
-import de.oliverpabst.PQT.db.metadata.model.Function;
-import de.oliverpabst.PQT.db.metadata.model.Schema;
-import de.oliverpabst.PQT.db.metadata.model.Table;
 import de.oliverpabst.PQT.db.metadata.model.View;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -29,6 +30,14 @@ public class DBOutlineTreeItem extends TreeItem<String> {
 
     public DBOutlineTreeItem(String _name, OutlineComponentType _compType, MetadataManager _mm) {
         super(_name);
+        schemaCompName = _name;
+        compType = _compType;
+        metadataManager = _mm;
+
+    }
+
+    public DBOutlineTreeItem(String _name, OutlineComponentType _compType, MetadataManager _mm, Node _image) {
+        super(_name, _image);
         schemaCompName = _name;
         compType = _compType;
         metadataManager = _mm;
@@ -79,16 +88,19 @@ public class DBOutlineTreeItem extends TreeItem<String> {
                 children.add(item);
             }
         } else if (parent.getComponentType() == OutlineComponentType.SCHEMA) {
-            DBOutlineTreeItem table = new DBOutlineTreeItem(resBundle.getString("tree_view_tables"), OutlineComponentType.TABLE, metadataManager);
+            DBOutlineTreeItem table = new DBOutlineTreeItem(resBundle.getString("tree_view_tables"), OutlineComponentType.TABLE,
+                    metadataManager, new ImageView(ImageProvider.getInstance().getTableImage()));
             children.add(table);
+
             DBOutlineTreeItem view = new DBOutlineTreeItem(resBundle.getString("tree_view_views"), OutlineComponentType.VIEW, metadataManager);
             children.add(view);
+
             DBOutlineTreeItem function = new DBOutlineTreeItem(resBundle.getString("tree_view_functions"), OutlineComponentType.FUNCTION, metadataManager);
             children.add(function);
+
             DBOutlineTreeItem sequence = new DBOutlineTreeItem(resBundle.getString("tree_view_sequences"), OutlineComponentType.SEQUENCE, metadataManager);
             children.add(sequence);
 
-            // TODO: fehlende Schemateile laden (Sequences, Tabellenkomponenten )
         } else if (parent.getComponentType() == OutlineComponentType.TABLE) {
             String schemaName = parent.getParent().getValue();
             metadataManager.loadTablesForSchema(schemaName); // TODO: Reparieren -> sollte nicht manuell geladen werden
@@ -98,7 +110,7 @@ public class DBOutlineTreeItem extends TreeItem<String> {
             tableNames.sort(c);
 
             for(String s: tableNames) {
-                DBOutlineTreeItem item = new DBOutlineTreeItem(s, OutlineComponentType.DB_OBJECT, metadataManager);
+                DBOutlineTreeItem item = new DBOutlineTreeItem(s, OutlineComponentType.TABLE_OBJECT, metadataManager);
                 children.add(item);
             }
         } else if (parent.getComponentType() == OutlineComponentType.FUNCTION) {
@@ -138,7 +150,25 @@ public class DBOutlineTreeItem extends TreeItem<String> {
                 DBOutlineTreeItem item = new DBOutlineTreeItem(s, OutlineComponentType.DB_OBJECT, metadataManager);
                 children.add(item);
             }
-        }
+        } else if (parent.getComponentType() == OutlineComponentType.TABLE_OBJECT) {
+            // Spalten
+            DBOutlineTreeItem columns = new DBOutlineTreeItem(resBundle.getString("tree_view_table_columns"),
+                    OutlineComponentType.TABLE_COLUMN, metadataManager);
+            children.add(columns);
+            // Constraints
+            DBOutlineTreeItem constraints = new DBOutlineTreeItem(resBundle.getString("tree_view_table_constraints"),
+                    OutlineComponentType.TABLE_CONSTRAINT, metadataManager);
+            children.add(constraints);
+            // Indices
+            DBOutlineTreeItem indices = new DBOutlineTreeItem(resBundle.getString("tree_view_table_indices"),
+                    OutlineComponentType.TABLE_INDEX, metadataManager);
+            children.add(indices);
+            // Triggers
+            DBOutlineTreeItem triggers = new DBOutlineTreeItem(resBundle.getString("tree_view_table_triggers"),
+                    OutlineComponentType.TABLE_TRIGGER, metadataManager);
+            children.add(triggers);
+
+        }// Tabelle und Einzelteile der Tabelle laden
 
         super.getChildren().setAll(children);
     }

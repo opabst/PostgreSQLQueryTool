@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Table extends DatabaseObject {
     private final ArrayList<Column> columns;
     private final ArrayList<Constraint> constraints;
-    private final ArrayList<Index> indizes;
+    private final ArrayList<Index> indices;
     private final ArrayList<Trigger> triggers;
 
     public Table(String _objectName, String _owner, String _acl, ArrayList<Column> _columns, ArrayList<Constraint> _constraints,
@@ -18,7 +18,7 @@ public class Table extends DatabaseObject {
         super(_objectName, _owner, _acl);
         columns = _columns;
         constraints = _constraints;
-        indizes = _indices;
+        indices = _indices;
         triggers = _triggers;
     }
 
@@ -27,7 +27,7 @@ public class Table extends DatabaseObject {
         super(_objectName, "", "");
         columns = _columns;
         constraints = _constraints;
-        indizes = _indices;
+        indices = _indices;
         triggers = _triggers;
     }
 
@@ -39,8 +39,8 @@ public class Table extends DatabaseObject {
         return constraints;
     }
 
-    public ArrayList<Index> getIndizes() {
-        return indizes;
+    public ArrayList<Index> getIndices() {
+        return indices;
     }
 
     public ArrayList<Trigger> getTriggers() {
