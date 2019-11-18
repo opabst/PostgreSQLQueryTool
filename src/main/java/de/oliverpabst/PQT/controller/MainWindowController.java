@@ -1,5 +1,6 @@
 package de.oliverpabst.PQT.controller;
 
+import de.oliverpabst.PQT.ImageProvider;
 import de.oliverpabst.PQT.model.DBOutlineTreeItem;
 import de.oliverpabst.PQT.db.DBConnection;
 import de.oliverpabst.PQT.db.metadata.MetadataManager;
@@ -286,6 +287,8 @@ public class MainWindowController {
         Scene scene = new Scene(mainWindowPane);
 
         aboutWindow.setScene(scene);
+
+        aboutWindow.getIcons().add(ImageProvider.getInstance().getAppIcon());
 
         aboutWindow.initModality(Modality.APPLICATION_MODAL);
         aboutWindow.initOwner(mainMenuBar.getScene().getWindow());

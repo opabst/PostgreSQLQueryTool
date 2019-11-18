@@ -1,5 +1,6 @@
 package de.oliverpabst.PQT.controller;
 
+import de.oliverpabst.PQT.ImageProvider;
 import de.oliverpabst.PQT.db.ConnectionStore;
 import de.oliverpabst.PQT.db.DBConnection;
 import javafx.collections.ListChangeListener;
@@ -36,6 +37,7 @@ public class WelcomeScreenController {
 
     @FXML
     public void initialize() {
+
         ConnectionStore.getInstance().getConnections().addListener(new ListChangeListener<DBConnection>() {
             @Override
             public void onChanged(Change<? extends DBConnection> c) {
@@ -222,6 +224,8 @@ public class WelcomeScreenController {
 
         Scene scene = new Scene(connectionPane);
         connectionWindow.setScene(scene);
+
+        connectionWindow.getIcons().add(ImageProvider.getInstance().getAppIcon());
 
         connectionWindow.initModality(Modality.APPLICATION_MODAL);
         connectionWindow.initOwner(((Button)event.getTarget()).getScene().getWindow());

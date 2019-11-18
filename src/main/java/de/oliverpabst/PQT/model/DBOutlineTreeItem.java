@@ -83,7 +83,8 @@ public class DBOutlineTreeItem extends TreeItem<String> {
             ArrayList<String> schemaNames = metadataManager.getSchemaNames();
 
             for(String s: schemaNames) {
-                DBOutlineTreeItem item = new DBOutlineTreeItem(s, OutlineComponentType.SCHEMA, metadataManager);
+                DBOutlineTreeItem item = new DBOutlineTreeItem(s, OutlineComponentType.SCHEMA,
+                        metadataManager, new ImageView(ImageProvider.getInstance().getSchemaIcon()));
                 children.add(item);
             }
         } else if (parent.getComponentType() == OutlineComponentType.SCHEMA) {
@@ -91,13 +92,16 @@ public class DBOutlineTreeItem extends TreeItem<String> {
                     metadataManager, new ImageView(ImageProvider.getInstance().getTableIcon()));
             children.add(table);
 
-            DBOutlineTreeItem view = new DBOutlineTreeItem(resBundle.getString("tree_view_views"), OutlineComponentType.VIEW, metadataManager);
+            DBOutlineTreeItem view = new DBOutlineTreeItem(resBundle.getString("tree_view_views"), OutlineComponentType.VIEW,
+                    metadataManager, new ImageView(ImageProvider.getInstance().getViewIcon()));
             children.add(view);
 
-            DBOutlineTreeItem function = new DBOutlineTreeItem(resBundle.getString("tree_view_functions"), OutlineComponentType.FUNCTION, metadataManager);
+            DBOutlineTreeItem function = new DBOutlineTreeItem(resBundle.getString("tree_view_functions"), OutlineComponentType.FUNCTION,
+                    metadataManager, new ImageView(ImageProvider.getInstance().getFunctionIcon()));
             children.add(function);
 
-            DBOutlineTreeItem sequence = new DBOutlineTreeItem(resBundle.getString("tree_view_sequences"), OutlineComponentType.SEQUENCE, metadataManager);
+            DBOutlineTreeItem sequence = new DBOutlineTreeItem(resBundle.getString("tree_view_sequences"), OutlineComponentType.SEQUENCE,
+                    metadataManager, new ImageView(ImageProvider.getInstance().getSequenceIcon()));
             children.add(sequence);
 
         } else if (parent.getComponentType() == OutlineComponentType.TABLE) {

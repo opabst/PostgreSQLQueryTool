@@ -20,6 +20,7 @@ public class PostgresQueryTool extends Application {
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        stage.getIcons().add(ImageProvider.getInstance().getAppIcon());
         stage.show();
     }
 

@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 
 public class ImageProvider {
 
-
+    private Image appIcon;
     private Image constraintIcon;
     private Image functionIcon;
     private Image indexIcon;
@@ -14,6 +14,10 @@ public class ImageProvider {
     private Image viewIcon;
 
     private static ImageProvider instance;
+
+    public Image getAppIcon() {
+        return appIcon;
+    }
 
     public Image getConstraintIcon() {
         return constraintIcon;
@@ -55,6 +59,9 @@ public class ImageProvider {
     }
 
     private void loadAllImages() {
+        appIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/PQT/icons/PQT.png"),
+                22, 22, true, false);
+
         constraintIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/PQT/icons/Constraint.png"),
                 22, 22, true, false);
 
