@@ -139,6 +139,9 @@ public class WelcomeScreenController {
         grid.add(dbnameTextField, 1, 3);
 
         Button deleteButton = new Button();
+        deleteButton.setMinSize(100, 28);
+        deleteButton.setPrefSize(100, 28);
+        deleteButton.setPrefSize(100, 28);
         deleteButton.setText(resBundle.getString("connection_delete"));
         deleteButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -151,6 +154,9 @@ public class WelcomeScreenController {
         GridPane.setHalignment(deleteButton, HPos.RIGHT);
 
         Button modifyButton = new Button();
+        modifyButton.setMinSize(100, 28);
+        modifyButton.setPrefSize(100, 28);
+        modifyButton.setMaxSize(100, 28);
         modifyButton.setText(resBundle.getString("connection_modify"));
         modifyButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -162,6 +168,9 @@ public class WelcomeScreenController {
         GridPane.setHalignment(modifyButton, HPos.RIGHT);
 
         Button connectButton = new Button();
+        connectButton.setMinSize(100, 28);
+        connectButton.setPrefSize(100, 28);
+        connectButton.setMaxSize(100, 28);
         connectButton.setText(resBundle.getString("connection_connect"));
         connectButton.setOnAction(new EventHandler() {
             @Override
