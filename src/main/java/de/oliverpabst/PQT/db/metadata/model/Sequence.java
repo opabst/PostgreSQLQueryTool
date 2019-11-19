@@ -10,12 +10,12 @@ public class Sequence extends DatabaseObject {
     private final Boolean isCyclic;
     private final Boolean wasCalled;
 
-    public Sequence(String _objectName, String _owner, String _acl, Long _currentValue, Long _nextValue,
+    public Sequence(String _objectName, String _owner, String _acl, String _dataType, Long _currentValue, Long _nextValue,
                     Long _minValue, Long _maxValue, Long _incrementValue,
                     Boolean _isCyclic, Boolean _wasCalled) {
         super(_objectName, _owner, _acl);
 
-        dataType = ""; //TODO: Fix this!!
+        dataType = _dataType;
         currentValue = _currentValue;
         nextValue = _nextValue;
         minimumValue = _minValue;
@@ -65,6 +65,10 @@ public class Sequence extends DatabaseObject {
 
     public Boolean getWasCalled() {
         return wasCalled;
+    }
+
+    public String getDataType() {
+        return dataType;
     }
 
     public DatabaseObjectTypes getObjectType() {
