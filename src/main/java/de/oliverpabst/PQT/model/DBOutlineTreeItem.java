@@ -25,14 +25,11 @@ public class DBOutlineTreeItem extends TreeItem<String> {
 
     private boolean hasLoadedChildren = false;
 
-    private boolean hasBeenTested = false;
-
     public DBOutlineTreeItem(String _name, OutlineComponentType _compType, MetadataManager _mm) {
         super(_name);
         schemaCompName = _name;
         compType = _compType;
         metadataManager = _mm;
-
     }
 
     public DBOutlineTreeItem(String _name, OutlineComponentType _compType, MetadataManager _mm, Node _image) {
