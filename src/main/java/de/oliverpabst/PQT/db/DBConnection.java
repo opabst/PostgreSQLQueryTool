@@ -1,6 +1,5 @@
 package de.oliverpabst.PQT.db;
 
-// TODO: Ausnahmen behandeln
 import java.io.Serializable;
 import java.sql.*;
 
