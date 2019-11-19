@@ -73,6 +73,9 @@ public class MainWindowController {
     private Menu fileMENU;
 
     @FXML
+    private MenuItem fileSettingsITM;
+
+    @FXML
     private MenuItem fileCloseITM;
 
     @FXML
@@ -112,6 +115,7 @@ public class MainWindowController {
             analyzeBTN.setText(resBundle.getString("query_analyze_button"));
 
             fileMENU.setText(resBundle.getString("menu_file_submenu"));
+            fileSettingsITM.setText(resBundle.getString("menu_file_submenu_settings"));
             fileCloseITM.setText(resBundle.getString("menu_file_submenu_close"));
 
             editMENU.setText(resBundle.getString("menu_edit_submenu"));
@@ -274,17 +278,17 @@ public class MainWindowController {
     @FXML
     public void openAboutScreen(ActionEvent event) {
         Stage aboutWindow = new Stage();
-        Parent mainWindowPane = null;
+        Parent aboutWindowPane = null;
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("de/oliverpabst/PQT/views/About.fxml"));
-            mainWindowPane = loader.load();
+            aboutWindowPane = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        assert mainWindowPane != null;
-        Scene scene = new Scene(mainWindowPane);
+        assert aboutWindowPane != null;
+        Scene scene = new Scene(aboutWindowPane);
 
         aboutWindow.setScene(scene);
 
@@ -293,5 +297,26 @@ public class MainWindowController {
         aboutWindow.initModality(Modality.APPLICATION_MODAL);
         aboutWindow.initOwner(mainMenuBar.getScene().getWindow());
         aboutWindow.showAndWait();
+    }
+
+    @FXML
+    public void openSettings(ActionEvent event) {
+        Stage settingsWindow = new Stage();
+        Parent settingsWindowPane = null;
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("de/oliverpabst/PQT/views/Settings.fxml"));
+            settingsWindowPane = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Scene scene = new Scene(settingsWindowPane);
+        settingsWindow.setScene(scene);
+        settingsWindow.getIcons().add(ImageProvider.getInstance().getAppIcon());
+
+        settingsWindow.initModality(Modality.APPLICATION_MODAL);
+        settingsWindow.initOwner(mainMenuBar.getScene().getWindow());
+        settingsWindow.showAndWait();
     }
 }
