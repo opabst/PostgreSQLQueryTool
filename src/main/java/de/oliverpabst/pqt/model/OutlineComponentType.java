@@ -1,0 +1,6 @@
+package de.oliverpabst.pqt.model;
+
+public enum OutlineComponentType {
+    ROOT, SCHEMA, TABLE, VIEW, SEQUENCE, INDEX, CONSTRAINT, FUNCTION, DB_OBJECT,
+    TABLE_OBJECT, TABLE_COLUMN, TABLE_CONSTRAINT, TABLE_INDEX, TABLE_TRIGGER
+}
