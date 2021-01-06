@@ -8,10 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.ResourceBundle;
+import java.util.*;
 
 // TODO: TreeItems mit Icons versehen
 // TODO: alle OutlineObjects alphabetisch aufsteigend sortieren
@@ -67,104 +64,104 @@ public class DBOutlineTreeItem extends TreeItem<String> {
 
         hasLoadedChildren = true;
 
-        ResourceBundle resBundle = ResourceBundle.getBundle("de.oliverpabst.PQT.lang_properties.guistrings");
+        final ResourceBundle resBundle = ResourceBundle.getBundle("de.oliverpabst.PQT.lang_properties.guistrings");
 
 
-        ArrayList<DBOutlineTreeItem> children = new ArrayList<>();
+        final List<DBOutlineTreeItem> children = new ArrayList<>();
 
         DBOutlineTreeItem parent = this;
         if (this.getComponentType() == OutlineComponentType.ROOT) {
             // Elemente der obersten Hierarchie auf Datenbankebene laden
 
             // Schemata laden
-            ArrayList<String> schemaNames = metadataManager.getSchemaNames();
+            final List<String> schemaNames = metadataManager.getSchemaNames();
 
-            for (String s: schemaNames) {
-                DBOutlineTreeItem item = new DBOutlineTreeItem(s, OutlineComponentType.SCHEMA,
+            for (final String schemaName: schemaNames) {
+                final DBOutlineTreeItem item = new DBOutlineTreeItem(schemaName, OutlineComponentType.SCHEMA,
                         metadataManager, new ImageView(ImageProvider.getInstance().getSchemaIcon()));
                 children.add(item);
             }
         } else if (parent.getComponentType() == OutlineComponentType.SCHEMA) {
-            DBOutlineTreeItem table = new DBOutlineTreeItem(resBundle.getString("tree_view_tables"), OutlineComponentType.TABLE,
+            final DBOutlineTreeItem table = new DBOutlineTreeItem(resBundle.getString("tree_view_tables"), OutlineComponentType.TABLE,
                     metadataManager, new ImageView(ImageProvider.getInstance().getTableIcon()));
             children.add(table);
 
-            DBOutlineTreeItem view = new DBOutlineTreeItem(resBundle.getString("tree_view_views"), OutlineComponentType.VIEW,
+            final DBOutlineTreeItem view = new DBOutlineTreeItem(resBundle.getString("tree_view_views"), OutlineComponentType.VIEW,
                     metadataManager, new ImageView(ImageProvider.getInstance().getViewIcon()));
             children.add(view);
 
-            DBOutlineTreeItem function = new DBOutlineTreeItem(resBundle.getString("tree_view_functions"), OutlineComponentType.FUNCTION,
+            final DBOutlineTreeItem function = new DBOutlineTreeItem(resBundle.getString("tree_view_functions"), OutlineComponentType.FUNCTION,
                     metadataManager, new ImageView(ImageProvider.getInstance().getFunctionIcon()));
             children.add(function);
 
-            DBOutlineTreeItem sequence = new DBOutlineTreeItem(resBundle.getString("tree_view_sequences"), OutlineComponentType.SEQUENCE,
+            final DBOutlineTreeItem sequence = new DBOutlineTreeItem(resBundle.getString("tree_view_sequences"), OutlineComponentType.SEQUENCE,
                     metadataManager, new ImageView(ImageProvider.getInstance().getSequenceIcon()));
             children.add(sequence);
 
         } else if (parent.getComponentType() == OutlineComponentType.TABLE) {
-            String schemaName = parent.getParent().getValue();
+            final String schemaName = parent.getParent().getValue();
             metadataManager.loadTablesForSchema(schemaName); // TODO: Reparieren -> sollte nicht manuell geladen werden
 
-            ArrayList<String> tableNames = new ArrayList<>(metadataManager.getTablesForSchema(schemaName).keySet());
-            Comparator<String> c = Comparator.comparing((String x) -> x);
+            final List<String> tableNames = new ArrayList<>(metadataManager.getTablesForSchema(schemaName).keySet());
+            final Comparator<String> c = Comparator.comparing((String x) -> x);
             tableNames.sort(c);
 
-            for (String s: tableNames) {
-                DBOutlineTreeItem item = new DBOutlineTreeItem(s, OutlineComponentType.TABLE_OBJECT, metadataManager);
+            for (final String tableName: tableNames) {
+                final DBOutlineTreeItem item = new DBOutlineTreeItem(tableName, OutlineComponentType.TABLE_OBJECT, metadataManager);
                 children.add(item);
             }
         } else if (parent.getComponentType() == OutlineComponentType.FUNCTION) {
-            String schemaName = parent.getParent().getValue();
+            final String schemaName = parent.getParent().getValue();
             metadataManager.loadFunctionsForSchema(schemaName); // TODO: Reparieren -> sollte nicht manuell geladen werden
 
-            ArrayList<String> functionNames = new ArrayList<>(metadataManager.getFunctionsForSchema(schemaName).keySet());
-            Comparator<String> c = Comparator.comparing((String x) -> x);
+            final List<String> functionNames = new ArrayList<>(metadataManager.getFunctionsForSchema(schemaName).keySet());
+            final Comparator<String> c = Comparator.comparing((String x) -> x);
             functionNames.sort(c);
 
-            for (String s: functionNames) {
-                DBOutlineTreeItem item = new DBOutlineTreeItem(s, OutlineComponentType.DB_OBJECT, metadataManager);
+            for (final String functionName: functionNames) {
+                final DBOutlineTreeItem item = new DBOutlineTreeItem(functionName, OutlineComponentType.DB_OBJECT, metadataManager);
                 children.add(item);
             }
         } else if (parent.getComponentType() == OutlineComponentType.VIEW) {
-            String schemaName = parent.getParent().getValue();
+            final String schemaName = parent.getParent().getValue();
             metadataManager.loadViewsForSchema(schemaName); // TODO: Reparieren -> sollte nicht manuell geladen werden
             // final HashMap<String, View> views = metadataManager.getViewsForSchema(schemaName);
 
-            ArrayList<String> viewNames = new ArrayList<>(metadataManager.getViewsForSchema(schemaName).keySet());
-            Comparator<String> c = Comparator.comparing((String x) -> x);
+            final List<String> viewNames = new ArrayList<>(metadataManager.getViewsForSchema(schemaName).keySet());
+            final Comparator<String> c = Comparator.comparing((String x) -> x);
             viewNames.sort(c);
 
-            for(String s: viewNames) {
-                DBOutlineTreeItem item = new DBOutlineTreeItem(s, OutlineComponentType.DB_OBJECT, metadataManager);
+            for (final String viewName: viewNames) {
+                final DBOutlineTreeItem item = new DBOutlineTreeItem(viewName, OutlineComponentType.DB_OBJECT, metadataManager);
                 children.add(item);
             }
         } else if (parent.getComponentType() == OutlineComponentType.SEQUENCE) {
-            String schemaName = parent.getParent().getValue();
+            final String schemaName = parent.getParent().getValue();
             metadataManager.loadSequencesForSchema(schemaName);
 
-            ArrayList<String> sequenceNames = new ArrayList<>(metadataManager.getSequencesForSchema(schemaName).keySet());
-            Comparator<String> c = Comparator.comparing((String x) -> x);
+            final List<String> sequenceNames = new ArrayList<>(metadataManager.getSequencesForSchema(schemaName).keySet());
+            final Comparator<String> c = Comparator.comparing((String x) -> x);
             sequenceNames.sort(c);
 
-            for (String s: sequenceNames) {
-                DBOutlineTreeItem item = new DBOutlineTreeItem(s, OutlineComponentType.DB_OBJECT, metadataManager);
+            for (final String sequenceName: sequenceNames) {
+                final DBOutlineTreeItem item = new DBOutlineTreeItem(sequenceName, OutlineComponentType.DB_OBJECT, metadataManager);
                 children.add(item);
             }
         } else if (parent.getComponentType() == OutlineComponentType.TABLE_OBJECT) {
             // Spalten
-            DBOutlineTreeItem columns = new DBOutlineTreeItem(resBundle.getString("tree_view_table_columns"),
+            final DBOutlineTreeItem columns = new DBOutlineTreeItem(resBundle.getString("tree_view_table_columns"),
                     OutlineComponentType.TABLE_COLUMN, metadataManager);
             children.add(columns);
             // Constraints
-            DBOutlineTreeItem constraints = new DBOutlineTreeItem(resBundle.getString("tree_view_table_constraints"),
+            final DBOutlineTreeItem constraints = new DBOutlineTreeItem(resBundle.getString("tree_view_table_constraints"),
                     OutlineComponentType.TABLE_CONSTRAINT, metadataManager);
             children.add(constraints);
             // Indices
-            DBOutlineTreeItem indices = new DBOutlineTreeItem(resBundle.getString("tree_view_table_indices"),
+            final DBOutlineTreeItem indices = new DBOutlineTreeItem(resBundle.getString("tree_view_table_indices"),
                     OutlineComponentType.TABLE_INDEX, metadataManager);
             children.add(indices);
             // Triggers
-            DBOutlineTreeItem triggers = new DBOutlineTreeItem(resBundle.getString("tree_view_table_triggers"),
+            final DBOutlineTreeItem triggers = new DBOutlineTreeItem(resBundle.getString("tree_view_table_triggers"),
                     OutlineComponentType.TABLE_TRIGGER, metadataManager);
             children.add(triggers);
 

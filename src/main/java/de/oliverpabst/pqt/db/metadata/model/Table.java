@@ -6,15 +6,16 @@ import de.oliverpabst.pqt.db.metadata.model.table.Index;
 import de.oliverpabst.pqt.db.metadata.model.table.Trigger;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Table extends DatabaseObject {
-    private final ArrayList<Column> columns;
-    private final ArrayList<Constraint> constraints;
-    private final ArrayList<Index> indices;
-    private final ArrayList<Trigger> triggers;
+    private final List<Column> columns;
+    private final List<Constraint> constraints;
+    private final List<Index> indices;
+    private final List<Trigger> triggers;
 
-    public Table(String _objectName, String _owner, String _acl, ArrayList<Column> _columns, ArrayList<Constraint> _constraints,
-                 ArrayList<Index> _indices, ArrayList<Trigger> _triggers) {
+    public Table(final String _objectName, final String _owner, final String _acl, final List<Column> _columns, final List<Constraint> _constraints,
+                 final List<Index> _indices, final List<Trigger> _triggers) {
         super(_objectName, _owner, _acl);
         columns = _columns;
         constraints = _constraints;
@@ -22,8 +23,8 @@ public class Table extends DatabaseObject {
         triggers = _triggers;
     }
 
-    public Table(String _objectName, ArrayList<Column> _columns, ArrayList<Constraint> _constraints,
-                 ArrayList<Index> _indices, ArrayList<Trigger> _triggers) {
+    public Table(final String _objectName, final List<Column> _columns, final List<Constraint> _constraints,
+                 final List<Index> _indices, final List<Trigger> _triggers) {
         super(_objectName, "", "");
         columns = _columns;
         constraints = _constraints;
@@ -31,19 +32,19 @@ public class Table extends DatabaseObject {
         triggers = _triggers;
     }
 
-    public ArrayList<Column> getColumns() {
+    public List<Column> getColumns() {
         return columns;
     }
 
-    public ArrayList<Constraint> getConstraints() {
+    public List<Constraint> getConstraints() {
         return constraints;
     }
 
-    public ArrayList<Index> getIndices() {
+    public List<Index> getIndices() {
         return indices;
     }
 
-    public ArrayList<Trigger> getTriggers() {
+    public List<Trigger> getTriggers() {
         return triggers;
     }
 

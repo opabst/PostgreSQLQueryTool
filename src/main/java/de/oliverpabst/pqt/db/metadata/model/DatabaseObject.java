@@ -5,7 +5,7 @@ public abstract class DatabaseObject {
     private final String owner;
     private final String accessControlList;
 
-    public DatabaseObject(String _objectName, String _owner, String _acl) {
+    public DatabaseObject(final String _objectName, final String _owner, final String _acl) {
         objectName = _objectName;
         owner = _owner;
         accessControlList = _acl;

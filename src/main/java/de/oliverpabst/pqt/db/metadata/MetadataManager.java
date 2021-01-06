@@ -9,16 +9,13 @@ import de.oliverpabst.pqt.db.metadata.model.table.Trigger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class MetadataManager {
 
     private boolean schemasLoaded = false;
 
-    private final HashMap<String, Schema> schemas; // HashMap aus Schemas, die wiederrum die Datenbankobjekte enthält
+    private final Map<String, Schema> schemas; // HashMap aus Schemas, die wiederrum die Datenbankobjekte enthält
 
     // TODO: Listen von Datenbankobjekten als sortierte Priority Queues vorhalten
 
@@ -59,12 +56,12 @@ public class MetadataManager {
 
         try {
 
-            ResultSet rs = dbConnection.executeQuery("SELECT schema_name, schema_owner FROM information_schema.schemata " +
+            final ResultSet rs = dbConnection.executeQuery("SELECT schema_name, schema_owner FROM information_schema.schemata " +
                     "WHERE schema_name NOT IN ('information_schema', 'pg_catalog')");
 
-            while(rs.next()) {
-                String schema_name = rs.getString("schema_name");
-                String schema_owner = rs.getString("schema_owner");
+            while (rs.next()) {
+                final String schema_name = rs.getString("schema_name");
+                final String schema_owner = rs.getString("schema_owner");
 
                 Schema s = new Schema(schema_name, schema_owner);
                 schemas.put(schema_name, s);
@@ -74,117 +71,117 @@ public class MetadataManager {
         }
     }
 
-    public void loadTablesForSchema(String _schemaName) {
+    public void loadTablesForSchema(final String schemaName) {
 
         ArrayList<String> tableNames = new ArrayList<>();
 
         try {
-            ResultSet rs = dbConnection.executeQuery("SELECT table_name FROM information_schema.tables " +
-                    "WHERE table_schema = '" + _schemaName + "'");
+            final ResultSet rs = dbConnection.executeQuery("SELECT table_name FROM information_schema.tables " +
+                    "WHERE table_schema = '" + schemaName + "'");
 
             while (rs.next()) {
-                String tableName = rs.getString("table_name");
+                final String tableName = rs.getString("table_name");
 
                 tableNames.add(tableName);
             }
 
-            for (String tableName : tableNames) {
-                ArrayList<Column> columns = getTableColumns(_schemaName, tableName);
-                ArrayList<Trigger> triggers = getTableTriggers(_schemaName, tableName);
-                ArrayList<Index> indices = getTableIndizes(_schemaName, tableName);
-                ArrayList<Constraint> constraints = getTableConstraints(_schemaName, tableName);
+            for (final String tableName : tableNames) {
+                final List<Column> columns = getTableColumns(schemaName, tableName);
+                final List<Trigger> triggers = getTableTriggers(schemaName, tableName);
+                final List<Index> indices = getTableIndizes(schemaName, tableName);
+                final List<Constraint> constraints = getTableConstraints(schemaName, tableName);
 
-                schemas.get(_schemaName).addTable(tableName, new Table(tableName, columns, constraints, indices, triggers));
+                schemas.get(schemaName).addTable(tableName, new Table(tableName, columns, constraints, indices, triggers));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public HashMap<String, Table> getTablesForSchema(String _schemaName) {
-        return schemas.get(_schemaName).getAllTables();
+    public Map<String, Table> getTablesForSchema(final String schemaName) {
+        return schemas.get(schemaName).getAllTables();
     }
 
-    public void loadFunctionsForSchema(String _schemaName) {
+    public void loadFunctionsForSchema(final String schemaName) {
         try {
-            ResultSet rs = dbConnection.executeQuery("SELECT routine_name, data_type, routine_body, routine_definition " +
+            final ResultSet rs = dbConnection.executeQuery("SELECT routine_name, data_type, routine_body, routine_definition " +
                     " FROM information_schema.routines " +
-                    " WHERE specific_schema = '" + _schemaName + "'");
+                    " WHERE specific_schema = '" + schemaName + "'");
 
             while (rs.next()) {
-                String funcName = rs.getString("routine_name");
-                String dataType = rs.getString("data_type");
-                String funcBody = rs.getString("routine_body");
-                String funcDef = rs.getString("routine_definition");
+                final String funcName = rs.getString("routine_name");
+                final String dataType = rs.getString("data_type");
+                final String funcBody = rs.getString("routine_body");
+                final String funcDef = rs.getString("routine_definition");
 
-                schemas.get(_schemaName).addFunction(funcName, new Function(funcName, dataType, funcBody, funcDef));
+                schemas.get(schemaName).addFunction(funcName, new Function(funcName, dataType, funcBody, funcDef));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public HashMap<String, Function> getFunctionsForSchema(String _schemaName) {
-        return schemas.get(_schemaName).getAllFunctions();
+    public Map<String, Function> getFunctionsForSchema(final String schemaName) {
+        return schemas.get(schemaName).getAllFunctions();
     }
 
-    public void loadViewsForSchema(String _schemaName) {
+    public void loadViewsForSchema(final String schemaName) {
 
         try {
-            ResultSet rs = dbConnection.executeQuery("SELECT table_name, view_definition " +
-                    "FROM information_schema.views WHERE table_schema = '" + _schemaName + "'");
+            final ResultSet rs = dbConnection.executeQuery("SELECT table_name, view_definition " +
+                    "FROM information_schema.views WHERE table_schema = '" + schemaName + "'");
             while (rs.next()) {
-                String viewName = rs.getString("table_name");
-                String viewDefinition = rs.getString("view_definition");
+                final String viewName = rs.getString("table_name");
+                final String viewDefinition = rs.getString("view_definition");
 
-                schemas.get(_schemaName).addView(viewName, new View(viewName, viewDefinition));
+                schemas.get(schemaName).addView(viewName, new View(viewName, viewDefinition));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public HashMap<String, View> getViewsForSchema(String _schemaName) {
-        return schemas.get(_schemaName).getAllViews();
+    public Map<String, View> getViewsForSchema(final String schemaName) {
+        return schemas.get(schemaName).getAllViews();
     }
 
-    public void loadSequencesForSchema(String _schemaName) {
+    public void loadSequencesForSchema(final String schemaName) {
 
         try {
-            ResultSet rs = dbConnection.executeQuery("SELECT sequence_name, data_type, start_value, minimum_value, maximum_value, increment "
-                    + " FROM information_schema.sequences WHERE sequence_schema = '" + _schemaName + "'");
+            final ResultSet rs = dbConnection.executeQuery("SELECT sequence_name, data_type, start_value, minimum_value, maximum_value, increment "
+                    + " FROM information_schema.sequences WHERE sequence_schema = '" + schemaName + "'");
             while (rs.next()) {
-                String sequenceName = rs.getString("sequence_name");
-                String dataType = rs.getString("data_type");
-                Long startValue = rs.getLong("start_value");
-                Long minValue = rs.getLong("minimum_value");
-                Long maxValue = rs.getLong("maximum_value");
-                Long increment = rs.getLong("increment");
+                final String sequenceName = rs.getString("sequence_name");
+                final String dataType = rs.getString("data_type");
+                final Long startValue = rs.getLong("start_value");
+                final Long minValue = rs.getLong("minimum_value");
+                final Long maxValue = rs.getLong("maximum_value");
+                final Long increment = rs.getLong("increment");
 
-                schemas.get(_schemaName).addSequence(sequenceName, new Sequence(sequenceName, dataType, startValue, minValue, maxValue, increment));
+                schemas.get(schemaName).addSequence(sequenceName, new Sequence(sequenceName, dataType, startValue, minValue, maxValue, increment));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public HashMap<String, Sequence> getSequencesForSchema(String _schemaName) {
-        return schemas.get(_schemaName).getAllSequences();
+    public Map<String, Sequence> getSequencesForSchema(final String schemaName) {
+        return schemas.get(schemaName).getAllSequences();
     }
 
-    private ArrayList<Sequence> getSequences(String _schemaName) {
-        ArrayList<Sequence> sequences = new ArrayList<>();
+    private List<Sequence> getSequences(final String schemaName) {
+        final List<Sequence> sequences = new ArrayList<>();
 
         try {
-            ResultSet rs = dbConnection.executeQuery("SELECT sequence_name, data_type, start_value, minimum_value, maximum_value, increment "
-                    + " FROM information_schema.sequences WHERE sequence_schema = '" + _schemaName + "'");
-            while(rs.next()) {
-                String sequenceName = rs.getString("sequence_name");
-                String dataType = rs.getString("data_type");
-                Long startValue = rs.getLong("start_value");
-                Long minValue = rs.getLong("minimum_value");
-                Long maxValue = rs.getLong("maximum_value");
-                Long increment = rs.getLong("increment");
+            final ResultSet rs = dbConnection.executeQuery("SELECT sequence_name, data_type, start_value, minimum_value, maximum_value, increment "
+                    + " FROM information_schema.sequences WHERE sequence_schema = '" + schemaName + "'");
+            while (rs.next()) {
+                final String sequenceName = rs.getString("sequence_name");
+                final String dataType = rs.getString("data_type");
+                final Long startValue = rs.getLong("start_value");
+                final Long minValue = rs.getLong("minimum_value");
+                final Long maxValue = rs.getLong("maximum_value");
+                final Long increment = rs.getLong("increment");
                 sequences.add(new Sequence(sequenceName, dataType, startValue, minValue, maxValue, increment));
             }
 
@@ -195,21 +192,21 @@ public class MetadataManager {
         return sequences;
     }
 
-    private ArrayList<Function> getFunctions(String _schemaName) {
-        ArrayList<Function> functions = new ArrayList<>();
+    private List<Function> getFunctions(final String schemaName) {
+        final List<Function> functions = new ArrayList<>();
 
         // information_schema.parameters
 
         try {
-            ResultSet rs = dbConnection.executeQuery("SELECT routine_name, data_type, routine_body, routine_definition " +
+            final ResultSet rs = dbConnection.executeQuery("SELECT routine_name, data_type, routine_body, routine_definition " +
                     " FROM information_schema.routines " +
-                    " WHERE specific_schema = '" + _schemaName + "'");
+                    " WHERE specific_schema = '" + schemaName + "'");
 
             while (rs.next()) {
-                String funcName = rs.getString("routine_name");
-                String dataType = rs.getString("data_type");
-                String funcBody = rs.getString("routine_body");
-                String funcDef = rs.getString("routine_definition");
+                final String funcName = rs.getString("routine_name");
+                final String dataType = rs.getString("data_type");
+                final String funcBody = rs.getString("routine_body");
+                final String funcDef = rs.getString("routine_definition");
 
                 functions.add(new Function(funcName, dataType, funcBody, funcDef));
             }
@@ -220,25 +217,25 @@ public class MetadataManager {
         return functions;
     }
 
-    private ArrayList<Table> getTables(String _schemaName) {
-        ArrayList<Table> tables = new ArrayList<>();
-        ArrayList<String> tableNames = new ArrayList<>();
+    private List<Table> getTables(final String schemaName) {
+        final List<Table> tables = new ArrayList<>();
+        final List<String> tableNames = new ArrayList<>();
 
         try {
-            ResultSet rs = dbConnection.executeQuery("SELECT table_name FROM information_schema.tables " +
-                    "WHERE table_schema = '" + _schemaName + "'");
+            final ResultSet rs = dbConnection.executeQuery("SELECT table_name FROM information_schema.tables " +
+                    "WHERE table_schema = '" + schemaName + "'");
 
             while (rs.next()) {
-                String tableName = rs.getString("table_name");
+                final String tableName = rs.getString("table_name");
 
                 tableNames.add(tableName);
             }
 
-            for(String tableName: tableNames) {
-                ArrayList<Column> columns = getTableColumns(_schemaName, tableName);
-                ArrayList<Trigger> triggers = getTableTriggers(_schemaName, tableName);
-                ArrayList<Index> indizes = getTableIndizes(_schemaName, tableName);
-                ArrayList<Constraint> constraints = getTableConstraints(_schemaName, tableName);
+            for (final String tableName: tableNames) {
+                final List<Column> columns = getTableColumns(schemaName, tableName);
+                final List<Trigger> triggers = getTableTriggers(schemaName, tableName);
+                final List<Index> indizes = getTableIndizes(schemaName, tableName);
+                final List<Constraint> constraints = getTableConstraints(schemaName, tableName);
 
                 tables.add(new Table(tableName, columns, constraints, indizes, triggers));
             }
@@ -249,26 +246,26 @@ public class MetadataManager {
         return tables;
     }
 
-    private ArrayList<Column> getTableColumns(String _schemaName, String _tableName) {
-        ArrayList<Column> columns = new ArrayList<>();
+    private List<Column> getTableColumns(final String schemaName, final String tableName) {
+        final List<Column> columns = new ArrayList<>();
 
         try {
-            ResultSet rs = dbConnection.executeQuery("SELECT column_name, ordinal_position, data_type, is_nullable, character_maximum_length, numeric_precision," +
+            final ResultSet rs = dbConnection.executeQuery("SELECT column_name, ordinal_position, data_type, is_nullable, character_maximum_length, numeric_precision," +
                     " numeric_precision_radix, numeric_scale, datetime_precision, interval_type " +
-                    " FROM information_schema.columns WHERE table_schema = '" + _schemaName + "' AND table_name = '" + _tableName + "'");
+                    " FROM information_schema.columns WHERE table_schema = '" + schemaName + "' AND table_name = '" + tableName + "'");
 
-            while(rs.next()) {
+            while (rs.next()) {
                 // TODO: handle NULL-values!
-                String columnName = rs.getString("column_name");
-                Integer columnPos = rs.getInt("ordinal_position");
-                String dataType = rs.getString("data_type");
-                Boolean isNullable = rs.getBoolean("is_nullable");
-                Integer maxStringLength = rs.getInt("character_maximum_length"); // if dataType is CHAR or bit string
-                Integer numericPrecision = rs.getInt("numeric_precision"); // if numeric
-                Integer numericPrecisionRadix = rs.getInt("numeric_precision_radix"); // if numeric determines the base of expression
-                Integer numericScale = rs.getInt("numeric_scale"); // if numeric
-                Integer datetimePrecision = rs.getInt("datetime_precision");
-                String intervalType = rs.getString("interval_type");
+                final String columnName = rs.getString("column_name");
+                final Integer columnPos = rs.getInt("ordinal_position");
+                final String dataType = rs.getString("data_type");
+                final Boolean isNullable = rs.getBoolean("is_nullable");
+                final Integer maxStringLength = rs.getInt("character_maximum_length"); // if dataType is CHAR or bit string
+                final Integer numericPrecision = rs.getInt("numeric_precision"); // if numeric
+                final Integer numericPrecisionRadix = rs.getInt("numeric_precision_radix"); // if numeric determines the base of expression
+                final Integer numericScale = rs.getInt("numeric_scale"); // if numeric
+                final Integer datetimePrecision = rs.getInt("datetime_precision");
+                final String intervalType = rs.getString("interval_type");
 
                 columns.add(new Column(columnPos, columnName, dataType, isNullable));
             }
@@ -279,16 +276,16 @@ public class MetadataManager {
         return columns;
     }
 
-    private ArrayList<Trigger> getTableTriggers(String _schemaName, String _tableName) {
-        ArrayList<Trigger> triggers = new ArrayList<>();
+    private List<Trigger> getTableTriggers(final String schemaName, final String tableName) {
+        final List<Trigger> triggers = new ArrayList<>();
         // information_schema.triggers
         // TODO: implement
 
         return triggers;
     }
 
-    private ArrayList<Index> getTableIndizes(String _schemaName, String _tableName) {
-        ArrayList<Index> indizes = new ArrayList<>();
+    private List<Index> getTableIndizes(final String schemaName, final String tableName) {
+        final List<Index> indizes = new ArrayList<>();
 
 
         // pg_indexes
@@ -297,21 +294,21 @@ public class MetadataManager {
         return indizes;
     }
 
-    private ArrayList<Constraint> getTableConstraints(String _schemaName, String _tableName) {
-        ArrayList<Constraint> constraints = new ArrayList<>();
+    private List<Constraint> getTableConstraints(final String schemaName, final String tableName) {
+        final List<Constraint> constraints = new ArrayList<>();
         // information_schema.referential_constraints
         // information_schema.table_constraints
         // information_schema.check_constraints
         // information_schema.key_column_usage
         try {
-            ResultSet rs = dbConnection.executeQuery("SELECT column_name, constraint_schema, constraint_name " +
-                    "FROM information_schema.constraint_column_usage WHERE table_schema = '" + _schemaName + "' AND " +
-                    " table_name = '" + _tableName + "'");
+            final ResultSet rs = dbConnection.executeQuery("SELECT column_name, constraint_schema, constraint_name " +
+                    "FROM information_schema.constraint_column_usage WHERE table_schema = '" + schemaName + "' AND " +
+                    " table_name = '" + tableName + "'");
 
             while (rs.next()) {
-                String columnName = rs.getString("column_name");
-                String constrainSchema = rs.getString("constraint_schema");
-                String constraintName = rs.getString("constraint_name");
+                final String columnName = rs.getString("column_name");
+                final String constrainSchema = rs.getString("constraint_schema");
+                final String constraintName = rs.getString("constraint_name");
 
                 constraints.add(new Constraint(constraintName, constrainSchema.concat(columnName)));
             }
@@ -322,15 +319,15 @@ public class MetadataManager {
         return constraints;
     }
 
-    private ArrayList<View> getViews(String _schemaName) {
-        ArrayList<View> views = new ArrayList<>();
+    private List<View> getViews(final String schemaName) {
+        final List<View> views = new ArrayList<>();
 
         try {
-            ResultSet rs = dbConnection.executeQuery("SELECT table_name, view_definition " +
-                    "FROM information_schema.views WHERE table_schema = '" + _schemaName + "'");
+            final ResultSet rs = dbConnection.executeQuery("SELECT table_name, view_definition " +
+                    "FROM information_schema.views WHERE table_schema = '" + schemaName + "'");
             while (rs.next()) {
-                String viewName = rs.getString("table_name");
-                String viewDefinition = rs.getString("view_definition");
+                final String viewName = rs.getString("table_name");
+                final String viewDefinition = rs.getString("view_definition");
 
                 views.add(new View(viewName, viewDefinition));
             }
