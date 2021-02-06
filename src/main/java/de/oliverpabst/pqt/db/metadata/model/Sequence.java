@@ -10,31 +10,31 @@ public class Sequence extends DatabaseObject {
     private final Boolean isCyclic;
     private final Boolean wasCalled;
 
-    public Sequence(String _objectName, String _owner, String _acl, String _dataType, Long _currentValue, Long _nextValue,
-                    Long _minValue, Long _maxValue, Long _incrementValue,
-                    Boolean _isCyclic, Boolean _wasCalled) {
-        super(_objectName, _owner, _acl);
+    public Sequence(final String objectName, final String owner, final String acl, final String dataType,
+                    final Long currentValue, final Long nextValue, final Long minValue, final Long maxValue,
+                    final Long incrementValue, final Boolean isCyclic, final Boolean wasCalled) {
+        super(objectName, owner, acl);
 
-        dataType = _dataType;
-        currentValue = _currentValue;
-        nextValue = _nextValue;
-        minimumValue = _minValue;
-        maximumValue = _maxValue;
-        incrementValue = _incrementValue;
-        isCyclic = _isCyclic;
-        wasCalled = _wasCalled;
+        this.dataType = dataType;
+        this.currentValue = currentValue;
+        this.nextValue = nextValue;
+        minimumValue = minValue;
+        maximumValue = maxValue;
+        this.incrementValue = incrementValue;
+        this.isCyclic = isCyclic;
+        this.wasCalled = wasCalled;
     }
 
-    public Sequence(String _objectName, String _dataType, Long _currentValue,
-                    Long _minValue, Long _maxValue, Long _incrementValue) {
-        super(_objectName, "", "");
+    public Sequence(final String objectName, final String dataType, final Long currentValue,
+                    final Long minValue, final Long maxValue, final Long incrementValue) {
+        super(objectName, "", "");
 
-        dataType = _dataType;
-        currentValue = _currentValue;
+        this.dataType = dataType;
+        this.currentValue = currentValue;
         nextValue = Long.MIN_VALUE;
-        minimumValue = _minValue;
-        maximumValue = _maxValue;
-        incrementValue = _incrementValue;
+        minimumValue = minValue;
+        maximumValue = maxValue;
+        this.incrementValue = incrementValue;
         isCyclic = false;
         wasCalled = false;
     }
