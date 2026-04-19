@@ -12,18 +12,18 @@ public class SettingsStore {
         settings = new HashMap<>();
     }
 
-    private static SettingsStore getInstance() {
+    public static SettingsStore getInstance() {
         if(instance == null) {
             instance = new SettingsStore();
         }
         return instance;
     }
 
-    private String getSetting(String _key) {
+    public String getSetting(String _key) {
         return settings.get(_key);
     }
 
-    private Boolean changeSetting(String _key, String _value) {
+    public Boolean changeSetting(String _key, String _value) {
         if(!settings.containsKey(_key)) {
             return false;
         } else {
@@ -32,7 +32,7 @@ public class SettingsStore {
         }
     }
 
-    private Boolean addSetting(String _key, String _value) {
+    public Boolean addSetting(String _key, String _value) {
         if(settings.containsKey(_key)) {
             return false;
         } else {

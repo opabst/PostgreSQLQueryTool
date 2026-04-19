@@ -1,14 +1,22 @@
 # Copilot Instructions for PostgreSQL Query Tool
 
 ## Project Overview
-Desktop GUI application for querying PostgreSQL databases, built with Java 25 and JavaFX 25. Uses Maven for builds. JavaFX 25 requires JDK 23 or later; the project is currently built with JDK 25.
+Desktop GUI application for querying PostgreSQL databases, built with Java 23 (source/target) and JavaFX 25. Uses Maven for builds. JavaFX 25 requires JDK 23 or later; the project is currently built with JDK 25.
 
 ## Architecture
-Follows an MVC pattern:
+Follows the **MVVM** (Model-View-ViewModel) pattern:
+
 - **Views**: FXML files in `src/main/resources/de/oliverpabst/pqt/views/`
-- **Controllers**: Java classes in `de.oliverpabst.pqt.controller`
-- **DB layer**: `de.oliverpabst.pqt.db` — JDBC wrappers and metadata queries
-- **Domain models**: `de.oliverpabst.pqt.db.metadata.model` — Schema, Table, View, Function, Sequence, Trigger, and nested table objects (Column, Index, Constraint)
+- **Controllers** (`de.oliverpabst.pqt.controller`): thin binders only — wire JavaFX property bindings between the View and the ViewModel; no business logic
+- **ViewModels** (`de.oliverpabst.pqt.viewmodel`): own all UI state as JavaFX properties; expose command methods (`runQuery()`, `testConnection()`, etc.)
+- **Services** (`de.oliverpabst.pqt.service`): background `Service<T>` / `Task<T>` subclasses that run JDBC work off the UI thread (`QueryService`, `ConnectionTestService`)
+- **DB layer** (`de.oliverpabst.pqt.db`): JDBC wrappers (`DBConnection`), `ConnectionStore`, `MetadataManager`
+- **Domain models** (`de.oliverpabst.pqt.db.metadata.model`): `Schema`, `Table`, `View`, `Function`, `Sequence`, `Trigger`, and nested table objects (`Column`, `Index`, `Constraint`)
+- **UI tree model** (`de.oliverpabst.pqt.model`): `DBOutlineTreeItem`, `OutlineComponentType`
+- **Result model** (`de.oliverpabst.pqt.model`): `QueryResult` record
+
+### Wiring pattern
+Each controller has a `setViewModel(XViewModel vm)` method that is called immediately after `FXMLLoader.load()`. All property bindings and listener registrations happen there, not in `initialize()`.
 
 ## Conventions
 - **Package prefix**: `de.oliverpabst.pqt`
@@ -16,13 +24,17 @@ Follows an MVC pattern:
 - **UI strings**: Never hard-code user-visible strings. Add them to both `guistrings.properties` (English) and `guistrings_de.properties` (German), then reference via `ResourceBundle`.
 - **Observable collections**: Use JavaFX `ObservableList` / `ObservableMap` for any data that drives a UI component.
 - **Lazy loading**: Tree nodes must load children on-demand (override `isLeaf()` and populate in an expansion listener), not eagerly.
-- **FXML controllers**: Each controller is wired to its `.fxml` via `fx:controller`. Keep business logic out of controllers; delegate to the DB layer or model classes.
+- **Passwords**: Never persist passwords. `DBConnection` holds a runtime-only password field populated by the user at connect time.
+- **SQL parameters**: Always use the `executeQuery(sql, params, ResultSetHandler)` overload in `DBConnection` for metadata queries — never concatenate user input into SQL strings.
+- **JDBC resources**: Use `ResultSetHandler<T>` callbacks so that `Statement` and `ResultSet` are closed inside `DBConnection`, not in callers.
+- **Schema ordering**: `Schema` stores its children in `TreeMap` for deterministic alphabetical ordering.
 
 ## Key Dependencies
 | Dependency | Version | Purpose |
 |---|---|---|
 | JavaFX | 25 | UI framework |
-| PostgreSQL JDBC | 42.2.18 | Database connectivity |
+| PostgreSQL JDBC | 42.7.10 | Database connectivity |
+| Jackson Databind | 2.18.3 | JSON persistence for connection profiles |
 | SLF4J | 1.7.21 | Logging |
 | JUnit 5 | 5.7.0 | Unit testing |
 
@@ -40,5 +52,6 @@ mvn test
 
 ## What to Avoid
 - Do not add new global singletons; prefer passing dependencies explicitly in new code.
-- Do not store plain-text passwords beyond what `ConnectionStore` already does.
+- Do not store passwords — not in `ConnectionStore`, not in JSON, not anywhere on disk.
 - Do not bypass the `MetadataManager` cache for repeated metadata queries.
+- Do not put business logic in controllers; delegate to ViewModels or the DB layer.

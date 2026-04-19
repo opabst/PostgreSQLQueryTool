@@ -1,16 +1,15 @@
 package de.oliverpabst.pqt.db;
 
-import java.io.Serializable;
 import java.sql.*;
 
-public class DBConnection implements Serializable {
+public class DBConnection {
 
     private transient Connection connection = null;
 
     private final String connectionName;
     private final String hostName;
     private final String userName;
-    private final String password;
+    private String password;
     private final String port;
     private final String databaseName;
 
@@ -40,6 +39,10 @@ public class DBConnection implements Serializable {
         return password;
     }
 
+    public void setPassword(final String password) {
+        this.password = password;
+    }
+
     public String getPort() {
         return port;
     }
@@ -60,16 +63,57 @@ public class DBConnection implements Serializable {
         }
     }
 
+    /**
+     * Returns a raw {@link java.sql.Statement} for executing user-supplied SQL.
+     * The caller is responsible for closing it (preferably via try-with-resources).
+     * Prefer {@link #executeQuery(String, Object[], ResultSetHandler)} for all
+     * internal, parameterisable queries.
+     */
+    public java.sql.Statement rawStatement() throws SQLException {
+        if (connection == null) {
+            connect();
+        }
+        return connection.createStatement();
+    }
+
+    /**
+     * Executes a raw SQL query and returns the live ResultSet.
+     * The caller is responsible for consuming and NOT closing the ResultSet;
+     * the Statement is intentionally left open to keep the ResultSet valid.
+     * Used only for the interactive SQL runner — prefer
+     * {@link #executeQuery(String, Object[], ResultSetHandler)} for internal queries.
+     */
     public ResultSet executeQuery(final String sqlQuery) throws SQLException {
         if (connection == null) {
             connect();
         }
 
         Statement stmt = connection.createStatement();
-        // dynamisch laden funktioniert so nicht
-        //stmt.setFetchSize(100);
-
         return stmt.executeQuery(sqlQuery);
+    }
+
+    /**
+     * Executes a parameterised query using a {@link PreparedStatement}, passes the
+     * {@link ResultSet} to {@code handler}, closes all JDBC resources, and returns
+     * the handler's result. Parameters are set positionally via
+     * {@link PreparedStatement#setObject(int, Object)}.
+     */
+    public <T> T executeQuery(final String sql, final Object[] params,
+                              final ResultSetHandler<T> handler) throws SQLException {
+        if (connection == null) {
+            connect();
+        }
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            if (params != null) {
+                for (int i = 0; i < params.length; i++) {
+                    stmt.setObject(i + 1, params[i]);
+                }
+            }
+            try (ResultSet rs = stmt.executeQuery()) {
+                return handler.handle(rs);
+            }
+        }
     }
 
     public void disconnect() {

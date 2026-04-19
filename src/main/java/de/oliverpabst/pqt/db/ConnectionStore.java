@@ -1,18 +1,24 @@
 package de.oliverpabst.pqt.db;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class ConnectionStore {
     private static ConnectionStore instance;
 
-    private static final String CONFIG_PATH = ".pqt/";
-    private static final String CRED_FILE = "pqt_credentials.ser";
+    private static final String CONFIG_DIR = ".pqt";
+    private static final String CONN_FILE = "connections.json";
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private ObservableList<DBConnection> connectionList;
 
@@ -24,7 +30,6 @@ public class ConnectionStore {
         if (instance == null) {
             instance = new ConnectionStore();
         }
-
         return instance;
     }
 
@@ -32,8 +37,7 @@ public class ConnectionStore {
         final Iterator<DBConnection> connectionIterator = connectionList.iterator();
         while (connectionIterator.hasNext()) {
             DBConnection existingCon = connectionIterator.next();
-
-            if(existingCon.equals(connection)) {
+            if (existingCon.equals(connection)) {
                 return false;
             }
         }
@@ -43,23 +47,21 @@ public class ConnectionStore {
 
     public DBConnection getConnection(final String connectionName) {
         DBConnection connection = null;
-        for(final DBConnection dbConnection: connectionList) {
-            if(dbConnection.getConnectionName().equals(connectionName)) {
+        for (final DBConnection dbConnection : connectionList) {
+            if (dbConnection.getConnectionName().equals(connectionName)) {
                 connection = dbConnection;
                 break;
             }
         }
-
         return connection;
     }
 
     public boolean removeConnection(final String connectionName) {
-        for (final DBConnection connection: connectionList) {
+        for (final DBConnection connection : connectionList) {
             if (connection.getConnectionName().equals(connectionName)) {
                 return connectionList.removeAll(connection);
             }
         }
-
         return false;
     }
 
@@ -67,110 +69,82 @@ public class ConnectionStore {
         return connectionList;
     }
 
-    public Boolean closeAllConnections() {
-        for (final DBConnection connection: connectionList) {
+    public boolean closeAllConnections() {
+        for (final DBConnection connection : connectionList) {
             connection.disconnect();
         }
         return true;
     }
 
-    public Boolean writeCredentialsToDisk() {
-        String homeDirectory = System.getProperty("user.home");
-        String filePath = homeDirectory + "/" + CONFIG_PATH + CRED_FILE;
-        String fileDir = homeDirectory + "/" + CONFIG_PATH;
-        FileOutputStream fileOut = null;
-        ObjectOutputStream objOut = null;
+    /**
+     * Persists all connections (without passwords) to ~/.pqt/connections.json.
+     */
+    public boolean writeConnectionsToDisk() {
+        final File dir = configDir();
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        final List<ConnectionRecord> records = new ArrayList<>();
+        for (final DBConnection c : connectionList) {
+            records.add(new ConnectionRecord(
+                    c.getConnectionName(),
+                    c.getHostName(),
+                    c.getPort(),
+                    c.getDatabaseName(),
+                    c.getUserName()
+            ));
+        }
+
         try {
-            File path = new File(fileDir);
-            File file = new File(filePath);
-            if (!path.exists()) {
-                path.mkdirs();
-            }
-            fileOut = new FileOutputStream(file, false);
-            objOut = new ObjectOutputStream(fileOut);
-
-            ArrayList<DBConnection> connections = new ArrayList<>(connectionList);
-            closeAllConnections();
-
-            objOut.writeObject(connections);
-
-        } catch (final FileNotFoundException e) {
-            // The config file does not exist yet. This is not an error!
+            objectMapper.writerWithDefaultPrettyPrinter()
+                    .writeValue(new File(dir, CONN_FILE), records);
             return true;
         } catch (final IOException e) {
-            final Alert ioeAlert = new Alert(Alert.AlertType.ERROR);
-            ioeAlert.setHeaderText("IO-Fehler");
-            ioeAlert.setContentText("Zugriff auf Datei " + filePath + " fehlgeschlagen!" + "\n" + e.toString());
-            ioeAlert.show();
+            final Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("IO Error");
+            alert.setContentText("Could not write connections file: " + e.getMessage());
+            alert.show();
             return false;
-        } finally {
-            if (objOut != null) {
-                try {
-                    objOut.close();
-                } catch (final IOException e) {
-                    return false;
-                }
-            }
-            if (fileOut != null) {
-                try {
-                    fileOut.close();
-                } catch (final IOException e) {
-                    return false;
-                }
-            }
         }
-        return true;
     }
 
-    public Boolean readCredentialsFromDisk() {
-        String homeDirectory = System.getProperty("user.home");
-        String filePath = homeDirectory + "/" + CONFIG_PATH + CRED_FILE;
-        String fileDir = homeDirectory + "/" + CONFIG_PATH;
-        FileInputStream fileIn = null;
-        ObjectInputStream objIn = null;
-        try {
-            File path = new File(filePath);
-            fileIn = new FileInputStream(path);
-            objIn = new ObjectInputStream(fileIn);
-
-            final ArrayList<DBConnection> connections = (ArrayList<DBConnection>)objIn.readObject();
-            connectionList.addAll(connections);
-
-        } catch (final FileNotFoundException e) {
-            // TODO: Evtl. annehmen, dass Anwendung noch nicht gestartet wurde? Also keinen Fehler werfen?
-            final Alert fnfeAlert = new Alert(Alert.AlertType.ERROR);
-            fnfeAlert.setHeaderText("Lesen der Zugangsdaten fehlgeschlagen!");
-            fnfeAlert.setContentText("Datei konnte " + fileDir + "nicht gefunden werden!");
-            fnfeAlert.show();
-            return false;
-        } catch (final IOException e) {
-            final Alert ioeAlert = new Alert(Alert.AlertType.ERROR);
-            ioeAlert.setHeaderText("IO-Fehler");
-            ioeAlert.setContentText("Zugriff auf Datei " + filePath + " fehlgeschlagen!");
-            ioeAlert.show();
-            return false;
-        } catch (final ClassNotFoundException e) {
-            final Alert cnfeAlert = new Alert(Alert.AlertType.ERROR);
-            cnfeAlert.setHeaderText("Klasse konnte nicht gefunden werden!");
-            cnfeAlert.setContentText("Klasse ArrayList<DBConnection> konnte nicht gefunden werden!");
-            cnfeAlert.show();
-            e.printStackTrace();
-        } finally {
-            if (objIn != null) {
-                try {
-                    objIn.close();
-                } catch (final IOException e) {
-                    return false;
-                }
-            }
-            if (fileIn != null) {
-                try {
-                    fileIn.close();
-                } catch (final IOException e) {
-                    return false;
-                }
-            }
+    /**
+     * Reads connections from ~/.pqt/connections.json. Passwords are never stored,
+     * so DBConnection objects are created without a password; the user must enter
+     * the password in the UI before connecting.
+     * If the file does not exist (first launch), this method returns true silently.
+     */
+    public boolean readConnectionsFromDisk() {
+        final File file = new File(configDir(), CONN_FILE);
+        if (!file.exists()) {
+            return true;
         }
-        return true;
+
+        try {
+            final List<ConnectionRecord> records = objectMapper.readValue(
+                    file, new TypeReference<List<ConnectionRecord>>() {});
+            for (final ConnectionRecord r : records) {
+                connectionList.add(new DBConnection(
+                        r.connectionName(),
+                        r.hostName(),
+                        r.port(),
+                        r.databaseName(),
+                        r.userName(),
+                        ""
+                ));
+            }
+            return true;
+        } catch (final IOException e) {
+            final Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("IO Error");
+            alert.setContentText("Could not read connections file: " + e.getMessage());
+            alert.show();
+            return false;
+        }
+    }
+
+    private File configDir() {
+        return new File(System.getProperty("user.home"), CONFIG_DIR);
     }
 }

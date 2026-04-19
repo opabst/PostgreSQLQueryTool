@@ -1,21 +1,22 @@
 package de.oliverpabst.pqt.db.metadata.model;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Schema extends DatabaseObject {
 
-    private final HashMap<String, Table> tables;
-    private final HashMap<String, Sequence> sequences;
-    private final HashMap<String, Function> functions;
-    private final HashMap<String, View> views;
+    private final TreeMap<String, Table> tables;
+    private final TreeMap<String, Sequence> sequences;
+    private final TreeMap<String, Function> functions;
+    private final TreeMap<String, View> views;
 
     public Schema(String _schemaName, String _schemaOwner) {
         super(_schemaName, _schemaOwner, "");
 
-        tables = new HashMap<>();
-        sequences = new HashMap<>();
-        functions = new HashMap<>();
-        views = new HashMap<>();
+        tables = new TreeMap<>();
+        sequences = new TreeMap<>();
+        functions = new TreeMap<>();
+        views = new TreeMap<>();
     }
 
     public void addTable(String _tableName, Table _table) {
@@ -50,19 +51,19 @@ public class Schema extends DatabaseObject {
         return views.get(_viewName);
     }
 
-    public HashMap<String, Table> getAllTables() {
+    public Map<String, Table> getAllTables() {
         return tables;
     }
 
-    public HashMap<String, Sequence> getAllSequences() {
+    public Map<String, Sequence> getAllSequences() {
         return sequences;
     }
 
-    public HashMap<String, Function> getAllFunctions() {
+    public Map<String, Function> getAllFunctions() {
         return functions;
     }
 
-    public HashMap<String, View> getAllViews() {
+    public Map<String, View> getAllViews() {
         return views;
     }
 

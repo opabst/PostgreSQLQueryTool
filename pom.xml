@@ -65,6 +65,13 @@
             <version>42.7.10</version>
         </dependency>
 
+        <!-- JSON persistence -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.18.3</version>
+        </dependency>
+
         <!-- JavaFX modules (platform-classified) -->
         <dependency>
             <groupId>org.openjfx</groupId>

@@ -1,83 +1,80 @@
 package de.oliverpabst.pqt.controller;
 
-import de.oliverpabst.pqt.ImageProvider;
 import de.oliverpabst.pqt.db.ConnectionStore;
 import de.oliverpabst.pqt.db.DBConnection;
+import de.oliverpabst.pqt.viewmodel.WelcomeViewModel;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class WelcomeScreenController {
 
-    @FXML
-    private Accordion connectionAccordion;
+    @FXML private Accordion connectionAccordion;
+    @FXML private TitledPane connectionsTitledPane;
+    @FXML private Button addConnection;
+
+    private WelcomeViewModel viewModel;
+
+    public WelcomeScreenController() { }
 
     @FXML
-    private Button addConnection;
+    public void initialize() { }
 
-    public WelcomeScreenController() {
-        ConnectionStore.getInstance();
-    }
+    public void setViewModel(final WelcomeViewModel vm) {
+        this.viewModel = vm;
 
-    @FXML
-    public void initialize() {
+        final ResourceBundle resBundle = ResourceBundle.getBundle(
+                "de.oliverpabst.PQT.lang_properties.guistrings");
 
-        ConnectionStore.getInstance().getConnections().addListener(new ListChangeListener<DBConnection>() {
-            @Override
-            public void onChanged(Change<? extends DBConnection> c) {
-                while (c.next()) {
-                    if(c.wasPermutated()) {
-                        System.out.println("Was permutated!");
-                    } else if (c.wasUpdated()) {
-                        System.out.println("Was updated!");
-                    } else if(c.wasAdded()) {
-                        for(DBConnection con: c.getAddedSubList()) {
-                            addConnectionTitledPane(con);
-                        }
-                    } else if(c.wasRemoved()) {
-                        ArrayList<TitledPane> deletedPanes = new ArrayList<>();
-                        for(DBConnection con: c.getRemoved()) {
-                            for(TitledPane pane: connectionAccordion.getPanes()) {
-                                if(pane.getText().equals(con.getConnectionName())) {
-                                    deletedPanes.add(pane);
-                                }
+        addConnection.setText(resBundle.getString("connection_add_connection"));
+        connectionsTitledPane.setText(resBundle.getString("welcome_connections_title"));
+
+        vm.getConnections().addListener((ListChangeListener<DBConnection>) c -> {
+            while (c.next()) {
+                if (c.wasAdded()) {
+                    for (final DBConnection con : c.getAddedSubList()) {
+                        addConnectionTitledPane(con);
+                    }
+                } else if (c.wasRemoved()) {
+                    final ArrayList<TitledPane> toRemove = new ArrayList<>();
+                    for (final DBConnection con : c.getRemoved()) {
+                        for (final TitledPane pane : connectionAccordion.getPanes()) {
+                            if (pane.getText().equals(con.getConnectionName())) {
+                                toRemove.add(pane);
                             }
                         }
-                        connectionAccordion.getPanes().removeAll(deletedPanes);
                     }
+                    connectionAccordion.getPanes().removeAll(toRemove);
                 }
             }
         });
-        ConnectionStore.getInstance().readCredentialsFromDisk();
 
-        ResourceBundle resBundle = ResourceBundle.getBundle("de.oliverpabst.PQT.lang_properties.guistrings");
-        addConnection.setText(resBundle.getString("connection_add_connection"));
+        // Populate accordion with connections that were loaded at startup
+        for (final DBConnection con : vm.getConnections()) {
+            addConnectionTitledPane(con);
+        }
     }
 
+    public void setStage(final Stage stage) {
+        if (viewModel != null) {
+            viewModel.setPrimaryStage(stage);
+        }
+    }
 
-    public void addConnectionTitledPane(DBConnection _con) {
-        ResourceBundle resBundle = ResourceBundle.getBundle("de.oliverpabst.PQT.lang_properties.guistrings");
-        TitledPane tp = new TitledPane();
+    private void addConnectionTitledPane(final DBConnection con) {
+        final ResourceBundle resBundle = ResourceBundle.getBundle(
+                "de.oliverpabst.PQT.lang_properties.guistrings");
 
-        GridPane grid = new GridPane();
-
-        // Größenconstraints
+        final GridPane grid = new GridPane();
         grid.setVgap(4);
         grid.setHgap(4);
         grid.getColumnConstraints().add(new ColumnConstraints(150));
@@ -86,149 +83,87 @@ public class WelcomeScreenController {
         grid.getColumnConstraints().add(new ColumnConstraints(150));
         grid.setPadding(new Insets(5, 5, 5, 5));
 
-        // Reihe 0
-        Label connectionNameLabel = new Label(resBundle.getString("connection_name_label"));
+        // Row 0 — connection name
+        final Label connectionNameLabel = new Label(resBundle.getString("connection_name_label"));
         grid.add(connectionNameLabel, 0, 0);
         GridPane.setHalignment(connectionNameLabel, HPos.RIGHT);
+        final TextField connectionnameTF = new TextField(con.getConnectionName());
+        connectionnameTF.setDisable(true);
+        grid.add(connectionnameTF, 1, 0);
 
-        TextField connectionnameTextfield = new TextField(_con.getConnectionName());
-        connectionnameTextfield.setDisable(true);
-        grid.add(connectionnameTextfield, 1, 0);
-
-        // Reihe 1
-        Label hostnameLabel = new Label(resBundle.getString("connection_hostname_label"));
+        // Row 1 — host / port
+        final Label hostnameLabel = new Label(resBundle.getString("connection_hostname_label"));
         grid.add(hostnameLabel, 0, 1);
         GridPane.setHalignment(hostnameLabel, HPos.RIGHT);
+        final TextField hostnameTF = new TextField(con.getHostName());
+        hostnameTF.setDisable(true);
+        grid.add(hostnameTF, 1, 1);
 
-        TextField hostnameTextField = new TextField(_con.getHostName());
-        hostnameTextField.setDisable(true);
-        grid.add(hostnameTextField, 1, 1);
-
-
-        Label portLabel = new Label(resBundle.getString("connection_port_label"));
+        final Label portLabel = new Label(resBundle.getString("connection_port_label"));
         grid.add(portLabel, 2, 1);
         GridPane.setHalignment(portLabel, HPos.RIGHT);
+        final TextField portTF = new TextField(con.getPort());
+        portTF.setDisable(true);
+        grid.add(portTF, 3, 1);
 
-        TextField portTextField = new TextField(_con.getPort());
-        portTextField.setDisable(true);
-        grid.add(portTextField, 3, 1);
-
-        // Reihe 2
-        Label usernameLabel = new Label(resBundle.getString("connection_username_label"));
+        // Row 2 — username / password prompt
+        final Label usernameLabel = new Label(resBundle.getString("connection_username_label"));
         grid.add(usernameLabel, 0, 2);
         GridPane.setHalignment(usernameLabel, HPos.RIGHT);
+        final TextField usernameTF = new TextField(con.getUserName());
+        usernameTF.setDisable(true);
+        grid.add(usernameTF, 1, 2);
 
-        TextField usernameTextField = new TextField(_con.getUserName());
-        usernameTextField.setDisable(true);
-        grid.add(usernameTextField, 1, 2);
-
-
-        Label passwordLabel = new Label(resBundle.getString("connection_password_label"));
+        final Label passwordLabel = new Label(resBundle.getString("connection_password_label"));
         grid.add(passwordLabel, 2, 2);
         GridPane.setHalignment(passwordLabel, HPos.RIGHT);
-
-        PasswordField passwordField = new PasswordField();
+        final PasswordField passwordField = new PasswordField();
         passwordField.setPromptText(resBundle.getString("connection_password_helptext"));
-        passwordField.setDisable(true);
         grid.add(passwordField, 3, 2);
-        // Reihe 4
-        Label databasenameLabel = new Label(resBundle.getString("connection_databasename_label"));
-        grid.add(databasenameLabel, 0, 3);
-        GridPane.setHalignment(databasenameLabel, HPos.RIGHT);
 
-        TextField dbnameTextField = new TextField(_con.getDatabaseName());
-        dbnameTextField.setDisable(true);
-        grid.add(dbnameTextField, 1, 3);
+        // Row 3 — database name
+        final Label dbnameLabel = new Label(resBundle.getString("connection_databasename_label"));
+        grid.add(dbnameLabel, 0, 3);
+        GridPane.setHalignment(dbnameLabel, HPos.RIGHT);
+        final TextField dbnameTF = new TextField(con.getDatabaseName());
+        dbnameTF.setDisable(true);
+        grid.add(dbnameTF, 1, 3);
 
-        Button deleteButton = new Button();
+        // Buttons
+        final Button deleteButton = new Button(resBundle.getString("connection_delete"));
         deleteButton.setMinSize(100, 28);
         deleteButton.setPrefSize(100, 28);
-        deleteButton.setPrefSize(100, 28);
-        deleteButton.setText(resBundle.getString("connection_delete"));
-        deleteButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                TitledPane pane = connectionAccordion.getExpandedPane();
-                ConnectionStore.getInstance().removeConnection(pane.getText());
-            }
+        deleteButton.setOnAction((ActionEvent e) -> {
+            final TitledPane pane = connectionAccordion.getExpandedPane();
+            ConnectionStore.getInstance().removeConnection(pane.getText());
         });
-        grid.add(deleteButton,3, 4);
+        grid.add(deleteButton, 3, 4);
         GridPane.setHalignment(deleteButton, HPos.RIGHT);
 
-        Button modifyButton = new Button();
-        modifyButton.setMinSize(100, 28);
-        modifyButton.setPrefSize(100, 28);
-        modifyButton.setMaxSize(100, 28);
-        modifyButton.setText(resBundle.getString("connection_modify"));
-        modifyButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-            }
-        });
-        grid.add(modifyButton, 3, 5);
-        GridPane.setHalignment(modifyButton, HPos.RIGHT);
-
-        Button connectButton = new Button();
+        final Button connectButton = new Button(resBundle.getString("connection_connect"));
         connectButton.setMinSize(100, 28);
         connectButton.setPrefSize(100, 28);
         connectButton.setMaxSize(100, 28);
-        connectButton.setText(resBundle.getString("connection_connect"));
-        connectButton.setOnAction(new EventHandler() {
-            @Override
-            public void handle(Event event) {
-                TitledPane currentPane = connectionAccordion.getExpandedPane();
-
-                DBConnection con = ConnectionStore.getInstance().getConnection(currentPane.getText());
-
-                Stage mainWindow = new Stage();
-                Parent mainWindowPane = null;
-                MainWindowController controller = null;
-                try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("de/oliverpabst/PQT/views/MainWindow.fxml"));
-                    mainWindowPane = loader.load();
-                    controller = loader.<MainWindowController>getController();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                controller.setDbConnection(con);
-
-                Scene scene = new Scene(mainWindowPane);
-                mainWindow.setScene(scene);
-                mainWindow.show();
-            }
+        connectButton.setOnAction((javafx.event.ActionEvent e) -> {
+            final TitledPane currentPane = connectionAccordion.getExpandedPane();
+            final DBConnection selectedCon = ConnectionStore.getInstance()
+                    .getConnection(currentPane.getText());
+            // Inject password entered by the user on this screen
+            selectedCon.setPassword(passwordField.getText());
+            viewModel.openMainWindow(selectedCon, connectButton.getScene().getWindow());
         });
+        grid.add(connectButton, 3, 5);
         GridPane.setHalignment(connectButton, HPos.RIGHT);
-        grid.add(connectButton, 3, 6);
 
-        tp.setText(_con.getConnectionName());
+        final TitledPane tp = new TitledPane();
+        tp.setText(con.getConnectionName());
         tp.setContent(grid);
-
         connectionAccordion.getPanes().add(tp);
     }
 
     @FXML
-    public void addConnection(ActionEvent event) {
-
-        Stage connectionWindow = new Stage();
-
-        Parent connectionPane = null;
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().
-                    getResource("de/oliverpabst/PQT/views/ConnectionWindow.fxml"));
-            connectionPane = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Scene scene = new Scene(connectionPane);
-        connectionWindow.setScene(scene);
-
-        connectionWindow.getIcons().add(ImageProvider.getInstance().getAppIcon());
-
-        connectionWindow.initModality(Modality.APPLICATION_MODAL);
-        connectionWindow.initOwner(((Button)event.getTarget()).getScene().getWindow());
-        connectionWindow.showAndWait();
+    public void addConnection(final ActionEvent event) {
+        viewModel.openAddConnectionWindow(addConnection.getScene().getWindow());
     }
 }
+

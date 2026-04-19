@@ -10,7 +10,7 @@
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
          <children>
-            <TitledPane animated="false" collapsible="false" layoutX="14.0" layoutY="7.0" text="Verbindungen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TitledPane fx:id="connectionsTitledPane" animated="false" collapsible="false" layoutX="14.0" layoutY="7.0" text="" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -22,7 +22,7 @@
          </children></AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
          <children>
-            <Button fx:id="addConnection" layoutX="533.0" layoutY="1.0" mnemonicParsing="false" onAction="#addConnection" text="Verbindung hinzufügen" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+            <Button fx:id="addConnection" layoutX="533.0" layoutY="1.0" mnemonicParsing="false" onAction="#addConnection" text="" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
          </children></AnchorPane>
   </items>
 </SplitPane>

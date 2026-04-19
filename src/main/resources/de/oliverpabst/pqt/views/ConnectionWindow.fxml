@@ -23,7 +23,7 @@
           <RowConstraints maxHeight="270.0" minHeight="270.0" prefHeight="270.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label fx:id="mainLabel" alignment="CENTER" prefHeight="17.0" prefWidth="600.0" text="Verbindungseinstellungen">
+            <Label fx:id="mainLabel" alignment="CENTER" prefHeight="17.0" prefWidth="600.0" text="">
                <font>
                   <Font name="System Bold" size="30.0" />
                </font>
