@@ -50,6 +50,48 @@ Tests live in `src/test/java`. Use JUnit 5 annotations (`@Test`, `@BeforeEach`, 
 mvn test
 ```
 
+## Local test database
+
+A Docker Compose setup lives under `docker/`. Start it with:
+
+```
+docker compose -f docker/docker-compose.yml up
+```
+
+PostgreSQL 17 listens on host port **5440** (`localhost:5440`). Flyway applies all migrations automatically on first start.
+
+| Setting | Value |
+|---|---|
+| Host | `localhost` |
+| Port | `5440` |
+| Database | `pqt_shop` |
+| Flyway / DDL user | `pqt_admin` / `pqt_admin_pw` |
+| inv admin | `inv_admin` / `inv_admin_pw` (role: `role_inv_admin`) |
+| inv read-only | `inv_user` / `inv_user_pw` (role: `role_inv_connect`) |
+| cust admin | `cust_admin` / `cust_admin_pw` (role: `role_cust_admin`) |
+| cust read-only | `cust_user` / `cust_user_pw` (role: `role_cust_connect`) |
+
+Privileges are attached to the `role_*` roles; login users are simply assigned to the appropriate role.
+
+The database has two schemas: `inv` (inventory — products, brands, categories, stock, price history, tags) and `cust` (customers — accounts, addresses, orders, order items, payment methods, reviews). Both are seeded with 5 000 products and 500 customers.
+
+### Flyway SQL naming conventions
+
+All DDL in `docker/flyway/sql/` follows these conventions:
+
+| Object type | Pattern | Example |
+|---|---|---|
+| Sequence | `sq_${name}_id` | `inv.sq_products_id` |
+| Index | `ix_${table}_${columns}` | `ix_products_category_id` |
+| Primary Key | `pk_${table}_${columns}` | `pk_products_id` |
+| Unique Constraint | `uc_${table}_${columns}` | `uc_products_sku` |
+| Function | `fn_${purpose}` | `inv.fn_get_available_stock` |
+| SQL keywords | UPPERCASE | `CREATE TABLE`, `SELECT` |
+
+Additional rules:
+- Primary keys, unique constraints, and indexes are declared **after** `CREATE TABLE` via explicit `ALTER TABLE … ADD CONSTRAINT` / `CREATE INDEX` statements — never inline.
+- Every object reference is schema-qualified (`inv.products`, `cust.orders`, etc.).
+
 ## What to Avoid
 - Do not add new global singletons; prefer passing dependencies explicitly in new code.
 - Do not store passwords — not in `ConnectionStore`, not in JSON, not anywhere on disk.

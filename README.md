@@ -75,6 +75,50 @@ src/main/java/de/oliverpabst/pqt/
 | SLF4J | 1.7.21 | Logging |
 | JUnit 5 | 5.7.0 | Unit testing |
 
+## Local test database (Docker)
+
+A ready-to-use PostgreSQL 17 test database is provided via Docker Compose. It contains two schemas — `inv` (inventory) and `cust` (customers) — seeded with 5 000 products and 500 customers.
+
+### Prerequisites
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or Docker Engine + Compose plugin)
+
+### Start
+
+```bash
+docker compose -f docker/docker-compose.yml up
+```
+
+Flyway runs all migrations automatically on first start and exits. PostgreSQL keeps running.
+
+### Connect
+
+| Setting | Value |
+|---|---|
+| Host | `localhost` |
+| Port | `5440` |
+| Database | `pqt_shop` |
+| Flyway / DDL user | `pqt_admin` / `pqt_admin_pw` |
+| inv admin | `inv_admin` / `inv_admin_pw` (role: `role_inv_admin`) |
+| inv read-only | `inv_user` / `inv_user_pw` (role: `role_inv_connect`) |
+| cust admin | `cust_admin` / `cust_admin_pw` (role: `role_cust_admin`) |
+| cust read-only | `cust_user` / `cust_user_pw` (role: `role_cust_connect`) |
+
+Privileges are attached to the `role_*` roles; login users are simply assigned to the appropriate role. `inv_user` and `cust_user` have `SELECT`-only access on their respective schemas.
+
+### Reset
+
+```bash
+docker compose -f docker/docker-compose.yml down -v
+docker compose -f docker/docker-compose.yml up
+```
+
+The `-v` flag removes the named volume so the database is fully recreated.
+
+### Credentials note
+
+The file `docker/.env` contains plain-text passwords for local development only. It is excluded from version control via `.gitignore` and must **never** be committed.
+
 ## License
 
 See [LICENSE](LICENSE).

@@ -24,3 +24,6 @@ Thumbs.db
 /dist/
 /nbdist/
 /.nb-gradle/
+
+# Docker — local credentials (never commit)
+docker/.env
