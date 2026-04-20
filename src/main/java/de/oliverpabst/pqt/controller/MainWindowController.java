@@ -13,11 +13,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.TableColumn;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class MainWindowController {
 
+    private static final Logger log = LoggerFactory.getLogger(MainWindowController.class);
     @FXML private TreeView<String> DatabaseObjectOutline;
     @FXML private TextArea MainWindowQueryTA;
     @FXML private TableView<ObservableList<String>> MainWindowResultTV;
@@ -40,6 +43,8 @@ public class MainWindowController {
     @FXML private MenuBar mainMenuBar;
 
     private MainViewModel viewModel;
+    private javafx.beans.value.ChangeListener<Number> selectedTabListener;
+    private javafx.collections.ListChangeListener<String> columnNamesListener;
 
     @FXML
     public void initialize() { }
@@ -48,7 +53,7 @@ public class MainWindowController {
         this.viewModel = vm;
 
         final var resBundle = java.util.ResourceBundle.getBundle(
-                "de.oliverpabst.PQT.lang_properties.guistrings");
+                "de.oliverpabst.pqt.lang_properties.guistrings");
 
         resultTab.setText(resBundle.getString("result_tab"));
         queryplanTab.setText(resBundle.getString("query_plan_tab"));
@@ -75,11 +80,12 @@ public class MainWindowController {
         MainWindowExplainPlanTA.textProperty().bind(vm.explainTextProperty());
         errorMessagesTA.textProperty().bind(vm.errorTextProperty());
 
-        vm.selectedTabProperty().addListener((obs, oldVal, newVal) ->
-                queryResultTabPanel.getSelectionModel().select(newVal.intValue()));
+        selectedTabListener = (obs, oldVal, newVal) ->
+                queryResultTabPanel.getSelectionModel().select(newVal.intValue());
+        vm.selectedTabProperty().addListener(selectedTabListener);
 
-        vm.getResultColumnNames().addListener(
-                (javafx.collections.ListChangeListener<String>) change -> rebuildColumns());
+        columnNamesListener = change -> rebuildColumns();
+        vm.getResultColumnNames().addListener(columnNamesListener);
 
         MainWindowResultTV.setItems(vm.getResultRows());
 
@@ -92,14 +98,20 @@ public class MainWindowController {
     @FXML public void analyzeQuery() { viewModel.analyzeQuery(); }
     @FXML public void close()        { }
 
+    public void dispose() {
+        if (viewModel != null) {
+            viewModel.selectedTabProperty().removeListener(selectedTabListener);
+            viewModel.getResultColumnNames().removeListener(columnNamesListener);
+        }
+    }
     @FXML
     public void openAboutScreen(final ActionEvent event) {
-        openModal("de/oliverpabst/PQT/views/About.fxml");
+        openModal("de/oliverpabst/pqt/views/About.fxml");
     }
 
     @FXML
     public void openSettings(final ActionEvent event) {
-        openModal("de/oliverpabst/PQT/views/Settings.fxml");
+        openModal("de/oliverpabst/pqt/views/Settings.fxml");
     }
 
     private void openModal(final String fxmlPath) {
@@ -114,7 +126,7 @@ public class MainWindowController {
             stage.initOwner(mainMenuBar.getScene().getWindow());
             stage.showAndWait();
         } catch (final IOException e) {
-            e.printStackTrace();
+            log.error("Failed to open modal '{}'", fxmlPath, e);
         }
     }
 

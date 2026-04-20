@@ -6,11 +6,15 @@ import de.oliverpabst.pqt.db.metadata.model.table.Column;
 import de.oliverpabst.pqt.db.metadata.model.table.Constraint;
 import de.oliverpabst.pqt.db.metadata.model.table.Index;
 import de.oliverpabst.pqt.db.metadata.model.table.Trigger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.*;
 
 public class MetadataManager {
+
+    private static final Logger log = LoggerFactory.getLogger(MetadataManager.class);
 
     private boolean schemasLoaded = false;
 
@@ -62,7 +66,7 @@ public class MetadataManager {
                         return null;
                     });
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Failed to load schemas", e);
         }
     }
 
@@ -89,7 +93,7 @@ public class MetadataManager {
                         new Table(tableName, columns, constraints, indices, triggers));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Failed to load tables for schema '{}'", schemaName, e);
         }
     }
 
@@ -114,7 +118,7 @@ public class MetadataManager {
                         return null;
                     });
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Failed to load functions for schema '{}'", schemaName, e);
         }
     }
 
@@ -136,7 +140,7 @@ public class MetadataManager {
                         return null;
                     });
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Failed to load views for schema '{}'", schemaName, e);
         }
     }
 
@@ -163,7 +167,7 @@ public class MetadataManager {
                         return null;
                     });
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Failed to load sequences for schema '{}'", schemaName, e);
         }
     }
 
@@ -190,7 +194,7 @@ public class MetadataManager {
                         return columns;
                     });
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Failed to load columns for {}.{}", schemaName, tableName, e);
             return Collections.emptyList();
         }
     }
@@ -223,7 +227,7 @@ public class MetadataManager {
                         return constraints;
                     });
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Failed to load constraints for {}.{}", schemaName, tableName, e);
             return Collections.emptyList();
         }
     }

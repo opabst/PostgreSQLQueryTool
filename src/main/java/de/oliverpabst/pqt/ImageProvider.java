@@ -4,6 +4,8 @@ import javafx.scene.image.Image;
 
 public class ImageProvider {
 
+    private static final int ICON_SIZE = 22;
+
     private Image appIcon;
     private Image constraintIcon;
     private Image functionIcon;
@@ -13,7 +15,7 @@ public class ImageProvider {
     private Image tableIcon;
     private Image viewIcon;
 
-    private static ImageProvider instance;
+    private static final ImageProvider instance = new ImageProvider();
 
     public Image getAppIcon() {
         return appIcon;
@@ -52,35 +54,32 @@ public class ImageProvider {
     }
 
     public static ImageProvider getInstance() {
-        if(instance == null) {
-            instance = new ImageProvider();
-        }
         return instance;
     }
 
     private void loadAllImages() {
-        appIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/PQT/icons/PQT.png"),
-                22, 22, true, false);
+        appIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/PQT.png"),
+                ICON_SIZE, ICON_SIZE, true, false);
 
-        constraintIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/PQT/icons/Constraint.png"),
-                22, 22, true, false);
+        constraintIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/Constraint.png"),
+                ICON_SIZE, ICON_SIZE, true, false);
 
-        functionIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/PQT/icons/Function.png"),
-                22, 22, true, false);
+        functionIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/Function.png"),
+                ICON_SIZE, ICON_SIZE, true, false);
 
-        indexIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/PQT/icons/Index.png"),
-                22, 22, true, false);
+        indexIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/Index.png"),
+                ICON_SIZE, ICON_SIZE, true, false);
 
-        schemaIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/PQT/icons/Schema.png"),
-                22, 22, true, false);
+        schemaIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/Schema.png"),
+                ICON_SIZE, ICON_SIZE, true, false);
 
-        sequenceIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/PQT/icons/Sequence.png"),
-                22, 22, true, false);
+        sequenceIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/Sequence.png"),
+                ICON_SIZE, ICON_SIZE, true, false);
 
-        tableIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/PQT/icons/Table.png"),
-                22, 22, true, false);
+        tableIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/Table.png"),
+                ICON_SIZE, ICON_SIZE, true, false);
 
-        viewIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/PQT/icons/View.png"),
-                22, 22, true, false);
+        viewIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/View.png"),
+                ICON_SIZE, ICON_SIZE, true, false);
     }
 }

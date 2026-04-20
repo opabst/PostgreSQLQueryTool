@@ -4,37 +4,37 @@ package de.oliverpabst.pqt.db.metadata.model;
 import java.util.ArrayList;
 
 public class Function extends DatabaseObject {
-    private final Integer argumentCount;
+    private final int argumentCount;
     private final ArrayList<String> arguments;
     private final ArrayList<String> signatureArguments;
     private final String returnType;
     private final String language;
     private final String functionDefinition;
 
-    public Function(String _objectName, String _returnType, String _language, String _functionDefinition) {
-        super(_objectName, "", "");
+    public Function(String objectName, String returnType, String language, String functionDefinition) {
+        super(objectName, "", "");
 
         argumentCount = -1;
         arguments = new ArrayList<>();
         signatureArguments = new ArrayList<>();
-        returnType = _returnType;
-        language = _language;
-        functionDefinition = _functionDefinition;
+        this.returnType = returnType;
+        this.language = language;
+        this.functionDefinition = functionDefinition;
     }
 
-    public Function(String _objectName, String _owner, String _acl, Integer _argumentCount, ArrayList<String> _arguments,
-                    ArrayList<String> _signatureArguments, String _returnType, String _language, String _functionDefinition) {
-        super(_objectName, _owner, _acl);
+    public Function(String objectName, String owner, String acl, int argumentCount, ArrayList<String> arguments,
+                    ArrayList<String> signatureArguments, String returnType, String language, String functionDefinition) {
+        super(objectName, owner, acl);
 
-        argumentCount = _argumentCount;
-        arguments = _arguments;
-        signatureArguments = _signatureArguments;
-        returnType = _returnType;
-        language = _language;
-        functionDefinition = _functionDefinition;
+        this.argumentCount = argumentCount;
+        this.arguments = arguments;
+        this.signatureArguments = signatureArguments;
+        this.returnType = returnType;
+        this.language = language;
+        this.functionDefinition = functionDefinition;
     }
 
-    public Integer getArgumentCount() {
+    public int getArgumentCount() {
         return argumentCount;
     }
 

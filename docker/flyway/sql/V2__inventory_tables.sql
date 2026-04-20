@@ -85,27 +85,33 @@ ALTER TABLE inv.product_tags ADD CONSTRAINT uc_product_tags_product_id_tag UNIQU
 -- ---------------------------------------------------------------
 ALTER TABLE inv.categories
     ADD CONSTRAINT fk_categories_parent_id
-    FOREIGN KEY (parent_id) REFERENCES inv.categories (id);
+    FOREIGN KEY (parent_id) REFERENCES inv.categories (id)
+    ON DELETE RESTRICT;
 
 ALTER TABLE inv.products
     ADD CONSTRAINT fk_products_category_id
-    FOREIGN KEY (category_id) REFERENCES inv.categories (id);
+    FOREIGN KEY (category_id) REFERENCES inv.categories (id)
+    ON DELETE RESTRICT;
 
 ALTER TABLE inv.products
     ADD CONSTRAINT fk_products_brand_id
-    FOREIGN KEY (brand_id) REFERENCES inv.brands (id);
+    FOREIGN KEY (brand_id) REFERENCES inv.brands (id)
+    ON DELETE RESTRICT;
 
 ALTER TABLE inv.stock
     ADD CONSTRAINT fk_stock_product_id
-    FOREIGN KEY (product_id) REFERENCES inv.products (id);
+    FOREIGN KEY (product_id) REFERENCES inv.products (id)
+    ON DELETE RESTRICT;
 
 ALTER TABLE inv.price_history
     ADD CONSTRAINT fk_price_history_product_id
-    FOREIGN KEY (product_id) REFERENCES inv.products (id);
+    FOREIGN KEY (product_id) REFERENCES inv.products (id)
+    ON DELETE RESTRICT;
 
 ALTER TABLE inv.product_tags
     ADD CONSTRAINT fk_product_tags_product_id
-    FOREIGN KEY (product_id) REFERENCES inv.products (id);
+    FOREIGN KEY (product_id) REFERENCES inv.products (id)
+    ON DELETE RESTRICT;
 
 -- ---------------------------------------------------------------
 -- Check Constraints

@@ -20,7 +20,7 @@ public class AboutWindowController {
 
     @FXML
     public void initialize() {
-        ResourceBundle resBundle = ResourceBundle.getBundle("de.oliverpabst.PQT.lang_properties.guistrings");
+        ResourceBundle resBundle = ResourceBundle.getBundle("de.oliverpabst.pqt.lang_properties.guistrings");
         aboutCloseButton.setText(resBundle.getString("about_close_button"));
 
         String htmlMessage =

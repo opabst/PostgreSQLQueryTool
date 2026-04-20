@@ -3,34 +3,34 @@ package de.oliverpabst.pqt.db.metadata.model;
 public class View extends DatabaseObject {
 
     private final String viewDefinition;
-    private final Boolean isMaterialized;
+    private final boolean isMaterialized;
 
-    public View(String _objectName, String _owner, String _acl, String _viewDefinition, Boolean _isMaterialized) {
-        super(_objectName, _owner, _acl);
+    public View(String objectName, String owner, String acl, String viewDefinition, boolean isMaterialized) {
+        super(objectName, owner, acl);
 
-        viewDefinition = _viewDefinition;
-        isMaterialized = _isMaterialized;
+        this.viewDefinition = viewDefinition;
+        this.isMaterialized = isMaterialized;
     }
 
-    public View(String _objectName, String _viewDefinition) {
-        super(_objectName, "", "");
+    public View(String objectName, String viewDefinition) {
+        super(objectName, "", "");
 
-        viewDefinition = _viewDefinition;
+        this.viewDefinition = viewDefinition;
         isMaterialized = false;
     }
 
-    public View(String _objectName, String _viewDefinition, Boolean _isMatrialized) {
-        super(_objectName, "", "");
+    public View(String objectName, String viewDefinition, boolean isMatrialized) {
+        super(objectName, "", "");
 
-        viewDefinition = _viewDefinition;
-        isMaterialized = _isMatrialized;
+        this.viewDefinition = viewDefinition;
+        isMaterialized = isMatrialized;
     }
 
     public String getViewDefinition() {
         return viewDefinition;
     }
 
-    public Boolean getIsMaterialized() {
+    public boolean getIsMaterialized() {
         return isMaterialized;
     }
 

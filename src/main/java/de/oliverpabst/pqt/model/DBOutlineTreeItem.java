@@ -14,6 +14,9 @@ import java.util.*;
 // TODO: alle OutlineObjects alphabetisch aufsteigend sortieren
 
 public class DBOutlineTreeItem extends TreeItem<String> {
+
+    private static final Comparator<String> ALPHA = Comparator.naturalOrder();
+
     private final String schemaCompName;
 
     private OutlineComponentType compType;
@@ -64,7 +67,7 @@ public class DBOutlineTreeItem extends TreeItem<String> {
 
         hasLoadedChildren = true;
 
-        final ResourceBundle resBundle = ResourceBundle.getBundle("de.oliverpabst.PQT.lang_properties.guistrings");
+        final ResourceBundle resBundle = ResourceBundle.getBundle("de.oliverpabst.pqt.lang_properties.guistrings");
 
 
         final List<DBOutlineTreeItem> children = new ArrayList<>();
@@ -103,8 +106,7 @@ public class DBOutlineTreeItem extends TreeItem<String> {
             metadataManager.loadTablesForSchema(schemaName); // TODO: Reparieren -> sollte nicht manuell geladen werden
 
             final List<String> tableNames = new ArrayList<>(metadataManager.getTablesForSchema(schemaName).keySet());
-            final Comparator<String> c = Comparator.comparing((String x) -> x);
-            tableNames.sort(c);
+            tableNames.sort(ALPHA);
 
             for (final String tableName: tableNames) {
                 final DBOutlineTreeItem item = new DBOutlineTreeItem(tableName, OutlineComponentType.TABLE_OBJECT, metadataManager);
@@ -115,8 +117,7 @@ public class DBOutlineTreeItem extends TreeItem<String> {
             metadataManager.loadFunctionsForSchema(schemaName); // TODO: Reparieren -> sollte nicht manuell geladen werden
 
             final List<String> functionNames = new ArrayList<>(metadataManager.getFunctionsForSchema(schemaName).keySet());
-            final Comparator<String> c = Comparator.comparing((String x) -> x);
-            functionNames.sort(c);
+            functionNames.sort(ALPHA);
 
             for (final String functionName: functionNames) {
                 final DBOutlineTreeItem item = new DBOutlineTreeItem(functionName, OutlineComponentType.DB_OBJECT, metadataManager);
@@ -128,8 +129,7 @@ public class DBOutlineTreeItem extends TreeItem<String> {
             // final HashMap<String, View> views = metadataManager.getViewsForSchema(schemaName);
 
             final List<String> viewNames = new ArrayList<>(metadataManager.getViewsForSchema(schemaName).keySet());
-            final Comparator<String> c = Comparator.comparing((String x) -> x);
-            viewNames.sort(c);
+            viewNames.sort(ALPHA);
 
             for (final String viewName: viewNames) {
                 final DBOutlineTreeItem item = new DBOutlineTreeItem(viewName, OutlineComponentType.DB_OBJECT, metadataManager);
@@ -140,8 +140,7 @@ public class DBOutlineTreeItem extends TreeItem<String> {
             metadataManager.loadSequencesForSchema(schemaName);
 
             final List<String> sequenceNames = new ArrayList<>(metadataManager.getSequencesForSchema(schemaName).keySet());
-            final Comparator<String> c = Comparator.comparing((String x) -> x);
-            sequenceNames.sort(c);
+            sequenceNames.sort(ALPHA);
 
             for (final String sequenceName: sequenceNames) {
                 final DBOutlineTreeItem item = new DBOutlineTreeItem(sequenceName, OutlineComponentType.DB_OBJECT, metadataManager);

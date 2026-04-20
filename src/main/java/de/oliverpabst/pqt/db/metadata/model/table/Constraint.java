@@ -6,22 +6,22 @@ public class Constraint extends TableObject {
     private final String matchType;
     private final String onChange;
     private final String onDelete;
-    private final Boolean isDeferrable;
-    private final Boolean isValid;
+    private final boolean isDeferrable;
+    private final boolean isValid;
 
-    public Constraint(String _objectname, String _references, String _matchType, String _onChange, String _onDelete, Boolean _isDeferrable, Boolean _isValid) {
-        objectName = _objectname;
-        references = _references;
-        matchType = _matchType;
-        onChange = _onChange;
-        onDelete = _onDelete;
-        isDeferrable = _isDeferrable;
-        isValid = _isValid;
+    public Constraint(String objectName, String references, String matchType, String onChange, String onDelete, boolean isDeferrable, boolean isValid) {
+        this.objectName = objectName;
+        this.references = references;
+        this.matchType = matchType;
+        this.onChange = onChange;
+        this.onDelete = onDelete;
+        this.isDeferrable = isDeferrable;
+        this.isValid = isValid;
     }
 
-    public Constraint(String _objectname, String _references) {
-        objectName = _objectname;
-        references = _references;
+    public Constraint(String objectName, String references) {
+        this.objectName = objectName;
+        this.references = references;
         matchType = "";
         onChange = "";
         onDelete = "";
@@ -49,11 +49,11 @@ public class Constraint extends TableObject {
         return onDelete;
     }
 
-    public Boolean getDeferrable() {
+    public boolean getDeferrable() {
         return isDeferrable;
     }
 
-    public Boolean getValid() {
+    public boolean getValid() {
         return isValid;
     }
 

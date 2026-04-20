@@ -7,12 +7,12 @@ public class Sequence extends DatabaseObject {
     private final Long minimumValue;
     private final Long maximumValue;
     private final Long incrementValue;
-    private final Boolean isCyclic;
-    private final Boolean wasCalled;
+    private final boolean isCyclic;
+    private final boolean wasCalled;
 
     public Sequence(final String objectName, final String owner, final String acl, final String dataType,
                     final Long currentValue, final Long nextValue, final Long minValue, final Long maxValue,
-                    final Long incrementValue, final Boolean isCyclic, final Boolean wasCalled) {
+                    final Long incrementValue, final boolean isCyclic, final boolean wasCalled) {
         super(objectName, owner, acl);
 
         this.dataType = dataType;

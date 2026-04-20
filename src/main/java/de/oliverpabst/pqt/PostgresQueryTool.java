@@ -8,18 +8,22 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ResourceBundle;
 
 public class PostgresQueryTool extends Application {
 
+    private static final Logger log = LoggerFactory.getLogger(PostgresQueryTool.class);
+
     @Override
     public void start(final Stage stage) throws Exception {
         final ResourceBundle resBundle = ResourceBundle.getBundle(
-                "de.oliverpabst.PQT.lang_properties.guistrings");
+                "de.oliverpabst.pqt.lang_properties.guistrings");
 
         final FXMLLoader loader = new FXMLLoader(getClass().getClassLoader()
-                .getResource("de/oliverpabst/PQT/views/WelcomeScreen.fxml"));
+                .getResource("de/oliverpabst/pqt/views/WelcomeScreen.fxml"));
         final Parent root = loader.load();
         final WelcomeScreenController controller = loader.getController();
 
@@ -37,8 +41,10 @@ public class PostgresQueryTool extends Application {
     @Override
     public void stop() {
         ConnectionStore.getInstance().closeAllConnections();
-        if (!ConnectionStore.getInstance().writeConnectionsToDisk()) {
-            System.err.println("Connection data could not be written!");
+        try {
+            ConnectionStore.getInstance().writeConnectionsToDisk();
+        } catch (final java.io.IOException e) {
+            log.error("Connection data could not be written", e);
         }
     }
 }

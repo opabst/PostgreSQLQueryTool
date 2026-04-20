@@ -6,16 +6,13 @@ public class SettingsStore {
 
     private HashMap<String, String> settings;
 
-    private static SettingsStore instance = null;
+    private static final SettingsStore instance = new SettingsStore();
 
     private SettingsStore() {
         settings = new HashMap<>();
     }
 
     public static SettingsStore getInstance() {
-        if(instance == null) {
-            instance = new SettingsStore();
-        }
         return instance;
     }
 

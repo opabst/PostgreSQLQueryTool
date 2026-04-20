@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ConnectionStore {
-    private static ConnectionStore instance;
+    private static final ConnectionStore instance = new ConnectionStore();
 
     private static final String CONFIG_DIR = ".pqt";
     private static final String CONN_FILE = "connections.json";
@@ -27,9 +26,6 @@ public class ConnectionStore {
     }
 
     public static ConnectionStore getInstance() {
-        if (instance == null) {
-            instance = new ConnectionStore();
-        }
         return instance;
     }
 
@@ -79,7 +75,7 @@ public class ConnectionStore {
     /**
      * Persists all connections (without passwords) to ~/.pqt/connections.json.
      */
-    public boolean writeConnectionsToDisk() {
+    public void writeConnectionsToDisk() throws IOException {
         final File dir = configDir();
         if (!dir.exists()) {
             dir.mkdirs();
@@ -99,13 +95,8 @@ public class ConnectionStore {
         try {
             objectMapper.writerWithDefaultPrettyPrinter()
                     .writeValue(new File(dir, CONN_FILE), records);
-            return true;
         } catch (final IOException e) {
-            final Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("IO Error");
-            alert.setContentText("Could not write connections file: " + e.getMessage());
-            alert.show();
-            return false;
+            throw e;
         }
     }
 
@@ -113,12 +104,12 @@ public class ConnectionStore {
      * Reads connections from ~/.pqt/connections.json. Passwords are never stored,
      * so DBConnection objects are created without a password; the user must enter
      * the password in the UI before connecting.
-     * If the file does not exist (first launch), this method returns true silently.
+     * If the file does not exist (first launch), this method returns silently.
      */
-    public boolean readConnectionsFromDisk() {
+    public void readConnectionsFromDisk() throws IOException {
         final File file = new File(configDir(), CONN_FILE);
         if (!file.exists()) {
-            return true;
+            return;
         }
 
         try {
@@ -134,13 +125,8 @@ public class ConnectionStore {
                         ""
                 ));
             }
-            return true;
         } catch (final IOException e) {
-            final Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("IO Error");
-            alert.setContentText("Could not read connections file: " + e.getMessage());
-            alert.show();
-            return false;
+            throw e;
         }
     }
 

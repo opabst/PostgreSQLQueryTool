@@ -1,19 +1,19 @@
 package de.oliverpabst.pqt.db.metadata.model.table;
 
 public class Column extends TableObject{
-    private final Integer columnNumber;
+    private final int columnNumber;
     private final String columnName;
     private final String dataType;
-    private final Boolean isNullable;
+    private final boolean isNullable;
 
-    public Column(Integer _colNum, String _colName, String _dataType, Boolean _isNullable) {
-        columnNumber = _colNum;
-        columnName = _colName;
-        dataType = _dataType;
-        isNullable = _isNullable;
+    public Column(int colNum, String colName, String dataType, boolean isNullable) {
+        columnNumber = colNum;
+        columnName = colName;
+        this.dataType = dataType;
+        this.isNullable = isNullable;
     }
 
-    public Integer getColumnNumber() {
+    public int getColumnNumber() {
         return columnNumber;
     }
 
@@ -25,7 +25,7 @@ public class Column extends TableObject{
         return dataType;
     }
 
-    public Boolean getIsNullable() {
+    public boolean getIsNullable() {
         return isNullable;
     }
 

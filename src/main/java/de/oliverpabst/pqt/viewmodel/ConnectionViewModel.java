@@ -70,8 +70,7 @@ public class ConnectionViewModel {
             }
         });
 
-        final Thread t = new Thread(task);
-        t.setDaemon(true);
+        final Thread t = Thread.ofVirtual().name("connection-test").unstarted(task);
         t.start();
     }
 

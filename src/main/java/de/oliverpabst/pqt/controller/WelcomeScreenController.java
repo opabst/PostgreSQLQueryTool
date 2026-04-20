@@ -18,11 +18,19 @@ import java.util.ResourceBundle;
 
 public class WelcomeScreenController {
 
+    private static final int COL_LABEL_WIDTH   = 150;
+    private static final int COL_VALUE_WIDTH   = 175;
+    private static final int COL_LABEL2_WIDTH  = 75;
+    private static final int COL_VALUE2_WIDTH  = 150;
+    private static final int BTN_MIN_WIDTH     = 100;
+    private static final int BTN_MIN_HEIGHT    = 28;
+
     @FXML private Accordion connectionAccordion;
     @FXML private TitledPane connectionsTitledPane;
     @FXML private Button addConnection;
 
     private WelcomeViewModel viewModel;
+    private ListChangeListener<DBConnection> connectionListener;
 
     public WelcomeScreenController() { }
 
@@ -33,12 +41,12 @@ public class WelcomeScreenController {
         this.viewModel = vm;
 
         final ResourceBundle resBundle = ResourceBundle.getBundle(
-                "de.oliverpabst.PQT.lang_properties.guistrings");
+                "de.oliverpabst.pqt.lang_properties.guistrings");
 
         addConnection.setText(resBundle.getString("connection_add_connection"));
         connectionsTitledPane.setText(resBundle.getString("welcome_connections_title"));
 
-        vm.getConnections().addListener((ListChangeListener<DBConnection>) c -> {
+        connectionListener = c -> {
             while (c.next()) {
                 if (c.wasAdded()) {
                     for (final DBConnection con : c.getAddedSubList()) {
@@ -56,7 +64,8 @@ public class WelcomeScreenController {
                     connectionAccordion.getPanes().removeAll(toRemove);
                 }
             }
-        });
+        };
+        vm.getConnections().addListener(connectionListener);
 
         // Populate accordion with connections that were loaded at startup
         for (final DBConnection con : vm.getConnections()) {
@@ -70,17 +79,23 @@ public class WelcomeScreenController {
         }
     }
 
+    public void dispose() {
+        if (viewModel != null && connectionListener != null) {
+            viewModel.getConnections().removeListener(connectionListener);
+        }
+    }
+
     private void addConnectionTitledPane(final DBConnection con) {
         final ResourceBundle resBundle = ResourceBundle.getBundle(
-                "de.oliverpabst.PQT.lang_properties.guistrings");
+                "de.oliverpabst.pqt.lang_properties.guistrings");
 
         final GridPane grid = new GridPane();
         grid.setVgap(4);
         grid.setHgap(4);
-        grid.getColumnConstraints().add(new ColumnConstraints(150));
-        grid.getColumnConstraints().add(new ColumnConstraints(175));
-        grid.getColumnConstraints().add(new ColumnConstraints(75));
-        grid.getColumnConstraints().add(new ColumnConstraints(150));
+        grid.getColumnConstraints().add(new ColumnConstraints(COL_LABEL_WIDTH));
+        grid.getColumnConstraints().add(new ColumnConstraints(COL_VALUE_WIDTH));
+        grid.getColumnConstraints().add(new ColumnConstraints(COL_LABEL2_WIDTH));
+        grid.getColumnConstraints().add(new ColumnConstraints(COL_VALUE2_WIDTH));
         grid.setPadding(new Insets(5, 5, 5, 5));
 
         // Row 0 — connection name
@@ -131,8 +146,8 @@ public class WelcomeScreenController {
 
         // Buttons
         final Button deleteButton = new Button(resBundle.getString("connection_delete"));
-        deleteButton.setMinSize(100, 28);
-        deleteButton.setPrefSize(100, 28);
+        deleteButton.setMinSize(BTN_MIN_WIDTH, BTN_MIN_HEIGHT);
+        deleteButton.setPrefSize(BTN_MIN_WIDTH, BTN_MIN_HEIGHT);
         deleteButton.setOnAction((ActionEvent e) -> {
             final TitledPane pane = connectionAccordion.getExpandedPane();
             ConnectionStore.getInstance().removeConnection(pane.getText());
@@ -141,9 +156,9 @@ public class WelcomeScreenController {
         GridPane.setHalignment(deleteButton, HPos.RIGHT);
 
         final Button connectButton = new Button(resBundle.getString("connection_connect"));
-        connectButton.setMinSize(100, 28);
-        connectButton.setPrefSize(100, 28);
-        connectButton.setMaxSize(100, 28);
+        connectButton.setMinSize(BTN_MIN_WIDTH, BTN_MIN_HEIGHT);
+        connectButton.setPrefSize(BTN_MIN_WIDTH, BTN_MIN_HEIGHT);
+        connectButton.setMaxSize(BTN_MIN_WIDTH, BTN_MIN_HEIGHT);
         connectButton.setOnAction((javafx.event.ActionEvent e) -> {
             final TitledPane currentPane = connectionAccordion.getExpandedPane();
             final DBConnection selectedCon = ConnectionStore.getInstance()

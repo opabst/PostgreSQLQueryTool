@@ -94,35 +94,43 @@ ALTER TABLE cust.reviews   ADD CONSTRAINT uc_reviews_customer_id_product_id UNIQ
 -- ---------------------------------------------------------------
 ALTER TABLE cust.addresses
     ADD CONSTRAINT fk_addresses_customer_id
-    FOREIGN KEY (customer_id) REFERENCES cust.customers (id);
+    FOREIGN KEY (customer_id) REFERENCES cust.customers (id)
+    ON DELETE RESTRICT;
 
 ALTER TABLE cust.orders
     ADD CONSTRAINT fk_orders_customer_id
-    FOREIGN KEY (customer_id) REFERENCES cust.customers (id);
+    FOREIGN KEY (customer_id) REFERENCES cust.customers (id)
+    ON DELETE RESTRICT;
 
 ALTER TABLE cust.orders
     ADD CONSTRAINT fk_orders_shipping_address_id
-    FOREIGN KEY (shipping_address_id) REFERENCES cust.addresses (id);
+    FOREIGN KEY (shipping_address_id) REFERENCES cust.addresses (id)
+    ON DELETE RESTRICT;
 
 ALTER TABLE cust.order_items
     ADD CONSTRAINT fk_order_items_order_id
-    FOREIGN KEY (order_id) REFERENCES cust.orders (id);
+    FOREIGN KEY (order_id) REFERENCES cust.orders (id)
+    ON DELETE RESTRICT;
 
 ALTER TABLE cust.order_items
     ADD CONSTRAINT fk_order_items_product_id
-    FOREIGN KEY (product_id) REFERENCES inv.products (id);
+    FOREIGN KEY (product_id) REFERENCES inv.products (id)
+    ON DELETE RESTRICT;
 
 ALTER TABLE cust.payment_methods
     ADD CONSTRAINT fk_payment_methods_customer_id
-    FOREIGN KEY (customer_id) REFERENCES cust.customers (id);
+    FOREIGN KEY (customer_id) REFERENCES cust.customers (id)
+    ON DELETE RESTRICT;
 
 ALTER TABLE cust.reviews
     ADD CONSTRAINT fk_reviews_customer_id
-    FOREIGN KEY (customer_id) REFERENCES cust.customers (id);
+    FOREIGN KEY (customer_id) REFERENCES cust.customers (id)
+    ON DELETE RESTRICT;
 
 ALTER TABLE cust.reviews
     ADD CONSTRAINT fk_reviews_product_id
-    FOREIGN KEY (product_id) REFERENCES inv.products (id);
+    FOREIGN KEY (product_id) REFERENCES inv.products (id)
+    ON DELETE RESTRICT;
 
 -- ---------------------------------------------------------------
 -- Check Constraints

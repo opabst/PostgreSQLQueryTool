@@ -10,8 +10,8 @@ public class Schema extends DatabaseObject {
     private final TreeMap<String, Function> functions;
     private final TreeMap<String, View> views;
 
-    public Schema(String _schemaName, String _schemaOwner) {
-        super(_schemaName, _schemaOwner, "");
+    public Schema(String schemaName, String schemaOwner) {
+        super(schemaName, schemaOwner, "");
 
         tables = new TreeMap<>();
         sequences = new TreeMap<>();
@@ -19,36 +19,36 @@ public class Schema extends DatabaseObject {
         views = new TreeMap<>();
     }
 
-    public void addTable(String _tableName, Table _table) {
-        tables.put(_tableName, _table);
+    public void addTable(String tableName, Table table) {
+        tables.put(tableName, table);
     }
 
-    public void addSequence(String _sequenceName, Sequence _sequence) {
-        sequences.put(_sequenceName, _sequence);
+    public void addSequence(String sequenceName, Sequence sequence) {
+        sequences.put(sequenceName, sequence);
     }
 
-    public void addFunction(String _functionName, Function _function) {
-        functions.put(_functionName, _function);
+    public void addFunction(String functionName, Function function) {
+        functions.put(functionName, function);
     }
 
-    public void addView(String _viewName, View _view) {
-        views.put(_viewName, _view);
+    public void addView(String viewName, View view) {
+        views.put(viewName, view);
     }
 
-    public Table getTable(String _tableName) {
-        return tables.get(_tableName);
+    public Table getTable(String tableName) {
+        return tables.get(tableName);
     }
 
-    public Sequence getSequence(String _sequenceName) {
-        return sequences.get(_sequenceName);
+    public Sequence getSequence(String sequenceName) {
+        return sequences.get(sequenceName);
     }
 
-    public Function getFunction(String _functionName) {
-        return functions.get(_functionName);
+    public Function getFunction(String functionName) {
+        return functions.get(functionName);
     }
 
-    public View getView(String _viewName) {
-        return views.get(_viewName);
+    public View getView(String viewName) {
+        return views.get(viewName);
     }
 
     public Map<String, Table> getAllTables() {

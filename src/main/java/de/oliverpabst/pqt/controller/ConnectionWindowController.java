@@ -42,7 +42,7 @@ public class ConnectionWindowController {
         this.viewModel = vm;
 
         final ResourceBundle resBundle = ResourceBundle.getBundle(
-                "de.oliverpabst.PQT.lang_properties.guistrings");
+                "de.oliverpabst.pqt.lang_properties.guistrings");
 
         mainLabel.setText(resBundle.getString("connection_window_title"));
         connectionnameLBL.setText(resBundle.getString("connection_name_label"));
