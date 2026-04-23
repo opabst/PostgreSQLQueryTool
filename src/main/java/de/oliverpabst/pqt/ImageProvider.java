@@ -6,14 +6,14 @@ public class ImageProvider {
 
     private static final int ICON_SIZE = 22;
 
-    private Image appIcon;
-    private Image constraintIcon;
-    private Image functionIcon;
-    private Image indexIcon;
-    private Image schemaIcon;
-    private Image sequenceIcon;
-    private Image tableIcon;
-    private Image viewIcon;
+    private final Image appIcon = loadIcon("PQT.png");
+    private final Image constraintIcon = loadIcon("Constraint.png");
+    private final Image functionIcon = loadIcon("Function.png");
+    private final Image indexIcon = loadIcon("Index.png");
+    private final Image schemaIcon = loadIcon("Schema.png");
+    private final Image sequenceIcon = loadIcon("Sequence.png");
+    private final Image tableIcon = loadIcon("Table.png");
+    private final Image viewIcon = loadIcon("View.png");
 
     private static final ImageProvider instance = new ImageProvider();
 
@@ -49,37 +49,15 @@ public class ImageProvider {
         return viewIcon;
     }
 
-    private ImageProvider() {
-        loadAllImages();
-    }
+    private ImageProvider() { }
 
     public static ImageProvider getInstance() {
         return instance;
     }
 
-    private void loadAllImages() {
-        appIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/PQT.png"),
-                ICON_SIZE, ICON_SIZE, true, false);
-
-        constraintIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/Constraint.png"),
-                ICON_SIZE, ICON_SIZE, true, false);
-
-        functionIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/Function.png"),
-                ICON_SIZE, ICON_SIZE, true, false);
-
-        indexIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/Index.png"),
-                ICON_SIZE, ICON_SIZE, true, false);
-
-        schemaIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/Schema.png"),
-                ICON_SIZE, ICON_SIZE, true, false);
-
-        sequenceIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/Sequence.png"),
-                ICON_SIZE, ICON_SIZE, true, false);
-
-        tableIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/Table.png"),
-                ICON_SIZE, ICON_SIZE, true, false);
-
-        viewIcon = new Image(getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/View.png"),
-                ICON_SIZE, ICON_SIZE, true, false);
+        private Image loadIcon(final String fileName) {
+        return new Image(
+            getClass().getClassLoader().getResourceAsStream("de/oliverpabst/pqt/icons/" + fileName),
+            ICON_SIZE, ICON_SIZE, true, false);
     }
 }

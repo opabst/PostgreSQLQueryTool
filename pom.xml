@@ -14,6 +14,9 @@
         <java.version>23</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>25</javafx.version>
+        <junit.jupiter.version>5.12.2</junit.jupiter.version>
+        <testfx.version>4.0.18</testfx.version>
+        <surefire.excludedGroups>ui</surefire.excludedGroups>
         <hikaricp.version>5.1.0</hikaricp.version>
         <slf4j.version>2.0.17</slf4j.version>
         <logback.version>1.5.18</logback.version>
@@ -47,6 +50,12 @@
             </activation>
             <properties>
                 <javafx.platform>mac</javafx.platform>
+            </properties>
+        </profile>
+        <profile>
+            <id>ui-tests</id>
+            <properties>
+                <surefire.excludedGroups>__none__</surefire.excludedGroups>
             </properties>
         </profile>
     </profiles>
@@ -131,7 +140,19 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.7.0</version>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-core</artifactId>
+            <version>${testfx.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit5</artifactId>
+            <version>${testfx.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -176,6 +197,12 @@
                 <version>3.0.0-M7</version>
                 <configuration>
                     <useModulePath>false</useModulePath>
+                    <excludedGroups>${surefire.excludedGroups}</excludedGroups>
+                    <systemPropertyVariables>
+                        <testfx.robot>glass</testfx.robot>
+                        <prism.order>sw</prism.order>
+                        <java.awt.headless>true</java.awt.headless>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
 

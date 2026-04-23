@@ -20,22 +20,22 @@ public class AboutWindowController {
 
     @FXML
     public void initialize() {
-        ResourceBundle resBundle = ResourceBundle.getBundle("de.oliverpabst.pqt.lang_properties.guistrings");
+        final ResourceBundle resBundle = ResourceBundle.getBundle("de.oliverpabst.pqt.lang_properties.guistrings");
         aboutCloseButton.setText(resBundle.getString("about_close_button"));
 
-        String htmlMessage =
+        final String htmlMessage =
                 "<p><h1><b>PostgreSQL-Query-Tool</b></h1></p>\n" +
                 "<br/>\n" +
                 "<p><b>Autor</b>: Oliver Pabst &#9400; 2019<br></p>\n" +
                 "<p><b>Lizenz</b>: <a href=&quot;https://www.gnu.org/licenses/gpl-3.0.en.html&quot;>GNU General Public License v3.0</a></p>\n";
 
-        WebEngine engine = aboutWebView.getEngine();
+        final WebEngine engine = aboutWebView.getEngine();
         engine.loadContent(htmlMessage);
     }
 
     @FXML
-    public void closeScreen(ActionEvent event) {
-        Stage stage = (Stage)((Button)event.getSource()).getScene().getWindow();
+    public void closeScreen(final ActionEvent event) {
+        final Stage stage = (Stage)((Button)event.getSource()).getScene().getWindow();
         stage.close();
     }
 }

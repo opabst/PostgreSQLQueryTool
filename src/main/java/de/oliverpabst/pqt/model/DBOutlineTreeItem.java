@@ -2,7 +2,6 @@ package de.oliverpabst.pqt.model;
 
 import de.oliverpabst.pqt.ImageProvider;
 import de.oliverpabst.pqt.db.metadata.MetadataManager;
-import de.oliverpabst.pqt.db.metadata.model.View;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
@@ -19,20 +18,20 @@ public class DBOutlineTreeItem extends TreeItem<String> {
 
     private final String schemaCompName;
 
-    private OutlineComponentType compType;
+    private final OutlineComponentType compType;
 
-    private MetadataManager metadataManager;
+    private final MetadataManager metadataManager;
 
     private boolean hasLoadedChildren = false;
 
-    public DBOutlineTreeItem(String componentSchemaName, OutlineComponentType componentType, MetadataManager metadataManager) {
+    public DBOutlineTreeItem(final String componentSchemaName, final OutlineComponentType componentType, final MetadataManager metadataManager) {
         super(componentSchemaName);
         schemaCompName = componentSchemaName;
         compType = componentType;
         this.metadataManager = metadataManager;
     }
 
-    public DBOutlineTreeItem(String componentSchemaName, OutlineComponentType componentType, MetadataManager metadataManager, Node imageNode) {
+    public DBOutlineTreeItem(final String componentSchemaName, final OutlineComponentType componentType, final MetadataManager metadataManager, final Node imageNode) {
         super(componentSchemaName, imageNode);
         schemaCompName = componentSchemaName;
         compType = componentType;
@@ -72,7 +71,7 @@ public class DBOutlineTreeItem extends TreeItem<String> {
 
         final List<DBOutlineTreeItem> children = new ArrayList<>();
 
-        DBOutlineTreeItem parent = this;
+        final DBOutlineTreeItem parent = this;
         if (this.getComponentType() == OutlineComponentType.ROOT) {
             // Elemente der obersten Hierarchie auf Datenbankebene laden
 

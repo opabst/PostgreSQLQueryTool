@@ -65,7 +65,7 @@ public class MetadataManager {
                         schemasLoaded = true;
                         return null;
                     });
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             log.error("Failed to load schemas", e);
         }
     }
@@ -92,7 +92,7 @@ public class MetadataManager {
                 schemas.get(schemaName).addTable(tableName,
                         new Table(tableName, columns, constraints, indices, triggers));
             }
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             log.error("Failed to load tables for schema '{}'", schemaName, e);
         }
     }
@@ -117,7 +117,7 @@ public class MetadataManager {
                         }
                         return null;
                     });
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             log.error("Failed to load functions for schema '{}'", schemaName, e);
         }
     }
@@ -139,7 +139,7 @@ public class MetadataManager {
                         }
                         return null;
                     });
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             log.error("Failed to load views for schema '{}'", schemaName, e);
         }
     }
@@ -166,7 +166,7 @@ public class MetadataManager {
                         }
                         return null;
                     });
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             log.error("Failed to load sequences for schema '{}'", schemaName, e);
         }
     }
@@ -193,7 +193,7 @@ public class MetadataManager {
                         }
                         return columns;
                     });
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             log.error("Failed to load columns for {}.{}", schemaName, tableName, e);
             return Collections.emptyList();
         }
@@ -226,7 +226,7 @@ public class MetadataManager {
                         }
                         return constraints;
                     });
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             log.error("Failed to load constraints for {}.{}", schemaName, tableName, e);
             return Collections.emptyList();
         }

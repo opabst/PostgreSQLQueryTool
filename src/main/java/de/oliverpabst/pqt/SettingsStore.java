@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class SettingsStore {
 
-    private HashMap<String, String> settings;
+    private final HashMap<String, String> settings;
 
     private static final SettingsStore instance = new SettingsStore();
 
@@ -16,11 +16,11 @@ public class SettingsStore {
         return instance;
     }
 
-    public String getSetting(String _key) {
+    public String getSetting(final String _key) {
         return settings.get(_key);
     }
 
-    public Boolean changeSetting(String _key, String _value) {
+    public Boolean changeSetting(final String _key, final String _value) {
         if(!settings.containsKey(_key)) {
             return false;
         } else {
@@ -29,7 +29,7 @@ public class SettingsStore {
         }
     }
 
-    public Boolean addSetting(String _key, String _value) {
+    public Boolean addSetting(final String _key, final String _value) {
         if(settings.containsKey(_key)) {
             return false;
         } else {

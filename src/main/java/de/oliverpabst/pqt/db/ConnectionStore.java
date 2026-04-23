@@ -19,7 +19,7 @@ public class ConnectionStore {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private ObservableList<DBConnection> connectionList;
+    private final ObservableList<DBConnection> connectionList;
 
     private ConnectionStore() {
         connectionList = FXCollections.observableArrayList();
@@ -32,7 +32,7 @@ public class ConnectionStore {
     public boolean addConnection(final DBConnection connection) {
         final Iterator<DBConnection> connectionIterator = connectionList.iterator();
         while (connectionIterator.hasNext()) {
-            DBConnection existingCon = connectionIterator.next();
+            final DBConnection existingCon = connectionIterator.next();
             if (existingCon.equals(connection)) {
                 return false;
             }
@@ -42,14 +42,12 @@ public class ConnectionStore {
     }
 
     public DBConnection getConnection(final String connectionName) {
-        DBConnection connection = null;
         for (final DBConnection dbConnection : connectionList) {
             if (dbConnection.getConnectionName().equals(connectionName)) {
-                connection = dbConnection;
-                break;
+                return dbConnection;
             }
         }
-        return connection;
+        return null;
     }
 
     public boolean removeConnection(final String connectionName) {
