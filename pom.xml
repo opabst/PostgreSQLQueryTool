@@ -17,7 +17,7 @@
         <junit.jupiter.version>5.12.2</junit.jupiter.version>
         <testfx.version>4.0.18</testfx.version>
         <surefire.excludedGroups>ui</surefire.excludedGroups>
-        <hikaricp.version>5.1.0</hikaricp.version>
+        <hikaricp.version>7.0.2</hikaricp.version>
         <slf4j.version>2.0.17</slf4j.version>
         <logback.version>1.5.18</logback.version>
         <mainClass>de.oliverpabst.pqt.PostgresQueryTool</mainClass>
