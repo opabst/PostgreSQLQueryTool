@@ -12,7 +12,7 @@ services:
       - "5440:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./postgres/init:/docker-entrypoint-initdb.d
+      - ./postgres/init:/docker-entrypoint-initdb.d:z
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
@@ -29,8 +29,8 @@ services:
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - ./flyway/sql:/flyway/sql
-      - ./flyway/conf:/flyway/conf
+      - ./flyway/sql:/flyway/sql:z
+      - ./flyway/conf:/flyway/conf:z
     env_file: .env
 
 volumes:
