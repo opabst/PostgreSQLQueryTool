@@ -67,6 +67,8 @@ public class MetadataManager {
                     });
         } catch (final SQLException e) {
             log.error("Failed to load schemas", e);
+        } catch (final RuntimeException e) {
+            log.error("Failed to load schemas (connection error)", e);
         }
     }
 

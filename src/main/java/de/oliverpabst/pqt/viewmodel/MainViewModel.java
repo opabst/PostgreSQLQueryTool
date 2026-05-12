@@ -70,7 +70,7 @@ public class MainViewModel {
                 resBundle.getString("tree_view_root"),
                 OutlineComponentType.ROOT,
                 metadataManager);
-        root.setExpanded(false);
+        root.setExpanded(true);
         treeRoot.set(root);
     }
 

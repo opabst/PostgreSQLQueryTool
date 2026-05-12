@@ -159,6 +159,7 @@ public class WelcomeScreenController {
         connectButton.setMinSize(BTN_MIN_WIDTH, BTN_MIN_HEIGHT);
         connectButton.setPrefSize(BTN_MIN_WIDTH, BTN_MIN_HEIGHT);
         connectButton.setMaxSize(BTN_MIN_WIDTH, BTN_MIN_HEIGHT);
+        connectButton.disableProperty().bind(passwordField.textProperty().isEmpty());
         connectButton.setOnAction((javafx.event.ActionEvent e) -> {
             final TitledPane currentPane = connectionAccordion.getExpandedPane();
             final DBConnection selectedCon = ConnectionStore.getInstance()
