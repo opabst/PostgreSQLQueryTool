@@ -3,16 +3,21 @@
 
 -- ---------------------------------------------------------------
 -- Sequences
--- One schema-wide sequence ensures all primary keys in cust are unique.
+-- Each table uses its own sequence so seed scripts can address them directly.
 -- ---------------------------------------------------------------
-CREATE SEQUENCE cust.sq_cust_id START 1 INCREMENT 1;
+CREATE SEQUENCE cust.sq_customers_id        START 1 INCREMENT 1;
+CREATE SEQUENCE cust.sq_addresses_id        START 1 INCREMENT 1;
+CREATE SEQUENCE cust.sq_orders_id           START 1 INCREMENT 1;
+CREATE SEQUENCE cust.sq_order_items_id      START 1 INCREMENT 1;
+CREATE SEQUENCE cust.sq_payment_methods_id  START 1 INCREMENT 1;
+CREATE SEQUENCE cust.sq_reviews_id          START 1 INCREMENT 1;
 
 -- ---------------------------------------------------------------
 -- Tables
 -- ---------------------------------------------------------------
 
 CREATE TABLE cust.customers (
-    id                  BIGINT       NOT NULL DEFAULT nextval('cust.sq_cust_id'),
+    id                  BIGINT       NOT NULL DEFAULT nextval('cust.sq_customers_id'),
     first_name          VARCHAR(100) NOT NULL,
     last_name           VARCHAR(100) NOT NULL,
     email               VARCHAR(255) NOT NULL,
@@ -24,7 +29,7 @@ CREATE TABLE cust.customers (
 );
 
 CREATE TABLE cust.addresses (
-    id            BIGINT       NOT NULL DEFAULT nextval('cust.sq_cust_id'),
+    id            BIGINT       NOT NULL DEFAULT nextval('cust.sq_addresses_id'),
     customer_id   BIGINT       NOT NULL,
     type          VARCHAR(10)  NOT NULL,
     street        VARCHAR(255) NOT NULL,
@@ -36,7 +41,7 @@ CREATE TABLE cust.addresses (
 );
 
 CREATE TABLE cust.orders (
-    id                   BIGINT        NOT NULL DEFAULT nextval('cust.sq_cust_id'),
+    id                   BIGINT        NOT NULL DEFAULT nextval('cust.sq_orders_id'),
     order_date           TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
     customer_id          BIGINT        NOT NULL,
     status               VARCHAR(20)   NOT NULL DEFAULT 'pending',
@@ -46,7 +51,7 @@ CREATE TABLE cust.orders (
 );
 
 CREATE TABLE cust.order_items (
-    id           BIGINT        NOT NULL DEFAULT nextval('cust.sq_cust_id'),
+    id           BIGINT        NOT NULL DEFAULT nextval('cust.sq_order_items_id'),
     order_id     BIGINT        NOT NULL,
     product_id   BIGINT        NOT NULL,
     quantity     INT           NOT NULL,
@@ -55,7 +60,7 @@ CREATE TABLE cust.order_items (
 );
 
 CREATE TABLE cust.payment_methods (
-    id           BIGINT      NOT NULL DEFAULT nextval('cust.sq_cust_id'),
+    id           BIGINT      NOT NULL DEFAULT nextval('cust.sq_payment_methods_id'),
     customer_id  BIGINT      NOT NULL,
     type         VARCHAR(20) NOT NULL,
     last_four    CHAR(4),
@@ -63,7 +68,7 @@ CREATE TABLE cust.payment_methods (
 );
 
 CREATE TABLE cust.reviews (
-    id           BIGINT        NOT NULL DEFAULT nextval('cust.sq_cust_id'),
+    id           BIGINT        NOT NULL DEFAULT nextval('cust.sq_reviews_id'),
     customer_id  BIGINT        NOT NULL,
     product_id   BIGINT        NOT NULL,
     rating       SMALLINT      NOT NULL,

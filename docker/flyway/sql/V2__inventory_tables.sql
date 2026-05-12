@@ -3,16 +3,21 @@
 
 -- ---------------------------------------------------------------
 -- Sequences
--- One schema-wide sequence ensures all primary keys in inv are unique.
+-- Each table uses its own sequence so seed scripts can address them directly.
 -- ---------------------------------------------------------------
-CREATE SEQUENCE inv.sq_inv_id START 1 INCREMENT 1;
+CREATE SEQUENCE inv.sq_categories_id     START 1 INCREMENT 1;
+CREATE SEQUENCE inv.sq_brands_id         START 1 INCREMENT 1;
+CREATE SEQUENCE inv.sq_products_id       START 1 INCREMENT 1;
+CREATE SEQUENCE inv.sq_stock_id          START 1 INCREMENT 1;
+CREATE SEQUENCE inv.sq_price_history_id  START 1 INCREMENT 1;
+CREATE SEQUENCE inv.sq_product_tags_id   START 1 INCREMENT 1;
 
 -- ---------------------------------------------------------------
 -- Tables
 -- ---------------------------------------------------------------
 
 CREATE TABLE inv.categories (
-    id          BIGINT          NOT NULL DEFAULT nextval('inv.sq_inv_id'),
+    id          BIGINT          NOT NULL DEFAULT nextval('inv.sq_categories_id'),
     name        VARCHAR(100)    NOT NULL,
     parent_id   BIGINT,
     description TEXT,
@@ -20,7 +25,7 @@ CREATE TABLE inv.categories (
 );
 
 CREATE TABLE inv.brands (
-    id            BIGINT       NOT NULL DEFAULT nextval('inv.sq_inv_id'),
+    id            BIGINT       NOT NULL DEFAULT nextval('inv.sq_brands_id'),
     name          VARCHAR(100) NOT NULL,
     website       VARCHAR(255),
     country_code  CHAR(2),
@@ -28,7 +33,7 @@ CREATE TABLE inv.brands (
 );
 
 CREATE TABLE inv.products (
-    id           BIGINT          NOT NULL DEFAULT nextval('inv.sq_inv_id'),
+    id           BIGINT          NOT NULL DEFAULT nextval('inv.sq_products_id'),
     sku          VARCHAR(50)     NOT NULL,
     name         VARCHAR(255)    NOT NULL,
     description  TEXT,
@@ -41,7 +46,7 @@ CREATE TABLE inv.products (
 );
 
 CREATE TABLE inv.stock (
-    id                  BIGINT  NOT NULL DEFAULT nextval('inv.sq_inv_id'),
+    id                  BIGINT  NOT NULL DEFAULT nextval('inv.sq_stock_id'),
     product_id          BIGINT  NOT NULL,
     quantity            INT     NOT NULL DEFAULT 0,
     reserved_quantity   INT     NOT NULL DEFAULT 0,
@@ -50,7 +55,7 @@ CREATE TABLE inv.stock (
 );
 
 CREATE TABLE inv.price_history (
-    id          BIGINT          NOT NULL DEFAULT nextval('inv.sq_inv_id'),
+    id          BIGINT          NOT NULL DEFAULT nextval('inv.sq_price_history_id'),
     product_id  BIGINT          NOT NULL,
     price       NUMERIC(10,2)   NOT NULL,
     valid_from  TIMESTAMPTZ     NOT NULL,
@@ -58,7 +63,7 @@ CREATE TABLE inv.price_history (
 );
 
 CREATE TABLE inv.product_tags (
-    id          BIGINT       NOT NULL DEFAULT nextval('inv.sq_inv_id'),
+    id          BIGINT       NOT NULL DEFAULT nextval('inv.sq_product_tags_id'),
     product_id  BIGINT       NOT NULL,
     tag         VARCHAR(50)  NOT NULL
 );
