@@ -1,0 +1,27 @@
+.code-area .text {
+    -fx-font-family: "Lucida Console";
+    -fx-font-size: 12px;
+}
+
+.keyword {
+    -fx-fill: #0000cc;
+    -fx-font-weight: bold;
+}
+
+.string {
+    -fx-fill: #008000;
+}
+
+.linecomment,
+.blockcomment {
+    -fx-fill: #808080;
+    -fx-font-style: italic;
+}
+
+.number {
+    -fx-fill: #800080;
+}
+
+.operator {
+    -fx-fill: #cc0000;
+}

@@ -1,8 +1,10 @@
 package de.oliverpabst.pqt.controller;
 
 import de.oliverpabst.pqt.ImageProvider;
+import de.oliverpabst.pqt.ui.SqlHighlighter;
 import de.oliverpabst.pqt.viewmodel.MainViewModel;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,6 +15,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.TableColumn;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.fxmisc.richtext.CodeArea;
+import org.reactfx.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +26,7 @@ public class MainWindowController {
 
     private static final Logger log = LoggerFactory.getLogger(MainWindowController.class);
     @FXML private TreeView<String> DatabaseObjectOutline;
-    @FXML private TextArea MainWindowQueryTA;
+    @FXML private CodeArea MainWindowQueryTA;
     @FXML private TableView<ObservableList<String>> MainWindowResultTV;
     @FXML private TextArea MainWindowExplainPlanTA;
     @FXML private Button runQueryBTN;
@@ -45,6 +49,10 @@ public class MainWindowController {
     private MainViewModel viewModel;
     private javafx.beans.value.ChangeListener<Number> selectedTabListener;
     private javafx.collections.ListChangeListener<String> columnNamesListener;
+    private ChangeListener<String> codeAreaTextListener;
+    private ChangeListener<String> vmQueryTextListener;
+    private ChangeListener<String> selectionListener;
+    private Subscription highlightingSubscription;
 
     @FXML
     public void initialize() { }
@@ -71,7 +79,38 @@ public class MainWindowController {
         helpMENU.setText(resBundle.getString("menu_help_submenu"));
         helpAboutITM.setText(resBundle.getString("menu_help_submenu_about"));
 
-        MainWindowQueryTA.textProperty().bindBidirectional(vm.queryTextProperty());
+        MainWindowQueryTA.getStylesheets().add(
+                getClass().getClassLoader()
+                        .getResource("de/oliverpabst/pqt/sql-highlighting.css")
+                        .toExternalForm());
+
+        codeAreaTextListener = (obs, oldVal, newVal) -> {
+            if (!newVal.equals(vm.queryTextProperty().get())) {
+                vm.queryTextProperty().set(newVal);
+            }
+        };
+        MainWindowQueryTA.textProperty().addListener(codeAreaTextListener);
+
+        vmQueryTextListener = (obs, oldVal, newVal) -> {
+            if (!newVal.equals(MainWindowQueryTA.getText())) {
+                MainWindowQueryTA.replaceText(newVal);
+            }
+        };
+        vm.queryTextProperty().addListener(vmQueryTextListener);
+
+        selectionListener = (obs, oldVal, newVal) ->
+                vm.selectedQueryTextProperty().set(newVal);
+        MainWindowQueryTA.selectedTextProperty().addListener(selectionListener);
+
+        highlightingSubscription = MainWindowQueryTA.richChanges()
+                .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
+                .subscribe(change -> {
+                    final String text = MainWindowQueryTA.getText();
+                    if (!text.isEmpty()) {
+                        MainWindowQueryTA.setStyleSpans(
+                                0, SqlHighlighter.computeHighlighting(text));
+                    }
+                });
 
         runQueryBTN.disableProperty().bind(vm.queryEmptyBinding);
         explainBTN.disableProperty().bind(vm.queryEmptyBinding);
@@ -102,6 +141,14 @@ public class MainWindowController {
         if (viewModel != null) {
             viewModel.selectedTabProperty().removeListener(selectedTabListener);
             viewModel.getResultColumnNames().removeListener(columnNamesListener);
+            viewModel.queryTextProperty().removeListener(vmQueryTextListener);
+        }
+        if (MainWindowQueryTA != null) {
+            MainWindowQueryTA.textProperty().removeListener(codeAreaTextListener);
+            MainWindowQueryTA.selectedTextProperty().removeListener(selectionListener);
+        }
+        if (highlightingSubscription != null) {
+            highlightingSubscription.unsubscribe();
         }
     }
     @FXML

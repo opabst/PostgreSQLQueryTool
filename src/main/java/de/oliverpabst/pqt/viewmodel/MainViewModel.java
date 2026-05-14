@@ -23,6 +23,9 @@ public class MainViewModel {
     private final StringProperty queryText = new SimpleStringProperty("");
     public StringProperty queryTextProperty() { return queryText; }
 
+    private final StringProperty selectedQueryText = new SimpleStringProperty("");
+    public StringProperty selectedQueryTextProperty() { return selectedQueryText; }
+
     /** True when the query text area is empty — used to disable action buttons. */
     public final BooleanBinding queryEmptyBinding =
             queryText.isEmpty().or(queryText.isEqualTo(""));
@@ -134,8 +137,9 @@ public class MainViewModel {
         }
     }
 
-    /** Returns selected text if non-empty, otherwise the full query text area content. */
+    /** Returns selected text when non-blank, otherwise the full query text area content. */
     private String effectiveSql() {
-        return queryText.get();
+        final String selection = selectedQueryText.get();
+        return selection.isBlank() ? queryText.get() : selection;
     }
 }
