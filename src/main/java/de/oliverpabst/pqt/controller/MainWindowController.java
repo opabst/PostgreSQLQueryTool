@@ -35,6 +35,8 @@ public class MainWindowController {
     @FXML private Tab resultTab;
     @FXML private Tab queryplanTab;
     @FXML private Tab errormessageTab;
+    @FXML private Tab metadataTab;
+    @FXML private TextArea metadataDetailsTA;
     @FXML private Button explainBTN;
     @FXML private Button analyzeBTN;
     @FXML private Menu fileMENU;
@@ -49,6 +51,7 @@ public class MainWindowController {
     private MainViewModel viewModel;
     private javafx.beans.value.ChangeListener<Number> selectedTabListener;
     private javafx.collections.ListChangeListener<String> columnNamesListener;
+    private javafx.beans.value.ChangeListener<TreeItem<String>> treeSelectionListener;
     private ChangeListener<String> codeAreaTextListener;
     private ChangeListener<String> vmQueryTextListener;
     private ChangeListener<String> selectionListener;
@@ -66,6 +69,7 @@ public class MainWindowController {
         resultTab.setText(resBundle.getString("result_tab"));
         queryplanTab.setText(resBundle.getString("query_plan_tab"));
         errormessageTab.setText(resBundle.getString("error_messages_tab"));
+        metadataTab.setText(resBundle.getString("metadata_tab"));
 
         runQueryBTN.setText(resBundle.getString("query_execute_button"));
         explainBTN.setText(resBundle.getString("query_explain_button"));
@@ -118,6 +122,7 @@ public class MainWindowController {
 
         MainWindowExplainPlanTA.textProperty().bind(vm.explainTextProperty());
         errorMessagesTA.textProperty().bind(vm.errorTextProperty());
+        metadataDetailsTA.textProperty().bind(vm.metadataTextProperty());
 
         selectedTabListener = (obs, oldVal, newVal) ->
                 queryResultTabPanel.getSelectionModel().select(newVal.intValue());
@@ -130,6 +135,9 @@ public class MainWindowController {
 
         DatabaseObjectOutline.setRoot(vm.treeRootProperty().get());
         DatabaseObjectOutline.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        treeSelectionListener = (obs, oldVal, newVal) -> vm.onTreeItemSelected(newVal);
+        DatabaseObjectOutline.getSelectionModel().selectedItemProperty().addListener(treeSelectionListener);
+        vm.onTreeItemSelected(DatabaseObjectOutline.getSelectionModel().getSelectedItem());
     }
 
     @FXML public void runQuery()     { viewModel.runQuery(); }
@@ -141,6 +149,9 @@ public class MainWindowController {
         if (viewModel != null) {
             viewModel.selectedTabProperty().removeListener(selectedTabListener);
             viewModel.getResultColumnNames().removeListener(columnNamesListener);
+            if (treeSelectionListener != null) {
+                DatabaseObjectOutline.getSelectionModel().selectedItemProperty().removeListener(treeSelectionListener);
+            }
             viewModel.queryTextProperty().removeListener(vmQueryTextListener);
         }
         if (MainWindowQueryTA != null) {
@@ -177,7 +188,6 @@ public class MainWindowController {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void rebuildColumns() {
         MainWindowResultTV.getColumns().clear();
         final java.util.List<String> names = viewModel.getResultColumnNames();

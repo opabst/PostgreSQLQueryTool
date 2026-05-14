@@ -2,6 +2,11 @@ package de.oliverpabst.pqt.model;
 
 import de.oliverpabst.pqt.ImageProvider;
 import de.oliverpabst.pqt.db.metadata.MetadataManager;
+import de.oliverpabst.pqt.db.metadata.model.Table;
+import de.oliverpabst.pqt.db.metadata.model.table.Column;
+import de.oliverpabst.pqt.db.metadata.model.table.Constraint;
+import de.oliverpabst.pqt.db.metadata.model.table.Index;
+import de.oliverpabst.pqt.db.metadata.model.table.Trigger;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
@@ -163,9 +168,62 @@ public class DBOutlineTreeItem extends TreeItem<String> {
                     OutlineComponentType.TABLE_TRIGGER, metadataManager);
             children.add(triggers);
 
+        } else if (parent.getComponentType() == OutlineComponentType.TABLE_COLUMN) {
+            final Table table = resolveParentTable(parent);
+            if (table != null) {
+                for (final Column column : table.getColumns()) {
+                    final String label = column.getColumnName() + " : " + column.getDataType();
+                    children.add(new DBOutlineTreeItem(label, OutlineComponentType.DB_OBJECT, metadataManager));
+                }
+            }
+
+        } else if (parent.getComponentType() == OutlineComponentType.TABLE_CONSTRAINT) {
+            final Table table = resolveParentTable(parent);
+            if (table != null) {
+                for (final Constraint constraint : table.getConstraints()) {
+                    final String label = constraint.getObjectName() + " -> " + constraint.getReferences();
+                    children.add(new DBOutlineTreeItem(label, OutlineComponentType.DB_OBJECT, metadataManager));
+                }
+            }
+
+        } else if (parent.getComponentType() == OutlineComponentType.TABLE_INDEX) {
+            final Table table = resolveParentTable(parent);
+            if (table != null) {
+                for (final Index index : table.getIndices()) {
+                    final String label = index.getIndexName() + " : " + index.getIndexType();
+                    children.add(new DBOutlineTreeItem(label, OutlineComponentType.DB_OBJECT, metadataManager));
+                }
+            }
+
+        } else if (parent.getComponentType() == OutlineComponentType.TABLE_TRIGGER) {
+            final Table table = resolveParentTable(parent);
+            if (table != null) {
+                for (final Trigger trigger : table.getTriggers()) {
+                    final String label = trigger.getTriggerName() + " : " + trigger.getTriggerEvent();
+                    children.add(new DBOutlineTreeItem(label, OutlineComponentType.DB_OBJECT, metadataManager));
+                }
+            }
+
         }// Tabelle und Einzelteile der Tabelle laden
 
         super.getChildren().setAll(children);
+    }
+
+    private Table resolveParentTable(final DBOutlineTreeItem parent) {
+        final TreeItem<String> tableItem = parent.getParent();
+        final TreeItem<String> groupItem = tableItem != null ? tableItem.getParent() : null;
+        final TreeItem<String> schemaItem = groupItem != null ? groupItem.getParent() : null;
+        if (tableItem == null || schemaItem == null) {
+            return null;
+        }
+
+        final String tableName = tableItem.getValue();
+        final String schemaName = schemaItem.getValue();
+        final var schema = metadataManager.getSchema(schemaName);
+        if (schema == null) {
+            return null;
+        }
+        return schema.getTable(tableName);
     }
 
     @Override

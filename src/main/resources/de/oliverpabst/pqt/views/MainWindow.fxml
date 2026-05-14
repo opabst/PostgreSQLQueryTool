@@ -69,6 +69,19 @@
                                           </AnchorPane>
                                       </content>
                                     </Tab>
+                                    <Tab fx:id="metadataTab" text="Metadata">
+                                      <content>
+                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                          <children>
+                                            <TextArea fx:id="metadataDetailsTA" editable="false" layoutX="49.0" layoutY="38.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                              <font>
+                                                <Font name="Lucida Console" size="12.0" />
+                                              </font>
+                                            </TextArea>
+                                          </children>
+                                        </AnchorPane>
+                                      </content>
+                                    </Tab>
                                 </tabs>
                               </TabPane>
                            </children></AnchorPane>
