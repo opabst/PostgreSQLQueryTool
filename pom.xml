@@ -14,7 +14,7 @@
         <java.version>23</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>25</javafx.version>
-        <junit.jupiter.version>5.12.2</junit.jupiter.version>
+        <junit.jupiter.version>6.0.3</junit.jupiter.version>
         <testfx.version>4.0.18</testfx.version>
         <surefire.excludedGroups>ui</surefire.excludedGroups>
         <hikaricp.version>5.1.0</hikaricp.version>
